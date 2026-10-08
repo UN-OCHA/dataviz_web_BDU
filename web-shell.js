@@ -317,13 +317,43 @@
     }
     return unpack(base64urlBytes(m[2])).then(function (b) { return new TextDecoder("utf-8").decode(b); });
   }
+  // Two kinds of JSON can arrive:
+  //   - a saved chart (Save / Load format, has "v") → opened like Load chart;
+  //   - anything else — the AI import format ({chartType, title, headers,
+  //     rows…}, an array of those, or {charts:[…]}), as written by an AI
+  //     assistant without the connector → handed to the "Use AI" box, which
+  //     validates it, shows any problem with "Copy fix prompt", and offers a
+  //     multi-chart import as one ZIP.
+  function isSavedChart(text) {
+    try { var o = JSON.parse(text); return !!(o && typeof o === "object" && !Array.isArray(o) && o.v); }
+    catch (e) { return false; }
+  }
+  function openInAiImport(text) {
+    var btn = document.getElementById("btn-use-ai");
+    var ta = document.getElementById("ai-import-textarea");
+    var go = document.getElementById("ai-import-submit");
+    if (!btn || !ta || !go) return false;
+    btn.click();
+    ta.value = text;
+    ta.dispatchEvent(new Event("input", { bubbles: true }));
+    go.click();
+    return true;
+  }
   function openFromHash(hash) {
     return chartFromHash(hash).then(function (json) {
       if (!json) return false;
-      document.dispatchEvent(new CustomEvent("ocha-load-config", { detail: { json: json, label: "the link" } }));
+      // Not even shaped like JSON (a damaged or truncated link): say so
+      // plainly rather than showing a parser error.
+      if (!/^\s*[\[{]/.test(json)) throw new Error("not JSON");
+      if (isSavedChart(json)) {
+        document.dispatchEvent(new CustomEvent("ocha-load-config", { detail: { json: json, label: "the link" } }));
+      } else if (!openInAiImport(json)) {
+        throw new Error("no AI import box");
+      }
       count("tool:link");
       return true;
-    }, function () {
+    }).catch(function () {
+      // Any failure — undecodable, not JSON, no AI box — ends here.
       say("This link doesn't contain a readable chart.", "error");
       return false;
     });
