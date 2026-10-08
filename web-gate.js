@@ -1,27 +1,36 @@
 /**
- * WebGate — the web version's sign-up ("soft gate").
+ * WebGate — the web version's sign-up ("soft gate"), asked at the first
+ * download.
  *
- * The first time someone opens the web version in a browser, they give the
- * same details as the plugin's download form (name, email, organization,
- * duty station). The answer goes to the download form's Apps Script, which
- * keeps web sign-ups on their own tab and emails ochavisual@un.org. The
- * browser then remembers the person, so they are asked once per browser.
+ * Anyone can open the web version and try everything. The first time they
+ * DOWNLOAD a chart (SVG, PNG, ZIP) or a map, icon or flag, they are asked
+ * for the same details as the plugin's download form (name, email,
+ * organization, duty station); the download then continues on its own.
+ * "Not now" closes the screen without downloading. Asked once per browser.
+ * (Saving a chart's JSON or exporting a theme is never gated: that's the
+ * person's own work.)
  *
- * "I've registered before" asks only for an email; the backend answers yes
- * or no — never anyone's details. Plugin downloads count as registered.
+ * The answer goes to the download form's Apps Script, which keeps web
+ * sign-ups on their own tab and emails ochavisual@un.org. "I've registered
+ * before" asks only for an email; the backend answers yes or no — never
+ * anyone's details. Plugin downloads count as registered.
  *
- * It is a SOFT gate: if the sign-up service can't be reached, people get in
- * anyway. The point is knowing who uses the tool, not locking it. While
- * BACKEND_READY is false the screen isn't shown at all.
+ * It is a SOFT gate: if the sign-up service can't be reached, the download
+ * goes ahead anyway. The point is knowing who uses the tool, not locking it.
+ * While BACKEND_READY is false nothing is asked or sent.
  *
- * What the browser keeps (localStorage "ocha-dataviz-web:user"): the email
- * and an anonymous user code (a one-way SHA-256 code of the email) used to
- * count unique users. Name, organization and duty station are sent once and
- * not kept here.
+ * What the browser keeps (localStorage):
+ *   "ocha-dataviz-web:user"    — after sign-up: the email (to skip the form
+ *                                next time). Name, organization and duty
+ *                                station are sent once and not kept.
+ *   "ocha-dataviz-web:browser" — a random anonymous code for this browser,
+ *                                sent with usage counts so unique browsers
+ *                                can be counted. Not derived from anything
+ *                                personal.
  *
- * API: WebGate.whenSignedIn(cb) — cb once the person is signed in (now, or
- * after the form); WebGate.userCode() — the anonymous code, or "";
- * WebGate.sendUsage({ch, v, e, loc, u}) — one usage count.
+ * API: WebGate.requireSignIn(then) — run `then` now if signed up, otherwise
+ * after the sign-up; WebGate.userCode() — the browser code;
+ * WebGate.isSignedUp(); WebGate.sendUsage({ch, v, e, loc, u, s}).
  */
 
 /* global SIGNUP_LISTS, WEB_ICONS */
@@ -37,10 +46,30 @@ var WebGate = (function () {
   // gate works locally but sends nothing: the current script would otherwise
   // file a web sign-up as a plugin download.
   var BACKEND_READY = true;     // download-form script, deployed 8 Oct 2026
+  // Only the published site sends anything. Local copies (testing, previews)
+  // show the same screens but never write to the sheet: test runs once
+  // added counts there.
+  var LIVE_SITE = /(^|\.)github\.io$/.test(location.hostname);
 
   var STORE_KEY = "ocha-dataviz-web:user";
-  var waiting = [];
+  var BROWSER_KEY = "ocha-dataviz-web:browser";
   var user = load();
+  var browserCode = loadBrowserCode();
+  var pending = null;            // the download waiting for the sign-up
+  var pendingCancel = null;      // …and what to do if the person says "Not now"
+
+  // A random 16-hex code, kept in this browser. Without storage (private
+  // window) it lives for this page only.
+  function loadBrowserCode() {
+    var c = "";
+    try { c = localStorage.getItem(BROWSER_KEY) || ""; } catch (e) { c = ""; }
+    if (/^[0-9a-f]{16}$/.test(c)) return c;
+    var bytes = new Uint8Array(8);
+    try { crypto.getRandomValues(bytes); } catch (e) { for (var i = 0; i < 8; i++) bytes[i] = Math.floor(Math.random() * 256); }
+    c = Array.prototype.map.call(bytes, function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    try { localStorage.setItem(BROWSER_KEY, c); } catch (e) { /* page-only */ }
+    return c;
+  }
 
   function load() {
     try { var u = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); return u && u.email ? u : null; }
@@ -50,37 +79,49 @@ var WebGate = (function () {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch (e) { /* private window: ask again next time */ }
   }
 
-  function userCode() { return (user && user.code) || ""; }
+  function userCode() { return browserCode; }
+  function isSignedUp() { return !!user; }
+
+  // Funnel counts (prompt shown, signed up, not now) — through the same
+  // usage counts as everything else, once Analytics is running.
+  function funnel(event) {
+    if (typeof window.sendAnalyticsPing === "function") window.sendAnalyticsPing(event);
+  }
 
   // One usage count → the same Apps Script, "kind": "usage" (it files ch
   // "web" counts on the "Web usage" tab). Fire-and-forget.
   function sendUsage(fields) {
-    if (!BACKEND_READY) return;
+    if (!BACKEND_READY || !LIVE_SITE) return;
     var body = { kind: "usage" };
     for (var k in fields) if (Object.prototype.hasOwnProperty.call(fields, k)) body[k] = fields[k];
     try { post(body, false).catch(function () {}); } catch (e) { /* offline: drop it */ }
   }
 
-  function whenSignedIn(cb) {
-    if (user) cb(); else waiting.push(cb);
+  // Run `then` (a download) now if this browser has signed up, otherwise
+  // after the sign-up screen. "Not now" drops it.
+  function requireSignIn(then, onCancel) {
+    if (user || !BACKEND_READY) { then(); return; }
+    pending = then;
+    pendingCancel = onCancel || null;
+    if (el) return;                              // screen already open
+    show();
+    funnel("gate:shown");
   }
 
-  function signedIn(u) {
+  function signedIn(u, how) {
     user = u;
     save(u);
-    var list = waiting; waiting = [];
-    list.forEach(function (cb) { try { cb(); } catch (e) { /* a listener's problem stays its own */ } });
+    funnel("gate:" + how);
+    var go = pending; pending = null; pendingCancel = null;
+    if (go) { try { go(); } catch (e) { /* the download's problem stays its own */ } }
   }
 
-  // One-way code of the email (first 16 hex characters of SHA-256). Needs a
-  // secure page (https or localhost); elsewhere there is simply no code.
-  function codeFor(email) {
-    var norm = String(email).trim().toLowerCase();
-    if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve("");
-    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(norm)).then(function (buf) {
-      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); })
-        .join("").slice(0, 16);
-    }, function () { return ""; });
+  function notNow() {
+    var cancel = pendingCancel;
+    pending = null; pendingCancel = null;
+    hide();
+    funnel("gate:notnow");
+    if (cancel) { try { cancel(); } catch (e) { /* ignore */ } }
   }
 
   function post(body, readAnswer) {
@@ -127,9 +168,9 @@ var WebGate = (function () {
           (document.documentElement.getAttribute("data-channel") === "beta" ? " · beta" : "") + "</em></span></div>" +
         // ── Sign up ──
         '<form id="gate-signup" novalidate>' +
-          '<h1 id="web-gate-title">Make OCHA charts in your browser</h1>' +
-          '<p class="gate-intro">The same charts as the plugin for Adobe Illustrator, no Illustrator needed. ' +
-            "Tell us who you are to get started. You'll only be asked once on this browser.</p>" +
+          '<h1 id="web-gate-title">One quick step before your download</h1>' +
+          '<p class="gate-intro">Tell us who you are, so we know who uses the tool. ' +
+            "You'll only be asked once on this browser, and your download starts right after.</p>" +
           '<label for="gate-name">Full name <span class="req">*</span></label>' +
           '<input id="gate-name" type="text" autocomplete="name">' +
           '<label for="gate-email">Email <span class="req">*</span></label>' +
@@ -144,8 +185,11 @@ var WebGate = (function () {
           '<label for="gate-city">Duty station — City <span class="req">*</span></label>' +
           '<input id="gate-city" type="text" autocomplete="address-level2" placeholder="e.g. Geneva">' +
           '<p class="gate-error" id="gate-signup-error" role="alert"></p>' +
-          '<button type="submit" class="btn btn-primary" id="gate-start">Start making charts</button>' +
-          '<button type="button" class="btn-link gate-switch" id="gate-to-returning">I\'ve registered before</button>' +
+          '<button type="submit" class="btn btn-primary" id="gate-start">Sign up and download</button>' +
+          '<div class="gate-links">' +
+            '<button type="button" class="btn-link gate-switch" id="gate-to-returning">I\'ve registered before</button>' +
+            '<button type="button" class="btn-link gate-switch" id="gate-not-now">Not now</button>' +
+          "</div>" +
         "</form>" +
         // ── Registered before ──
         '<form id="gate-returning" novalidate hidden>' +
@@ -154,8 +198,11 @@ var WebGate = (function () {
           '<label for="gate-email2">Email <span class="req">*</span></label>' +
           '<input id="gate-email2" type="email" autocomplete="email">' +
           '<p class="gate-error" id="gate-returning-error" role="alert"></p>' +
-          '<button type="submit" class="btn btn-primary" id="gate-continue">Continue</button>' +
-          '<button type="button" class="btn-link gate-switch" id="gate-to-signup">New here? Sign up</button>' +
+          '<button type="submit" class="btn btn-primary" id="gate-continue">Continue and download</button>' +
+          '<div class="gate-links">' +
+            '<button type="button" class="btn-link gate-switch" id="gate-to-signup">New here? Sign up</button>' +
+            '<button type="button" class="btn-link gate-switch" id="gate-not-now-2">Not now</button>' +
+          "</div>" +
         "</form>" +
         '<p class="gate-note">Your name, email and organization are collected by the OCHA Brand and Design Unit solely to ' +
           "understand who is using the tool. They are processed in line with the UN Personal Data Protection and Privacy " +
@@ -167,6 +214,11 @@ var WebGate = (function () {
     wire();
     document.getElementById("gate-name").focus();
   }
+
+  // Escape = "Not now" (nothing is downloaded).
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && el) notNow();
+  });
 
   function hide() {
     if (el && el.parentNode) el.parentNode.removeChild(el);
@@ -188,6 +240,8 @@ var WebGate = (function () {
       $("gate-signup").hidden = true; $("gate-returning").hidden = false;
       $("gate-email2").value = $("gate-email").value; $("gate-email2").focus();
     });
+    $("gate-not-now").addEventListener("click", notNow);
+    $("gate-not-now-2").addEventListener("click", notNow);
     $("gate-to-signup").addEventListener("click", function () {
       $("gate-returning").hidden = true; $("gate-signup").hidden = false;
       $("gate-email").value = $("gate-email2").value; $("gate-name").focus();
@@ -206,7 +260,7 @@ var WebGate = (function () {
       if (!city) return err("gate-signup-error", "Please enter your duty station city.");
       var btn = $("gate-start");
       btn.disabled = true;
-      btn.textContent = "Getting things ready…";
+      btn.textContent = "Getting your download ready…";
       var version = (document.getElementById("app-version") || {}).textContent || "";
       var tz = "";
       try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (x) { tz = ""; }
@@ -214,12 +268,10 @@ var WebGate = (function () {
       function finish() {
         if (done) return;
         done = true;
-        codeFor(email).then(function (code) {
-          hide();
-          signedIn({ email: email, code: code, since: new Date().toISOString(), via: "signup" });
-        });
+        hide();
+        signedIn({ email: email, since: new Date().toISOString(), via: "signup" }, "signup");
       }
-      if (BACKEND_READY) {
+      if (BACKEND_READY && LIVE_SITE) {
         try {
           post({ kind: "web-signup", name: name, email: email, org: org, country: country, city: city,
             version: version, timeZone: tz }, false).then(finish, finish);
@@ -239,12 +291,10 @@ var WebGate = (function () {
       btn.disabled = true;
       btn.textContent = "Checking…";
       function letIn() {
-        codeFor(email).then(function (code) {
-          hide();
-          signedIn({ email: email, code: code, since: new Date().toISOString(), via: "returning" });
-        });
+        hide();
+        signedIn({ email: email, since: new Date().toISOString(), via: "returning" }, "returning");
       }
-      if (!BACKEND_READY) { letIn(); return; }
+      if (!BACKEND_READY || !LIVE_SITE) { letIn(); return; }
       var answered = false;
       // Soft gate: if the check can't be done, let the person in.
       var timer = setTimeout(function () { if (!answered) { answered = true; letIn(); } }, 8000);
@@ -254,7 +304,7 @@ var WebGate = (function () {
         clearTimeout(timer);
         if (a && a.registered) { letIn(); return; }
         btn.disabled = false;
-        btn.textContent = "Continue";
+        btn.textContent = "Continue and download";
         err("gate-returning-error", "We couldn't find that email. Please sign up instead. It only takes a minute.");
       }, function () {
         if (answered) return;
@@ -265,10 +315,6 @@ var WebGate = (function () {
     });
   }
 
-  // Ask on first visit (phones get their own message instead) — but only
-  // when sign-ups are actually recorded: never ask people for details that
-  // go nowhere. Until then nobody is "signed in", so no usage counts start.
-  if (BACKEND_READY && !user && !document.getElementById("web-phone-gate")) show();
-
-  return { whenSignedIn: whenSignedIn, userCode: userCode, sendUsage: sendUsage, collecting: BACKEND_READY };
+  return { requireSignIn: requireSignIn, userCode: userCode, isSignedUp: isSignedUp,
+    sendUsage: sendUsage, collecting: BACKEND_READY, liveSite: LIVE_SITE };
 })();

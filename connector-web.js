@@ -21,9 +21,9 @@
  *   - storage is the browser's localStorage.
  *   - files are the browser's file picker and downloads.
  *   - illustrator is null: nothing is placed in a document.
- *   - analytics: counts start only after sign-up (web-gate.js), carry the
- *     region from the browser's time zone (no IP lookup) and an anonymous
- *     user code, and are marked ch=web so they land on their own tab.
+ *   - analytics: counts start at once, carry the region from the browser's
+ *     time zone (no IP lookup), a random browser code and whether this
+ *     browser has signed up, and land on their own tab ("Web usage").
  */
 
 /* global BrowserFiles, WebGate */
@@ -217,15 +217,18 @@ var Connector = (function () {
   }
 
   var analytics = {
+    // Counts start at once for everyone (the sign-up only comes at the
+    // first download), so the funnel — tried / signed up / downloaded — is
+    // visible. Each count carries a random browser code, not personal data.
     whenReady: function (cb) {
-      if (!WEB_COUNTS_ON || typeof WebGate === "undefined") return;
-      WebGate.whenSignedIn(cb);
+      if (WEB_COUNTS_ON) cb();
     },
     // To the web version's own tab ("Web usage"), through the sign-up
     // service (see web-gate.js), with the anonymous user code.
     send: function (f) {
       if (typeof WebGate === "undefined") return;
-      WebGate.sendUsage({ ch: "web", v: f.v, e: f.e, loc: f.loc, u: WebGate.userCode() });
+      WebGate.sendUsage({ ch: "web", v: f.v, e: f.e, loc: f.loc, u: WebGate.userCode(),
+        s: WebGate.isSignedUp() ? "yes" : "no" });
     },
     location: function (cb) { cb(regionFromTimeZone()); }
   };
@@ -249,7 +252,18 @@ var Connector = (function () {
     fs: fs,
     http: http,
     storage: storage,
-    files: { openText: BrowserFiles.openText, saveText: BrowserFiles.saveText },
+    files: {
+      openText: BrowserFiles.openText,
+      // opts.signInFirst (asset downloads): ask the sign-up first; "Not now"
+      // answers like a cancelled save dialog (cb(null, null)).
+      saveText: function (opts, cb) {
+        if (opts && opts.signInFirst && typeof WebGate !== "undefined") {
+          WebGate.requireSignIn(function () { BrowserFiles.saveText(opts, cb); }, function () { cb(null, null); });
+          return;
+        }
+        BrowserFiles.saveText(opts, cb);
+      }
+    },
     analytics: analytics,
     openURL: function (url) {
       try { window.open(url, "_blank", "noopener"); } catch (e) { /* popup blocked */ }

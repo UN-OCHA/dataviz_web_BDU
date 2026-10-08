@@ -218,7 +218,7 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
   display: grid;
   place-items: center;
   padding: var(--space-400) var(--space-300);
-  background: var(--bg-page);
+  background: rgba(0, 0, 0, 0.55);   /* the app stays visible behind, like the panel's dialogs */
   overflow-y: auto;
 }
 #web-gate .gate-card {
@@ -262,7 +262,8 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
 #web-gate .gate-error { min-height: 1.2em; font-size: var(--font-size-sm); color: #E5484D; }
 #web-gate .gate-error:empty { min-height: 0; }
 #web-gate .btn-primary { justify-self: stretch; padding: var(--space-150); font-size: var(--font-size-md); margin-top: var(--space-75); }
-#web-gate .gate-switch { justify-self: center; font-size: var(--font-size-sm); }
+#web-gate .gate-switch { font-size: var(--font-size-sm); }
+#web-gate .gate-links { display: flex; justify-content: space-between; gap: var(--space-200); flex-wrap: wrap; }
 #web-gate .gate-note { font-size: var(--font-size-xs); line-height: 1.5; color: var(--text-tertiary); }
 #web-gate .gate-note a { color: inherit; }
 

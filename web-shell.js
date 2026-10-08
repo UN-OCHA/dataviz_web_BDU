@@ -23,7 +23,7 @@
  * DOM events and the shared DataStore.
  */
 
-/* global DataStore, ZipStore, WEB_ICONS */
+/* global DataStore, ZipStore, WEB_ICONS, WebGate */
 
 (function () {
   "use strict";
@@ -191,12 +191,18 @@
   }
 
   // ── Download SVG: byte for byte what the plugin places ──────
+  // Downloads ask for the sign-up first (once per browser): web-gate.js.
+  function signInThen(go) { WebGate.requireSignIn(go); }
+
   btnSvg.addEventListener("click", function () {
     if (!currentSvg) return;
+    var svg = currentSvg, type = DataStore.chartType || "unknown";
     var name = baseName(DataStore.chartTitle) + ".svg";
-    downloadBlob(new Blob([currentSvg], { type: "image/svg+xml" }), name);
-    say("Downloaded " + name, "success");
-    count("export:svg:" + (DataStore.chartType || "unknown"));
+    signInThen(function () {
+      downloadBlob(new Blob([svg], { type: "image/svg+xml" }), name);
+      say("Downloaded " + name, "success");
+      count("export:svg:" + type);
+    });
   });
 
   // ── Download PNG ────────────────────────────────────────────
@@ -285,6 +291,10 @@
 
   btnPng.addEventListener("click", function () {
     if (!currentSvg) return;
+    signInThen(downloadPng);
+  });
+  function downloadPng() {
+    if (!currentSvg) return;
     var scale = parseInt(pngScale.value, 10) || 2;
     var name = baseName(DataStore.chartTitle) + (scale === 1 ? "" : "@" + scale + "x") + ".png";
     btnPng.disabled = true;
@@ -296,7 +306,7 @@
     }, function (err) {
       say((err && err.message) || "PNG export failed.", "error");
     }).then(function () { btnPng.disabled = !currentSvg; });
-  });
+  }
 
   // ── Open a chart from a link ────────────────────────────────
   // The chart's Save/Open JSON travels in the URL fragment (after #), so it
@@ -395,8 +405,10 @@
       used[key] = true;
       return { name: (n > 1 ? name + " (" + n + ")" : name) + ".svg", text: c.svg };
     });
-    downloadBlob(ZipStore.build(files), "humanitarian-dataviz-charts.zip");
-    count("export:zip:" + files.length);
+    signInThen(function () {
+      downloadBlob(ZipStore.build(files), "humanitarian-dataviz-charts.zip");
+      count("export:zip:" + files.length);
+    });
   });
 
   // ── Preview window for assets (location maps) ───────────────
@@ -457,6 +469,9 @@
   document.getElementById("web-asset-download").addEventListener("click", function () {
     var d = assetCurrent;
     if (!d) return;
+    signInThen(function () { downloadAsset(d); });
+  });
+  function downloadAsset(d) {
     fetch(encodeURI(d.path)).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.blob();
@@ -468,7 +483,7 @@
     }).catch(function () {
       say("Couldn't download " + d.fileName, "error");
     });
-  });
+  }
 
   // ── Resizable panel ─────────────────────────────────────────
   // Drag the panel's right edge (or focus it and use ← →). Double-click

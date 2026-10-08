@@ -106,8 +106,12 @@ var PanelUtils = (function () {
     }
     Connector.files.saveText({
       title: "Save SVG", extensions: ["svg"], defaultName: fileName,
-      mime: "image/svg+xml", text: text
-    }, function (err) { callback(err ? ("Couldn't download: " + err.message) : null); });
+      mime: "image/svg+xml", text: text,
+      signInFirst: true          // web: the sign-up comes before the first download
+    }, function (err, res) {
+      if (err) callback("Couldn't download: " + err.message);
+      else callback(res ? null : "Not downloaded.");
+    });
   }
 
   /**
