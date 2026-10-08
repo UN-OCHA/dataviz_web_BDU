@@ -1,0 +1,5 @@
+Roboto (version 2.137) and Roboto Condensed (version 3.008), by Christian Robertson / Google.
+Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+
+The .woff files here are format conversions (TrueType -> WOFF) of the official
+font files, with no changes to the glyphs.

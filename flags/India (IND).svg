@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 225 150">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="225" height="150"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h225v150H0V0Z" fill="#f93"/>
+  <path d="M0,50h225v50H0v-50Z" fill="#fff"/>
+  <path d="M0,100h225v50H0v-50Z" fill="#128807"/>
+  <g>
+    <circle cx="112.5" cy="75" r="20" fill="#008"/>
+    <circle cx="112.5" cy="75" r="17.5" fill="#fff"/>
+    <circle cx="112.5" cy="75" r="3.5" fill="#008"/>
+    <g id="d">
+      <g id="c">
+        <g id="b">
+          <g id="a">
+            <circle cx="129.85" cy="77.284" r=".875" fill="#008"/>
+            <path d="M112.5,92.5l.6-10.5-.6-5-.6,5,.6,10.5Z" fill="#008"/>
+          </g>
+          <g id="a1" data-name="a">
+            <circle cx="128.668" cy="81.697" r=".875" fill="#008"/>
+            <path d="M107.971,91.904l3.297-9.987.715-4.985-1.874,4.674-2.138,10.298Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b1" data-name="b">
+          <g id="a2" data-name="a">
+            <circle cx="126.384" cy="85.653" r=".875" fill="#008"/>
+            <path d="M103.75,90.155l5.77-8.793,1.98-4.63-3.02,4.03-4.73,9.393Z" fill="#008"/>
+          </g>
+          <g id="a3" data-name="a">
+            <circle cx="123.153" cy="88.884" r=".875" fill="#008"/>
+            <path d="M100.126,87.374l7.849-7,3.111-3.96-3.96,3.111-7,7.849Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+      <g id="c1" data-name="c">
+        <g id="b2" data-name="b">
+          <g id="a4" data-name="a">
+            <circle cx="119.197" cy="91.168" r=".875" fill="#008"/>
+            <path d="M97.345,83.75l9.393-4.73,4.03-3.02-4.63,1.98-8.793,5.77Z" fill="#008"/>
+          </g>
+          <g id="a5" data-name="a">
+            <circle cx="114.784" cy="92.35" r=".875" fill="#008"/>
+            <path d="M95.596,79.529l10.298-2.138,4.674-1.874-4.985.715-9.987,3.297Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b3" data-name="b">
+          <g id="a6" data-name="a">
+            <circle cx="110.216" cy="92.35" r=".875" fill="#008"/>
+            <path d="M95,75l10.5.6,5-.6-5-.6-10.5.6Z" fill="#008"/>
+          </g>
+          <g id="a7" data-name="a">
+            <circle cx="105.803" cy="91.168" r=".875" fill="#008"/>
+            <path d="M95.596,70.471l9.987,3.297,4.985.715-4.674-1.874-10.298-2.138Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="d1" data-name="d">
+      <g id="c2" data-name="c">
+        <g id="b4" data-name="b">
+          <g id="a8" data-name="a">
+            <circle cx="101.847" cy="88.884" r=".875" fill="#008"/>
+            <path d="M97.345,66.25l8.793,5.77,4.63,1.98-4.03-3.02-9.393-4.73Z" fill="#008"/>
+          </g>
+          <g id="a9" data-name="a">
+            <circle cx="98.616" cy="85.653" r=".875" fill="#008"/>
+            <path d="M100.126,62.626l7,7.849,3.96,3.111-3.111-3.96-7.849-7Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b5" data-name="b">
+          <g id="a10" data-name="a">
+            <circle cx="96.332" cy="81.697" r=".875" fill="#008"/>
+            <path d="M103.75,59.845l4.73,9.393,3.02,4.03-1.98-4.63-5.77-8.793Z" fill="#008"/>
+          </g>
+          <g id="a11" data-name="a">
+            <circle cx="95.15" cy="77.284" r=".875" fill="#008"/>
+            <path d="M107.971,58.096l2.138,10.298,1.874,4.674-.715-4.985-3.297-9.987Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+      <g id="c3" data-name="c">
+        <g id="b6" data-name="b">
+          <g id="a12" data-name="a">
+            <circle cx="95.15" cy="72.716" r=".875" fill="#008"/>
+            <path d="M112.5,57.5l-.6,10.5.6,5,.6-5-.6-10.5Z" fill="#008"/>
+          </g>
+          <g id="a13" data-name="a">
+            <circle cx="96.332" cy="68.303" r=".875" fill="#008"/>
+            <path d="M117.029,58.096l-3.297,9.987-.715,4.985,1.874-4.674,2.138-10.298Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b7" data-name="b">
+          <g id="a14" data-name="a">
+            <circle cx="98.616" cy="64.347" r=".875" fill="#008"/>
+            <path d="M121.25,59.845l-5.77,8.793-1.98,4.63,3.02-4.03,4.73-9.393Z" fill="#008"/>
+          </g>
+          <g id="a15" data-name="a">
+            <circle cx="101.847" cy="61.116" r=".875" fill="#008"/>
+            <path d="M124.874,62.626l-7.849,7-3.111,3.96,3.96-3.111,7-7.849Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="d2" data-name="d">
+      <g id="c4" data-name="c">
+        <g id="b8" data-name="b">
+          <g id="a16" data-name="a">
+            <circle cx="105.803" cy="58.832" r=".875" fill="#008"/>
+            <path d="M127.655,66.25l-9.393,4.73-4.03,3.02,4.63-1.98,8.793-5.77Z" fill="#008"/>
+          </g>
+          <g id="a17" data-name="a">
+            <circle cx="110.216" cy="57.65" r=".875" fill="#008"/>
+            <path d="M129.404,70.471l-10.298,2.138-4.674,1.874,4.985-.715,9.987-3.297Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b9" data-name="b">
+          <g id="a18" data-name="a">
+            <circle cx="114.784" cy="57.65" r=".875" fill="#008"/>
+            <path d="M130,75l-10.5-.6-5,.6,5,.6,10.5-.6Z" fill="#008"/>
+          </g>
+          <g id="a19" data-name="a">
+            <circle cx="119.197" cy="58.832" r=".875" fill="#008"/>
+            <path d="M129.404,79.529l-9.987-3.297-4.985-.715,4.674,1.874,10.298,2.138Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+      <g id="c5" data-name="c">
+        <g id="b10" data-name="b">
+          <g id="a20" data-name="a">
+            <circle cx="123.153" cy="61.116" r=".875" fill="#008"/>
+            <path d="M127.655,83.75l-8.793-5.77-4.63-1.98,4.03,3.02,9.393,4.73Z" fill="#008"/>
+          </g>
+          <g id="a21" data-name="a">
+            <circle cx="126.384" cy="64.347" r=".875" fill="#008"/>
+            <path d="M124.874,87.374l-7-7.849-3.96-3.111,3.111,3.96,7.849,7Z" fill="#008"/>
+          </g>
+        </g>
+        <g id="b11" data-name="b">
+          <g id="a22" data-name="a">
+            <circle cx="128.668" cy="68.303" r=".875" fill="#008"/>
+            <path d="M121.25,90.155l-4.73-9.393-3.02-4.03,1.98,4.63,5.77,8.793Z" fill="#008"/>
+          </g>
+          <g id="a23" data-name="a">
+            <circle cx="129.85" cy="72.716" r=".875" fill="#008"/>
+            <path d="M117.029,91.904l-2.138-10.298-1.874-4.674.715,4.985,3.297,9.987Z" fill="#008"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  </g>
+</svg>

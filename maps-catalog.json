@@ -1,0 +1,1298 @@
+[
+  {
+    "name": "Afghanistan",
+    "code": "afg",
+    "url": "https://reliefweb.int/attachments/c405ecfe-1ab1-4bc7-a7eb-e4a6dc758ea8/afg_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Albania",
+    "code": "alb",
+    "url": "https://reliefweb.int/attachments/9c1fd3cb-b6ac-4946-9bd0-92bc17899ac6/alb_OCHA.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Algeria",
+    "code": "dza",
+    "url": "https://reliefweb.int/attachments/1defb131-8b52-4053-b945-85f8576a66b5/dza_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Andorra",
+    "code": "and",
+    "url": "https://reliefweb.int/attachments/c332b55e-435c-4c49-8590-bbec0234b238/and_OCHA.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Angola",
+    "code": "ago",
+    "url": "https://reliefweb.int/attachments/779a671f-ee98-47c4-96aa-3529d61d800e/ago_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Anguilla",
+    "code": "aia",
+    "url": "https://reliefweb.int/attachments/9d9afede-1539-417d-b052-966260389b34/aia_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Antigua and Barbuda",
+    "code": "atg",
+    "url": "https://reliefweb.int/attachments/fac8590f-7e41-4b7c-a1a3-4549a9a67902/atg_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Argentina",
+    "code": "arg",
+    "url": "https://reliefweb.int/attachments/c35ee0c0-bceb-4cf7-bff1-0e7994b83312/arg_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Armenia",
+    "code": "arm",
+    "url": "https://reliefweb.int/attachments/f56b9fe2-8c78-4837-9b24-99b73cce9243/arm_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Australia",
+    "code": "aus",
+    "url": "https://reliefweb.int/attachments/d2cc7ee6-c23e-43ca-9968-310ef3aba503/aus_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Austria",
+    "code": "aut",
+    "url": "https://reliefweb.int/attachments/3a1f339a-37ef-4b03-89f1-29f50d035dbb/aut_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Azerbaijan",
+    "code": "aze",
+    "url": "https://reliefweb.int/attachments/358e1a3f-cb6b-458a-8764-a2804080621a/aze_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Bahamas",
+    "code": "bhs",
+    "url": "https://reliefweb.int/attachments/bec28269-73ca-4f58-83c4-f64cf9c1df00/bhs_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Bahrain",
+    "code": "bhr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/bhr_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Bangladesh",
+    "code": "bgd",
+    "url": "https://reliefweb.int/attachments/8221ff2f-01a6-4a64-94dc-a1c15d51bdcf/bgd_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Barbados",
+    "code": "brb",
+    "url": "https://reliefweb.int/attachments/134685dc-b80d-46a2-9c55-41f23e3b2c8f/brb_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Belarus",
+    "code": "blr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/blr_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Belgium",
+    "code": "bel",
+    "url": "https://reliefweb.int/attachments/7bd8fedf-30fb-46ee-9e97-cc0c4b4faf7c/bel_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Belize",
+    "code": "blz",
+    "url": "https://reliefweb.int/attachments/67554e51-a000-44f3-a33b-4d811d429b91/blz_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Benin",
+    "code": "ben",
+    "url": "https://reliefweb.int/attachments/653527f3-8bf0-41a9-8cc2-1b53fe218faf/ben_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Bhutan",
+    "code": "btn",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/btn_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Bolivia",
+    "code": "bol",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/bol_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Bonaire, Saint Eustatius and Saba",
+    "code": "bes",
+    "url": "https://reliefweb.int/attachments/cd348971-74f1-40fa-9326-bf2cfd306180/bes_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "code": "bih",
+    "url": "https://reliefweb.int/attachments/dfb567a7-d9f8-43b7-b39a-01c0a0c4f174/bih_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Botswana",
+    "code": "bwa",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/bwa_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Brazil",
+    "code": "bra",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/bra_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "British Virgin Islands",
+    "code": "vgb",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/vgb_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Brunei Darussalam",
+    "code": "brn",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/brn_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Bulgaria",
+    "code": "bgr",
+    "url": "https://reliefweb.int/attachments/3f81b49a-3f30-4b45-80b4-f977c4d4e5a8/bgr_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Burkina Faso",
+    "code": "bfa",
+    "url": "https://reliefweb.int/attachments/8cfc4ab1-f959-4739-8883-999f03ad27af/bfa_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Burundi",
+    "code": "bdi",
+    "url": "https://reliefweb.int/attachments/d7256c4e-00ae-4efc-ac50-836e1216d77d/bdi_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Cabo Verde",
+    "code": "cpv",
+    "url": "https://reliefweb.int/attachments/ff43f986-9323-4eb8-9ed1-8c86e1f314ea/cpv_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Cambodia",
+    "code": "khm",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/khm_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Cameroon",
+    "code": "cmr",
+    "url": "https://reliefweb.int/attachments/762088c7-3029-49fa-8c80-878cafc5806f/cmr_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Canada",
+    "code": "can",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/can_ocha.svg",
+    "region": "North America"
+  },
+  {
+    "name": "Caribbean",
+    "code": "caribbean",
+    "url": "https://reliefweb.int/attachments/a27ed752-631a-4402-bc25-aed438db953b/caribbean_ocha.svg",
+    "region": "Region"
+  },
+  {
+    "name": "Central African Republic",
+    "code": "caf",
+    "url": "https://reliefweb.int/attachments/f4772430-f3fb-4d3d-812c-1c4fb5de6c37/caf_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Central America",
+    "code": "central_america",
+    "url": "https://reliefweb.int/attachments/d02ddb77-dbef-4170-b763-031695b72d4e/Central_America_ocha.svg",
+    "region": "Region"
+  },
+  {
+    "name": "Chad",
+    "code": "tcd",
+    "url": "https://reliefweb.int/attachments/91201e0f-b887-4715-bb83-16a7f6a3eb5f/tcd_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Chile",
+    "code": "chl",
+    "url": "https://reliefweb.int/attachments/ebab5e31-691b-4358-b485-04eced60dc6e/chl_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "China",
+    "code": "chn",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/chn_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Colombia",
+    "code": "col",
+    "url": "https://reliefweb.int/attachments/81f09cce-fe30-478d-8680-59cf87cd77b1/col_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Comoros",
+    "code": "com",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/com_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Congo",
+    "code": "cog",
+    "url": "https://reliefweb.int/attachments/402e7a0a-4339-4432-ba93-5371933a11f6/cog_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Cook Islands",
+    "code": "cok",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/cok_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Costa Rica",
+    "code": "cri",
+    "url": "https://reliefweb.int/attachments/0c3f17b1-28df-4e2b-a02c-2dfa4bcecb53/cri_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "C&ocirc;te d'Ivoire",
+    "code": "civ",
+    "url": "https://reliefweb.int/attachments/ce385ecf-28f1-4bac-85af-969f9bdab7ce/civ_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Croatia",
+    "code": "hrv",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/hrv_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Cuba",
+    "code": "cub",
+    "url": "https://reliefweb.int/attachments/bedee6ee-f305-40f4-9e12-bda3e4983298/cub_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Cura&ccedil;ao",
+    "code": "cuw",
+    "url": "https://reliefweb.int/attachments/829dd036-bb44-4337-bbf8-40242d304b29/cuw_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Cyprus",
+    "code": "cyp",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/cyp_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Czechia",
+    "code": "cze",
+    "url": "https://reliefweb.int/attachments/a05a1918-453a-47ab-9b37-60edd6924bb2/cze_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Democratic People's Republic of Korea",
+    "code": "prk",
+    "url": "https://reliefweb.int/attachments/1b805b10-08d7-4a15-95ff-9f7a0695859a/prk_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Democratic Republic of the Congo",
+    "code": "cod",
+    "url": "https://reliefweb.int/attachments/876cb96d-7b51-4655-a395-4fad251b4de9/cod_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Denmark",
+    "code": "dnk",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/dnk_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Djibouti",
+    "code": "dji",
+    "url": "https://reliefweb.int/attachments/42a3b9c7-6d70-4cb5-b0c9-97d511662967/dji_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Dominica",
+    "code": "dma",
+    "url": "https://reliefweb.int/attachments/e106f658-5280-45ec-906d-16f5a57c8139/dma_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Dominican Republic",
+    "code": "dom",
+    "url": "https://reliefweb.int/attachments/36ff042b-8ca2-4941-aaa9-c7cd20638b3a/dom_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Ecuador",
+    "code": "ecu",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/ecu_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Egypt",
+    "code": "egy",
+    "url": "https://reliefweb.int/attachments/e514dc8b-d50e-30df-b979-2e8777764826/egy_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "El Salvador",
+    "code": "slv",
+    "url": "https://reliefweb.int/attachments/8fce4f88-b5ad-497d-94bf-1c6360a5cb1f/slv_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Equatorial Guinea",
+    "code": "gnq",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/gnq_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Eritrea",
+    "code": "eri",
+    "url": "https://reliefweb.int/attachments/bb9ab60a-b49c-4bc9-aa17-4b8e8660d6d9/eri_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Estonia",
+    "code": "est",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/est_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Eswatini",
+    "code": "swz",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/swz_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Ethiopia",
+    "code": "eth",
+    "url": "https://reliefweb.int/attachments/ac411c3b-e83f-4729-baec-3a50c1f28eca/eth_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Fiji",
+    "code": "fji",
+    "url": "https://reliefweb.int/attachments/ad756ff6-7a12-4b7b-a561-a5a2a2e92382/fji_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Finland",
+    "code": "fin",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/fin_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "France",
+    "code": "fra",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/fra_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "French Polynesia",
+    "code": "pyf",
+    "url": "https://reliefweb.int/attachments/ddc04d30-9455-49a1-8dac-a93c56674a42/pyf_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Gabon",
+    "code": "gab",
+    "url": "https://reliefweb.int/attachments/078bc9b6-909b-4d19-ba32-0d7be60fa9c9/gab_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Gambia",
+    "code": "gmb",
+    "url": "https://reliefweb.int/attachments/df40b073-524f-4ece-b08e-bcbf79dfe00e/gmb_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Georgia",
+    "code": "geo",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/geo_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Germany",
+    "code": "deu",
+    "url": "https://reliefweb.int/attachments/dc3e76c3-d9db-4e03-8a15-7f19ddba1e27/deu_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Ghana",
+    "code": "gha",
+    "url": "https://reliefweb.int/attachments/9bb64ef0-75b7-46da-b3b5-6723e3de862b/gha_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Greece",
+    "code": "grc",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/grc_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Grenada",
+    "code": "grd",
+    "url": "https://reliefweb.int/attachments/347ba630-8ac0-485a-8f30-57914311c917/grd_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Guam",
+    "code": "gum",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/gum_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Guadeloupe",
+    "code": "glp",
+    "url": "https://reliefweb.int/attachments/a64e5e73-f29c-4e93-9dc0-6b705ae09919/glp_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Guatemala",
+    "code": "gtm",
+    "url": "https://reliefweb.int/attachments/4584245b-5f92-42d3-9da4-8d7d7df6cc6c/gtm_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Guinea",
+    "code": "gin",
+    "url": "https://reliefweb.int/attachments/2ad63e8a-6f31-43f3-bb8c-7065130713f3/gin_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Guinea-Bissau",
+    "code": "gnb",
+    "url": "https://reliefweb.int/attachments/95fe13f1-bcbd-453c-a1f1-7c3cd6c5a26a/gnb_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Guyana",
+    "code": "guy",
+    "url": "https://reliefweb.int/attachments/fc27956e-0cd0-43e0-a172-16502dc01ef5/guy_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Haiti",
+    "code": "hti",
+    "url": "https://reliefweb.int/attachments/2a8b870f-0e3a-4690-81a5-914356feed68/hti_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Honduras",
+    "code": "hnd",
+    "url": "https://reliefweb.int/attachments/56709c32-503b-4cea-a351-5cbfd90d6c85/hnd_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Hungary",
+    "code": "hun",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/hun_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Iceland",
+    "code": "isl",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/isl_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "India",
+    "code": "ind",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/ind_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Indonesia",
+    "code": "idn",
+    "url": "https://reliefweb.int/attachments/1a1f4979-1218-4903-bd28-844239d58cb3/idn_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Iran, Islamic Republic of",
+    "code": "irn",
+    "url": "https://reliefweb.int/attachments/52e35973-e533-4a0b-8280-b2176070dc40/irn_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Iraq",
+    "code": "irq",
+    "url": "https://reliefweb.int/attachments/9a65a07e-75f0-42ee-858c-bc66655f0883/irq_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Ireland",
+    "code": "irl",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/irl_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Israel",
+    "code": "isr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/isr_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Italy",
+    "code": "ita",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/ita_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Jamaica",
+    "code": "jam",
+    "url": "https://reliefweb.int/attachments/2a8082cd-4f97-40bf-8fa7-3314588f1f58/jam_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Japan",
+    "code": "jpn",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/jpn_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Jordan",
+    "code": "jor",
+    "url": "https://reliefweb.int/attachments/20c6f0f6-1656-49bd-996e-3d321e64c174/jor_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Kazakhstan",
+    "code": "kaz",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/kaz_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Kenya",
+    "code": "ken",
+    "url": "https://reliefweb.int/attachments/d0da4c16-bc92-4f76-a732-7d4b05daf292/ken_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Kiribati",
+    "code": "kir",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/kir_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Kuwait",
+    "code": "kwt",
+    "url": "https://reliefweb.int/attachments/c7d306c6-1570-43ba-b366-b350b8090874/kwt_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Kyrgyzstan",
+    "code": "kgz",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/kgz_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Lao People's Democratic Republic",
+    "code": "lao",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lao_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Latvia",
+    "code": "lva",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lva_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Lebanon",
+    "code": "lbn",
+    "url": "https://reliefweb.int/attachments/94f69fd5-7785-4376-b59f-222567bf76a9/lbn_OCHA.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Lesotho",
+    "code": "lso",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lso_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Liberia",
+    "code": "lbr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lbr_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Libya",
+    "code": "lby",
+    "url": "https://reliefweb.int/attachments/120273a8-38e3-4f63-929c-47a852f03722/lby_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Liechtenstein",
+    "code": "lie",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lie_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Lithuania",
+    "code": "ltu",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/ltu_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Luxembourg",
+    "code": "lux",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lux_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Madagascar",
+    "code": "mdg",
+    "url": "https://reliefweb.int/attachments/041a1ef5-ab46-42ea-9c32-90fc0d6f85d4/mdg_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Malawi",
+    "code": "mli",
+    "url": "https://reliefweb.int/attachments/ce922b76-d7cc-467d-9496-64447afa1aaa/mli_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Malaysia",
+    "code": "mys",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mys_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Maldives",
+    "code": "mdv",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mdv_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Mali",
+    "code": "mli",
+    "url": "https://reliefweb.int/attachments/0d2e520f-c21d-4415-8414-629e54d1676e/mli_OCHA.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Malta",
+    "code": "mlt",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mlt_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Marshall Islands",
+    "code": "mhl",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mhl_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Martinique (FR)",
+    "code": "mtq",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mtq_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Mauritania",
+    "code": "mrt",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mrt_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Mauritius",
+    "code": "mus",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mus_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Mexico",
+    "code": "mex",
+    "url": "https://reliefweb.int/attachments/706e0cc4-27ff-40aa-9445-86ce6499ba5d/mex_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Micronesia, Federated States of",
+    "code": "fsm",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/fsm_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Moldova, Republic of",
+    "code": "mda",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mda_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Mongolia",
+    "code": "mng",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mng_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Montenegro",
+    "code": "mne",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mne_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Montserrat",
+    "code": "msr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/msr_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Morocco",
+    "code": "mar",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mar_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Mozambique",
+    "code": "moz",
+    "url": "https://reliefweb.int/attachments/7bbe0edd-1b9f-47af-a16f-802064bb1cb1/moz_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Myanmar",
+    "code": "mmr",
+    "url": "https://reliefweb.int/attachments/bdab95e0-4920-4f1a-95a1-f21b2ea4e357/mmr_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Namibia",
+    "code": "nam",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/nam_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Nauru",
+    "code": "nru",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/nru_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Nepal",
+    "code": "npl",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/npl_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Netherlands",
+    "code": "nld",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/nld_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "New Zealand",
+    "code": "nzl",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/nzl_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Nicaragua",
+    "code": "nic",
+    "url": "https://reliefweb.int/attachments/2e26cd1a-8c7d-48ad-b3ec-21b3bec7b20c/nic_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Niger",
+    "code": "ner",
+    "url": "https://reliefweb.int/attachments/78551455-1b32-4f2a-afdb-1df8a3855cde/ner_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Nigeria",
+    "code": "nga",
+    "url": "https://reliefweb.int/attachments/2bdfaeb0-8eaa-4675-bbfa-e573b22a19ec/nga_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Niue",
+    "code": "niu",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/niu_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "North Macedonia",
+    "code": "mkd",
+    "url": "https://reliefweb.int/attachments/c9e396d4-1a76-4da8-a166-3e2bd8f75150/mkd_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Northern Mariana Islands (USA)",
+    "code": "mnp",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/mnp_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Norway",
+    "code": "nor",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/nor_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Occupied Palestinian Territory",
+    "code": "pse",
+    "url": "https://reliefweb.int/attachments/6df29015-3532-4cd0-8275-f242e6704b9f/pse_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Oman",
+    "code": "omn",
+    "url": "https://reliefweb.int/attachments/45fad60b-ea44-4897-b56f-40090c361da7/omn_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Pakistan",
+    "code": "pak",
+    "url": "https://reliefweb.int/attachments/eb4a4a1c-0518-4d06-a44a-2e17ea3c6c4e/pak_OCHA.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Palau",
+    "code": "plw",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/plw_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Panama",
+    "code": "pan",
+    "url": "https://reliefweb.int/attachments/37e2d8cb-d43b-410c-ab8d-9e39bb9518f8/pan_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Papua New Guinea",
+    "code": "png",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/png_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Paraguay",
+    "code": "pry",
+    "url": "https://reliefweb.int/attachments/9bbe0bc3-dff1-494f-926e-c5f9b0b99244/pry_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Peru",
+    "code": "per",
+    "url": "https://reliefweb.int/attachments/2f62f60e-c49f-40b3-b814-4b97dbcc9b90/per_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Philippines",
+    "code": "phl",
+    "url": "https://reliefweb.int/attachments/39403b37-4638-4e6f-804a-a49ca4599b52/phl_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Poland",
+    "code": "pol",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/pol_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Portugal",
+    "code": "prt",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/prt_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Puerto Rico",
+    "code": "pri",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/pri_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Qatar",
+    "code": "qat",
+    "url": "https://reliefweb.int/attachments/99a577ef-71fe-456e-a778-294545175a9f/qat_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Republic of Korea",
+    "code": "kor",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/kor_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "R&eacute;union (FR)",
+    "code": "reu",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/reu_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Romania",
+    "code": "rou",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/rou_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Russian Federation",
+    "code": "rus",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/rus_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Rwanda",
+    "code": "rwa",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/rwa_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Sahel",
+    "code": "sahel",
+    "url": "https://reliefweb.int/attachments/b73645dd-aaf8-4b61-af69-cfeccd2fc0fe/sahel_ocha.svg",
+    "region": "Region"
+  },
+  {
+    "name": "Saint Barth&eacute;lemy",
+    "code": "blm",
+    "url": "https://reliefweb.int/attachments/976336cc-3cce-4a0b-b4bb-c40f62505d3a/blm_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Saint Kitts and Nevis",
+    "code": "kna",
+    "url": "https://reliefweb.int/attachments/840d2696-9c70-4c70-a7c9-3777a22de08c/kna_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Saint Lucia",
+    "code": "lca",
+    "url": "https://reliefweb.int/attachments/83f36e31-c417-4b80-9b6a-8ab180bff5cd/lca_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Saint Martin",
+    "code": "maf",
+    "url": "https://reliefweb.int/attachments/abbe31a7-6f88-4682-b4c0-e99154ae14ad/maf_ocha.svg",
+    "region": "Other"
+  },
+  {
+    "name": "Saint Vincent and the Grenadines",
+    "code": "vct",
+    "url": "https://reliefweb.int/attachments/b0ca8756-7cd2-4fd0-9119-a74f008e285a/vct_OCHA.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Samoa",
+    "code": "wsm",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/wsm_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "San Marino",
+    "code": "smr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/smr_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Sao Tome and Principe",
+    "code": "stp",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/stp_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Saudi Arabia",
+    "code": "sau",
+    "url": "https://reliefweb.int/attachments/4905ad59-3e0f-4156-a1e9-506598451292/sau_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Senegal",
+    "code": "sen",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/sen_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Serbia",
+    "code": "srb",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/srb_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Seychelles",
+    "code": "syc",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/syc_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Sierra Leone",
+    "code": "sle",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/sle_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Singapore",
+    "code": "sgp",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/sgp_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Sint Maarten",
+    "code": "sxm",
+    "url": "https://reliefweb.int/attachments/5e117eb1-ee32-4011-a379-305775ec340d/sxm_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Slovakia",
+    "code": "svk",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/svk_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Slovenia",
+    "code": "svn",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/svn_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Solomon Islands",
+    "code": "slb",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/slb_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Somalia",
+    "code": "som",
+    "url": "https://reliefweb.int/attachments/309c75ba-2e20-4aeb-900f-2270f5346ea8/som_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "South Africa",
+    "code": "zaf",
+    "url": "https://reliefweb.int/attachments/91739417-31d2-4800-93c0-81774bcdf0b9/zaf_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "South Sudan",
+    "code": "ssd",
+    "url": "https://reliefweb.int/attachments/09e0fd4b-2992-46dc-91f0-8a2643a2ddab/ssd_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Spain",
+    "code": "esp",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/esp_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Sri Lanka",
+    "code": "lka",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/lka_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Sudan",
+    "code": "sdn",
+    "url": "https://reliefweb.int/attachments/b8c103eb-e4bb-49f0-bc62-0ab7e5fef398/sdn_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Suriname",
+    "code": "sur",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/sur_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Sweden",
+    "code": "swe",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/swe_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Switzerland",
+    "code": "che",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/che_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "Syrian Arab Republic",
+    "code": "syr",
+    "url": "https://reliefweb.int/attachments/7fdc3773-756b-4c1c-a181-46b670fcb1c4/syr_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Tajikistan",
+    "code": "tjk",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tjk_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Thailand",
+    "code": "tha",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tha_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Timor-Leste",
+    "code": "tls",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tls_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Togo",
+    "code": "tgo",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tgo_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Tonga",
+    "code": "ton",
+    "url": "https://reliefweb.int/attachments/b7f15c80-4dad-4986-a550-58122213d266/ton_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Trinidad and Tobago",
+    "code": "tto",
+    "url": "https://reliefweb.int/attachments/f3ad0926-51c8-454e-ac20-91291a3ce18d/tto_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Tunisia",
+    "code": "tun",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tun_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "T&uuml;rkiye",
+    "code": "tur",
+    "url": "https://reliefweb.int/attachments/3ee35b4c-a385-4287-ad66-61277ac24024/tur_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Turkmenistan",
+    "code": "tkm",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tkm_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Turks and Caicos Islands",
+    "code": "tca",
+    "url": "https://reliefweb.int/attachments/6bc359a8-982d-441f-a304-10edfc102835/tca_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Tuvalu",
+    "code": "tuv",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tuv_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Uganda",
+    "code": "uga",
+    "url": "https://reliefweb.int/attachments/9f575072-5e1d-4fd1-a85f-2081579fd940/uga_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Ukraine",
+    "code": "ukr",
+    "url": "https://reliefweb.int/attachments/ff11d714-2b2d-45e9-bd5c-d3aae7537af7/ukr_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "United Arab Emirates",
+    "code": "are",
+    "url": "https://reliefweb.int/attachments/fbbe58f1-b005-412a-a680-5c708ae1e611/are_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "code": "gbr",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/gbr_ocha.svg",
+    "region": "Europe"
+  },
+  {
+    "name": "United Republic of Tanzania",
+    "code": "tza",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/tza_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "United States of America",
+    "code": "usa",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/usa_ocha.svg",
+    "region": "North America"
+  },
+  {
+    "name": "United States Virgin Islands",
+    "code": "vir",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/vir_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Uruguay",
+    "code": "ury",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/ury_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Uzbekistan",
+    "code": "uzb",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/uzb_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Vanuatu",
+    "code": "vut",
+    "url": "https://reliefweb.int/attachments/a6a9bac7-6309-47c0-9f2b-3f52352938b2/vut_ocha.svg",
+    "region": "Pacific"
+  },
+  {
+    "name": "Venezuela",
+    "code": "ven",
+    "url": "https://reliefweb.int/attachments/f2ea8a50-eedf-4339-8ec0-05dc40e9605e/ven_ocha.svg",
+    "region": "Central and South America"
+  },
+  {
+    "name": "Viet Nam",
+    "code": "vnm",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/vnm_ocha.svg",
+    "region": "Asia"
+  },
+  {
+    "name": "Western Sahara",
+    "code": "esh",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/esh_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Yemen",
+    "code": "yem",
+    "url": "https://reliefweb.int/attachments/671a7086-2297-4207-9ebb-91f90a8da166/yem_ocha.svg",
+    "region": "Middle East"
+  },
+  {
+    "name": "Zambia",
+    "code": "zmb",
+    "url": "https://reliefweb.int/sites/reliefweb.int/files/resources/zmb_ocha.svg",
+    "region": "Africa"
+  },
+  {
+    "name": "Zimbabwe",
+    "code": "zwe",
+    "url": "https://reliefweb.int/attachments/ff092e9e-cb20-4a05-9c87-b2f406015a84/zwe_ocha.svg",
+    "region": "Africa"
+  }
+]

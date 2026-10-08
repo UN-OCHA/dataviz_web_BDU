@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69.282" height="34.641" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 720 360">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="720" height="360"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h720v360H0V0Z" fill="#da121a"/>
+  <path d="M0,0h720v240H0V0Z" fill="#fcdd09"/>
+  <path d="M0,0h720v120H0V0Z" fill="#078930"/>
+  <g>
+    <circle cx="360" cy="180" r="120" fill="#0f47af"/>
+    <g id="a">
+      <path d="M360,84l-4.206,12.944,17.348,53.39h-23.13l-2.599,8h74.163l11.011-8h-51.034l-21.553-66.334Z" fill="#fcdd09"/>
+      <g>
+        <path d="M385.863,144.403l30.564-42.069"/>
+        <rect x="375.146" y="121.368" width="51.999" height="4" transform="translate(65.564 375.405) rotate(-54.003)" fill="#fcdd09"/>
+      </g>
+    </g>
+    <g id="a1" data-name="a">
+      <path d="M451.301,150.334h-13.61s-45.416,32.997-45.416,32.997l-7.148-21.998h-8.412s22.918,70.534,22.918,70.534l11.011,8-15.77-48.536,56.427-40.996Z" fill="#fcdd09"/>
+      <g>
+        <path d="M401.847,193.597l49.455,16.068"/>
+        <rect x="424.574" y="175.631" width="4.001" height="52" transform="translate(102.997 545.023) rotate(-72.001)" fill="#fcdd09"/>
+      </g>
+    </g>
+    <g id="a2" data-name="a">
+      <path d="M416.427,257.666l-4.206-12.944-45.417-32.997,18.713-13.595-2.6-8-59.999,43.592-4.206,12.944,41.287-29.997,56.427,40.997Z" fill="#fcdd09"/>
+      <g>
+        <path d="M360,224v52"/>
+        <rect x="358" y="224" width="4" height="52" fill="#fcdd09"/>
+      </g>
+    </g>
+    <g id="a3" data-name="a">
+      <path d="M303.573,257.666l11.011-8,17.347-53.39,18.713,13.595,6.805-4.944-59.999-43.592h-13.61s41.287,29.997,41.287,29.997l-21.553,66.334Z" fill="#fcdd09"/>
+      <g>
+        <path d="M318.153,193.597l-49.454,16.069"/>
+        <rect x="267.426" y="199.631" width="51.999" height="4.001" transform="translate(-47.949 100.551) rotate(-18.002)" fill="#fcdd09"/>
+      </g>
+    </g>
+    <g id="a4" data-name="a">
+      <path d="M268.699,150.334l11.011,8h56.138s-7.148,21.997-7.148,21.997l6.805,4.944,22.918-70.533-4.206-12.944-15.77,48.536h-69.748Z" fill="#fcdd09"/>
+      <g>
+        <path d="M334.137,144.403l-30.565-42.068"/>
+        <rect x="316.855" y="97.369" width="4" height="52" transform="translate(-11.618 210.982) rotate(-36)" fill="#fcdd09"/>
+      </g>
+    </g>
+  </g>
+  </g>
+</svg>

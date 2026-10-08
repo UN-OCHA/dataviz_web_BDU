@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69.282" height="34.641" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 600 300">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="600" height="300"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <clipPath id="clippath">
+      <path d="M0,0v75h350v75h-50L0,0ZM300,0h-150v200H0v-50L300,0Z" fill="none"/>
+    </clipPath>
+  </defs>
+  <path d="M0,0h600v300H0V0Z" fill="#00247d"/>
+  <g>
+    <path d="M0,0l300,150M300,0L0,150"/>
+    <polygon points="293.292 163.416 150 91.771 6.708 163.416 -6.708 136.583 116.459 75 -6.708 13.417 6.708 -13.417 150 58.229 293.292 -13.417 306.708 13.417 183.541 75 306.708 136.583 293.292 163.416" fill="#fff"/>
+  </g>
+  <g clip-path="url(#clippath)">
+    <g>
+      <path d="M0,0l300,150M300,0L0,150"/>
+      <polygon points="295.528 158.944 150 86.18 4.472 158.944 -4.472 141.056 127.639 75 -4.472 8.944 4.472 -8.944 150 63.82 295.528 -8.944 304.472 8.944 172.361 75 304.472 141.056 295.528 158.944" fill="#cf142b"/>
+    </g>
+  </g>
+  <g>
+    <path d="M150,0v200M0,75h350"/>
+    <polygon points="175 200 125 200 125 100 0 100 0 50 125 50 125 0 175 0 175 50 350 50 350 100 175 100 175 200" fill="#fff"/>
+  </g>
+  <g>
+    <path d="M150,0v200M0,75h350"/>
+    <polygon points="165 200 135 200 135 90 0 90 0 60 135 60 135 0 165 0 165 60 350 60 350 90 165 90 165 200" fill="#cf142b"/>
+  </g>
+  <path d="M300,0v150H0v150h600V0h-300Z" fill="#00247d"/>
+  <g>
+    <g id="d">
+      <g id="c">
+        <path id="b" d="M450,25.5l-6.953,21.399,11.413,3.708" fill="#fff"/>
+        <path id="b1" data-name="b" d="M450,25.5l6.953,21.399-11.413,3.708" fill="#fff"/>
+      </g>
+      <g id="c1" data-name="c">
+        <path id="b2" data-name="b" d="M471.399,41.047h-22.5v12" fill="#fff"/>
+        <path id="b3" data-name="b" d="M471.399,41.047l-18.203,13.225-7.053-9.708" fill="#fff"/>
+      </g>
+      <g id="c2" data-name="c">
+        <path id="b4" data-name="b" d="M463.225,66.203l-6.953-21.399-11.413,3.708" fill="#fff"/>
+        <path id="b5" data-name="b" d="M463.225,66.203l-18.203-13.225,7.053-9.708" fill="#fff"/>
+      </g>
+      <g id="c3" data-name="c">
+        <path id="b6" data-name="b" d="M436.775,66.203l18.203-13.225-7.053-9.708" fill="#fff"/>
+        <path id="b7" data-name="b" d="M436.775,66.203l6.953-21.399,11.413,3.708" fill="#fff"/>
+      </g>
+      <g id="c4" data-name="c">
+        <path id="b8" data-name="b" d="M428.601,41.047l18.203,13.225,7.053-9.708" fill="#fff"/>
+        <path id="b9" data-name="b" d="M428.601,41.047h22.5v12" fill="#fff"/>
+      </g>
+    </g>
+    <g id="e">
+      <g id="d1" data-name="d">
+        <g id="c5" data-name="c">
+          <path id="b10" data-name="b" d="M500.639,36.264l-15.055,16.721,8.918,8.03" fill="#fff"/>
+          <path id="b11" data-name="b" d="M500.639,36.264l-2.352,22.377-11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c6" data-name="c">
+          <path id="b12" data-name="b" d="M513.864,59.17l-20.555-9.152-4.881,10.963" fill="#fff"/>
+          <path id="b13" data-name="b" d="M513.864,59.17l-22.008,4.678-2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c7" data-name="c">
+          <path id="b14" data-name="b" d="M496.165,78.827l2.352-22.377-11.934-1.254" fill="#fff"/>
+          <path id="b15" data-name="b" d="M496.165,78.827l-11.25-19.486,10.392-6" fill="#fff"/>
+        </g>
+        <g id="c8" data-name="c">
+          <path id="b16" data-name="b" d="M472.002,68.068l22.008-4.678-2.495-11.738" fill="#fff"/>
+          <path id="b17" data-name="b" d="M472.002,68.068l15.055-16.721,8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c9" data-name="c">
+          <path id="b18" data-name="b" d="M474.766,41.763l11.25,19.486,10.392-6" fill="#fff"/>
+          <path id="b19" data-name="b" d="M474.766,41.763l20.555,9.152-4.881,10.963" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d2" data-name="d">
+        <g id="c10" data-name="c">
+          <path id="b20" data-name="b" d="M542.522,66.693l-20.555,9.152,4.881,10.963" fill="#fff"/>
+          <path id="b21" data-name="b" d="M542.522,66.693l-11.25,19.486-10.392-6" fill="#fff"/>
+        </g>
+        <g id="c11" data-name="c">
+          <path id="b22" data-name="b" d="M545.286,92.999l-15.055-16.721-8.918,8.03" fill="#fff"/>
+          <path id="b23" data-name="b" d="M545.286,92.999l-22.008-4.678,2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c12" data-name="c">
+          <path id="b24" data-name="b" d="M521.123,103.757l11.25-19.486-10.392-6" fill="#fff"/>
+          <path id="b25" data-name="b" d="M521.123,103.757l-2.352-22.377,11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c13" data-name="c">
+          <path id="b26" data-name="b" d="M503.424,84.101l22.008,4.678,2.495-11.738" fill="#fff"/>
+          <path id="b27" data-name="b" d="M503.424,84.101l20.555-9.152,4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c14" data-name="c">
+          <path id="b28" data-name="b" d="M516.649,61.194l2.352,22.377,11.934-1.254" fill="#fff"/>
+          <path id="b29" data-name="b" d="M516.649,61.194l15.055,16.721-8.918,8.03" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d3" data-name="d">
+        <g id="c15" data-name="c">
+          <path id="b30" data-name="b" d="M568.406,111.527h-22.5v12" fill="#fff"/>
+          <path id="b31" data-name="b" d="M568.406,111.527l-18.203,13.225-7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c16" data-name="c">
+          <path id="b32" data-name="b" d="M560.233,136.683l-6.953-21.399-11.413,3.708" fill="#fff"/>
+          <path id="b33" data-name="b" d="M560.233,136.683l-18.203-13.225,7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c17" data-name="c">
+          <path id="b34" data-name="b" d="M533.783,136.683l18.203-13.225-7.053-9.708" fill="#fff"/>
+          <path id="b35" data-name="b" d="M533.783,136.683l6.953-21.399,11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c18" data-name="c">
+          <path id="b36" data-name="b" d="M525.609,111.527l18.203,13.225,7.053-9.708" fill="#fff"/>
+          <path id="b37" data-name="b" d="M525.609,111.527h22.5v12" fill="#fff"/>
+        </g>
+        <g id="c19" data-name="c">
+          <path id="b38" data-name="b" d="M547.008,95.98l-6.953,21.399,11.413,3.708" fill="#fff"/>
+          <path id="b39" data-name="b" d="M547.008,95.98l6.953,21.399-11.413,3.708" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d4" data-name="d">
+        <g id="c20" data-name="c">
+          <path id="b40" data-name="b" d="M573.818,163.014l-20.555-9.152-4.881,10.963" fill="#fff"/>
+          <path id="b41" data-name="b" d="M573.818,163.014l-22.008,4.678-2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c21" data-name="c">
+          <path id="b42" data-name="b" d="M556.119,182.67l2.352-22.377-11.934-1.254" fill="#fff"/>
+          <path id="b43" data-name="b" d="M556.119,182.67l-11.25-19.486,10.392-6" fill="#fff"/>
+        </g>
+        <g id="c22" data-name="c">
+          <path id="b44" data-name="b" d="M531.956,171.912l22.008-4.678-2.495-11.738" fill="#fff"/>
+          <path id="b45" data-name="b" d="M531.956,171.912l15.055-16.721,8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c23" data-name="c">
+          <path id="b46" data-name="b" d="M534.72,145.606l11.25,19.486,10.392-6" fill="#fff"/>
+          <path id="b47" data-name="b" d="M534.72,145.606l20.555,9.152-4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c24" data-name="c">
+          <path id="b48" data-name="b" d="M560.593,140.107l-15.055,16.721,8.918,8.03" fill="#fff"/>
+          <path id="b49" data-name="b" d="M560.593,140.107l-2.352,22.377-11.934-1.254" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d5" data-name="d">
+        <g id="c25" data-name="c">
+          <path id="b50" data-name="b" d="M557.82,212.25l-15.055-16.721-8.918,8.03" fill="#fff"/>
+          <path id="b51" data-name="b" d="M557.82,212.25l-22.008-4.678,2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c26" data-name="c">
+          <path id="b52" data-name="b" d="M533.657,223.008l11.25-19.486-10.392-6" fill="#fff"/>
+          <path id="b53" data-name="b" d="M533.657,223.008l-2.352-22.377,11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c27" data-name="c">
+          <path id="b54" data-name="b" d="M515.958,203.352l22.008,4.678,2.495-11.738" fill="#fff"/>
+          <path id="b55" data-name="b" d="M515.958,203.352l20.555-9.152,4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c28" data-name="c">
+          <path id="b56" data-name="b" d="M529.183,180.445l2.352,22.377,11.934-1.254" fill="#fff"/>
+          <path id="b57" data-name="b" d="M529.183,180.445l15.055,16.721-8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c29" data-name="c">
+          <path id="b58" data-name="b" d="M555.055,185.945l-20.555,9.152,4.881,10.963" fill="#fff"/>
+          <path id="b59" data-name="b" d="M555.055,185.945l-11.25,19.486-10.392-6" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d6" data-name="d">
+        <g id="c30" data-name="c">
+          <path id="b60" data-name="b" d="M523.179,250.723l-6.953-21.399-11.413,3.708" fill="#fff"/>
+          <path id="b61" data-name="b" d="M523.179,250.723l-18.203-13.225,7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c31" data-name="c">
+          <path id="b62" data-name="b" d="M496.729,250.723l18.203-13.225-7.053-9.708" fill="#fff"/>
+          <path id="b63" data-name="b" d="M496.729,250.723l6.953-21.399,11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c32" data-name="c">
+          <path id="b64" data-name="b" d="M488.555,225.567l18.203,13.225,7.053-9.708" fill="#fff"/>
+          <path id="b65" data-name="b" d="M488.555,225.567h22.5v12" fill="#fff"/>
+        </g>
+        <g id="c33" data-name="c">
+          <path id="b66" data-name="b" d="M509.954,210.02l-6.953,21.399,11.413,3.708" fill="#fff"/>
+          <path id="b67" data-name="b" d="M509.954,210.02l6.953,21.399-11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c34" data-name="c">
+          <path id="b68" data-name="b" d="M531.353,225.567h-22.5v12" fill="#fff"/>
+          <path id="b69" data-name="b" d="M531.353,225.567l-18.203,13.225-7.053-9.708" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d7" data-name="d">
+        <g id="c35" data-name="c">
+          <path id="b70" data-name="b" d="M475.885,271.779l2.352-22.377-11.934-1.254" fill="#fff"/>
+          <path id="b71" data-name="b" d="M475.885,271.779l-11.25-19.486,10.392-6" fill="#fff"/>
+        </g>
+        <g id="c36" data-name="c">
+          <path id="b72" data-name="b" d="M451.721,261.021l22.008-4.678-2.495-11.738" fill="#fff"/>
+          <path id="b73" data-name="b" d="M451.721,261.021l15.055-16.721,8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c37" data-name="c">
+          <path id="b74" data-name="b" d="M454.486,234.716l11.25,19.486,10.392-6" fill="#fff"/>
+          <path id="b75" data-name="b" d="M454.486,234.716l20.555,9.152-4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c38" data-name="c">
+          <path id="b76" data-name="b" d="M480.359,229.216l-15.055,16.721,8.918,8.03" fill="#fff"/>
+          <path id="b77" data-name="b" d="M480.359,229.216l-2.352,22.377-11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c39" data-name="c">
+          <path id="b78" data-name="b" d="M493.584,252.123l-20.555-9.152-4.881,10.963" fill="#fff"/>
+          <path id="b79" data-name="b" d="M493.584,252.123l-22.008,4.678-2.495-11.738" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="e1" data-name="e">
+      <g id="d8" data-name="d">
+        <g id="c40" data-name="c">
+          <path id="b80" data-name="b" d="M424.115,271.779l11.25-19.486-10.392-6" fill="#fff"/>
+          <path id="b81" data-name="b" d="M424.115,271.779l-2.352-22.377,11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c41" data-name="c">
+          <path id="b82" data-name="b" d="M406.416,252.123l22.008,4.678,2.495-11.738" fill="#fff"/>
+          <path id="b83" data-name="b" d="M406.416,252.123l20.555-9.152,4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c42" data-name="c">
+          <path id="b84" data-name="b" d="M419.641,229.216l2.352,22.377,11.934-1.254" fill="#fff"/>
+          <path id="b85" data-name="b" d="M419.641,229.216l15.055,16.721-8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c43" data-name="c">
+          <path id="b86" data-name="b" d="M445.514,234.716l-20.555,9.152,4.881,10.963" fill="#fff"/>
+          <path id="b87" data-name="b" d="M445.514,234.716l-11.25,19.486-10.392-6" fill="#fff"/>
+        </g>
+        <g id="c44" data-name="c">
+          <path id="b88" data-name="b" d="M448.279,261.021l-15.055-16.721-8.918,8.03" fill="#fff"/>
+          <path id="b89" data-name="b" d="M448.279,261.021l-22.008-4.678,2.495-11.738" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d9" data-name="d">
+        <g id="c45" data-name="c">
+          <path id="b90" data-name="b" d="M376.821,250.723l18.203-13.225-7.053-9.708" fill="#fff"/>
+          <path id="b91" data-name="b" d="M376.821,250.723l6.953-21.399,11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c46" data-name="c">
+          <path id="b92" data-name="b" d="M368.647,225.567l18.203,13.225,7.053-9.708" fill="#fff"/>
+          <path id="b93" data-name="b" d="M368.647,225.567h22.5v12" fill="#fff"/>
+        </g>
+        <g id="c47" data-name="c">
+          <path id="b94" data-name="b" d="M390.046,210.02l-6.953,21.399,11.413,3.708" fill="#fff"/>
+          <path id="b95" data-name="b" d="M390.046,210.02l6.953,21.399-11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c48" data-name="c">
+          <path id="b96" data-name="b" d="M411.445,225.567h-22.5v12" fill="#fff"/>
+          <path id="b97" data-name="b" d="M411.445,225.567l-18.203,13.225-7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c49" data-name="c">
+          <path id="b98" data-name="b" d="M403.271,250.723l-6.953-21.399-11.413,3.708" fill="#fff"/>
+          <path id="b99" data-name="b" d="M403.271,250.723l-18.203-13.225,7.053-9.708" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d10" data-name="d">
+        <g id="c50" data-name="c">
+          <path id="b100" data-name="b" d="M342.18,212.25l22.008-4.678-2.495-11.738" fill="#fff"/>
+          <path id="b101" data-name="b" d="M342.18,212.25l15.055-16.721,8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c51" data-name="c">
+          <path id="b102" data-name="b" d="M344.945,185.945l11.25,19.486,10.392-6" fill="#fff"/>
+          <path id="b103" data-name="b" d="M344.945,185.945l20.555,9.152-4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c52" data-name="c">
+          <path id="b104" data-name="b" d="M370.817,180.445l-15.055,16.721,8.918,8.03" fill="#fff"/>
+          <path id="b105" data-name="b" d="M370.817,180.445l-2.352,22.377-11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c53" data-name="c">
+          <path id="b106" data-name="b" d="M384.042,203.352l-20.555-9.152-4.881,10.963" fill="#fff"/>
+          <path id="b107" data-name="b" d="M384.042,203.352l-22.008,4.678-2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c54" data-name="c">
+          <path id="b108" data-name="b" d="M366.343,223.008l2.352-22.377-11.934-1.254" fill="#fff"/>
+          <path id="b109" data-name="b" d="M366.343,223.008l-11.25-19.486,10.392-6" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d11" data-name="d">
+        <g id="c55" data-name="c">
+          <path id="b110" data-name="b" d="M326.182,163.014l22.008,4.678,2.495-11.738" fill="#fff"/>
+          <path id="b111" data-name="b" d="M326.182,163.014l20.555-9.152,4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c56" data-name="c">
+          <path id="b112" data-name="b" d="M339.407,140.107l2.352,22.377,11.934-1.254" fill="#fff"/>
+          <path id="b113" data-name="b" d="M339.407,140.107l15.055,16.721-8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c57" data-name="c">
+          <path id="b114" data-name="b" d="M365.28,145.606l-20.555,9.152,4.881,10.963" fill="#fff"/>
+          <path id="b115" data-name="b" d="M365.28,145.606l-11.25,19.486-10.392-6" fill="#fff"/>
+        </g>
+        <g id="c58" data-name="c">
+          <path id="b116" data-name="b" d="M368.044,171.912l-15.055-16.721-8.918,8.03" fill="#fff"/>
+          <path id="b117" data-name="b" d="M368.044,171.912l-22.008-4.678,2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c59" data-name="c">
+          <path id="b118" data-name="b" d="M343.881,182.67l11.25-19.486-10.392-6" fill="#fff"/>
+          <path id="b119" data-name="b" d="M343.881,182.67l-2.352-22.377,11.934-1.254" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d12" data-name="d">
+        <g id="c60" data-name="c">
+          <path id="b120" data-name="b" d="M331.593,111.527l18.203,13.225,7.053-9.708" fill="#fff"/>
+          <path id="b121" data-name="b" d="M331.593,111.527h22.5v12" fill="#fff"/>
+        </g>
+        <g id="c61" data-name="c">
+          <path id="b122" data-name="b" d="M352.992,95.98l-6.953,21.399,11.413,3.708" fill="#fff"/>
+          <path id="b123" data-name="b" d="M352.992,95.98l6.953,21.399-11.413,3.708" fill="#fff"/>
+        </g>
+        <g id="c62" data-name="c">
+          <path id="b124" data-name="b" d="M374.391,111.527h-22.5v12" fill="#fff"/>
+          <path id="b125" data-name="b" d="M374.391,111.527l-18.203,13.225-7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c63" data-name="c">
+          <path id="b126" data-name="b" d="M366.217,136.683l-6.953-21.399-11.413,3.708" fill="#fff"/>
+          <path id="b127" data-name="b" d="M366.217,136.683l-18.203-13.225,7.053-9.708" fill="#fff"/>
+        </g>
+        <g id="c64" data-name="c">
+          <path id="b128" data-name="b" d="M339.767,136.683l18.203-13.225-7.053-9.708" fill="#fff"/>
+          <path id="b129" data-name="b" d="M339.767,136.683l6.953-21.399,11.413,3.708" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d13" data-name="d">
+        <g id="c65" data-name="c">
+          <path id="b130" data-name="b" d="M357.478,66.693l11.25,19.486,10.392-6" fill="#fff"/>
+          <path id="b131" data-name="b" d="M357.478,66.693l20.555,9.152-4.881,10.963" fill="#fff"/>
+        </g>
+        <g id="c66" data-name="c">
+          <path id="b132" data-name="b" d="M383.351,61.194l-15.055,16.721,8.918,8.03" fill="#fff"/>
+          <path id="b133" data-name="b" d="M383.351,61.194l-2.352,22.377-11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c67" data-name="c">
+          <path id="b134" data-name="b" d="M396.576,84.101l-20.555-9.152-4.881,10.963" fill="#fff"/>
+          <path id="b135" data-name="b" d="M396.576,84.101l-22.008,4.678-2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c68" data-name="c">
+          <path id="b136" data-name="b" d="M378.877,103.757l2.352-22.377-11.934-1.254" fill="#fff"/>
+          <path id="b137" data-name="b" d="M378.877,103.757l-11.25-19.486,10.392-6" fill="#fff"/>
+        </g>
+        <g id="c69" data-name="c">
+          <path id="b138" data-name="b" d="M354.714,92.999l22.008-4.678-2.495-11.738" fill="#fff"/>
+          <path id="b139" data-name="b" d="M354.714,92.999l15.055-16.721,8.918,8.03" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d14" data-name="d">
+        <g id="c70" data-name="c">
+          <path id="b140" data-name="b" d="M399.361,36.264l2.352,22.377,11.934-1.254" fill="#fff"/>
+          <path id="b141" data-name="b" d="M399.361,36.264l15.055,16.721-8.918,8.03" fill="#fff"/>
+        </g>
+        <g id="c71" data-name="c">
+          <path id="b142" data-name="b" d="M425.234,41.763l-20.555,9.152,4.881,10.963" fill="#fff"/>
+          <path id="b143" data-name="b" d="M425.234,41.763l-11.25,19.486-10.392-6" fill="#fff"/>
+        </g>
+        <g id="c72" data-name="c">
+          <path id="b144" data-name="b" d="M427.998,68.068l-15.055-16.721-8.918,8.03" fill="#fff"/>
+          <path id="b145" data-name="b" d="M427.998,68.068l-22.008-4.678,2.495-11.738" fill="#fff"/>
+        </g>
+        <g id="c73" data-name="c">
+          <path id="b146" data-name="b" d="M403.835,78.827l11.25-19.486-10.392-6" fill="#fff"/>
+          <path id="b147" data-name="b" d="M403.835,78.827l-2.352-22.377,11.934-1.254" fill="#fff"/>
+        </g>
+        <g id="c74" data-name="c">
+          <path id="b148" data-name="b" d="M386.136,59.17l22.008,4.678,2.495-11.738" fill="#fff"/>
+          <path id="b149" data-name="b" d="M386.136,59.17l20.555-9.152,4.881,10.963" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  </g>
+</svg>

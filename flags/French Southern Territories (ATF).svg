@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 600 400">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="600" height="400"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h600v400H0V0Z" fill="#002395"/>
+  <path d="M0,0h244v164H0V0Z" fill="#fff"/>
+  <path d="M0,0h80v160H0V0Z" fill="#002395"/>
+  <path d="M160,0h80v160h-80V0Z" fill="#ed2939"/>
+  <path d="M355,183l12.875,20.5h36.625v71.5l-27.5-43-37,59h18l19-34,39,70,39-70,19,34h18l-37-59-27.5,43v-39.5h16.5l12.25-19.5h-28.75v-12.5h36.625l12.875-20.5h-122ZM398,270.5h-40v14h40v-14ZM474,270.5h-40v14h40v-14Z" fill="#fff"/>
+  <path id="a" d="M416,341l12.348,37.989-32.34-23.478h39.984l-32.34,23.478,12.348-37.989Z" fill="#fff"/>
+  <path id="a1" data-name="a" d="M371,307l12.348,37.989-32.34-23.478h39.984l-32.34,23.478,12.348-37.989Z" fill="#fff"/>
+  <path id="a2" data-name="a" d="M461,307l12.348,37.989-32.34-23.478h39.984l-32.34,23.478,12.348-37.989Z" fill="#fff"/>
+  <path id="a3" data-name="a" d="M333,206l12.348,37.989-32.34-23.478h39.984l-32.34,23.478,12.348-37.989Z" fill="#fff"/>
+  <path id="a4" data-name="a" d="M499,206l12.348,37.989-32.34-23.478h39.984l-32.34,23.478,12.348-37.989Z" fill="#fff"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69.282" height="34.641" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 120 60">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="120" height="60"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <clipPath id="clippath">
+      <path d="M0,0v15h70v15h-10L0,0ZM0,30v10h30V0h30L0,30Z" fill="none"/>
+    </clipPath>
+  </defs>
+  <path d="M0,0h120v60H0V0Z" fill="#002868"/>
+  <g>
+    <g>
+      <path d="M0,0l60,30M60,0L0,30"/>
+      <polygon points="58.658 32.684 30 18.354 1.342 32.684 -1.342 27.317 23.292 15 -1.342 2.683 1.342 -2.683 30 11.646 58.658 -2.683 61.342 2.683 36.708 15 61.342 27.317 58.658 32.684" fill="#fff"/>
+    </g>
+    <g clip-path="url(#clippath)">
+      <g>
+        <path d="M0,0l60,30M60,0L0,30"/>
+        <polygon points="59.105 31.789 30 17.236 .895 31.789 -.895 28.211 25.528 15 -.895 1.789 .895 -1.789 30 12.764 59.105 -1.789 60.895 1.789 34.472 15 60.895 28.211 59.105 31.789" fill="#cf142b"/>
+      </g>
+    </g>
+    <g>
+      <path d="M30,0v40M0,15h70"/>
+      <polygon points="35 40 25 40 25 20 0 20 0 10 25 10 25 0 35 0 35 10 70 10 70 20 35 20 35 40" fill="#fff"/>
+    </g>
+    <g>
+      <path d="M30,0v40M0,15h70"/>
+      <polygon points="33 40 27 40 27 18 0 18 0 12 27 12 27 0 33 0 33 12 70 12 70 18 33 18 33 40" fill="#cf142b"/>
+    </g>
+  </g>
+  <path d="M60,0h60v60H0v-30h60V0Z" fill="#fcd116"/>
+  <g>
+    <g>
+      <circle cx="30" cy="15" r="5.104" fill="#002868"/>
+      <path id="b" d="M30-2621725.706L1541050.514,2121047.809-2493393.557-810147.456H2493453.557L-1540990.514,2121047.809" fill="#fcd116"/>
+    </g>
+    <path id="b1" data-name="b" d="M12.5-1541006.71L905802.5,1246728.29-1465586.5-476186.71H1465611.5L-905777.5,1246728.29" fill="#fcd116"/>
+    <path id="b2" data-name="b" d="M47.5-1541006.71L905837.5,1246728.29-1465551.5-476186.71H1465646.5L-905742.5,1246728.29" fill="#fcd116"/>
+    <path id="b3" data-name="b" d="M30-1540996.71L905820,1246738.29-1465569-476176.71H1465629L-905760,1246738.29" fill="#fcd116"/>
+    <path id="b4" data-name="b" d="M30-1541016.71L905820,1246718.29-1465569-476196.71H1465629L-905760,1246718.29" fill="#fcd116"/>
+  </g>
+  </g>
+</svg>

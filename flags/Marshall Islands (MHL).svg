@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="67.528" height="35.541" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 570 300">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="570" height="300"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h570v300H0V0Z" fill="#003893"/>
+  <path d="M0,295.2v-7.2L570,35v87.4L0,295.2Z" fill="#fff"/>
+  <path d="M0,290.4v-4.8L570,4.8v58.8L0,290.4Z" fill="#dd7500"/>
+  <g>
+    <g id="b">
+      <path d="M109.536,16.536l5.59,93h-11.18l5.59-93Z" fill="#fff"/>
+      <path id="a" d="M126.77,45.217l-10.643,66.085-13.183-3.532,23.826-62.553Z" fill="#fff"/>
+      <path id="a1" data-name="a" d="M142.83,51.869l-27.384,61.079-11.82-6.824,39.204-54.255Z" fill="#fff"/>
+      <path id="a2" data-name="a" d="M156.621,62.451l-42.26,51.91-9.651-9.651,51.91-42.26Z" fill="#fff"/>
+      <path id="a3" data-name="a" d="M167.203,76.242l-54.255,39.204-6.824-11.82,61.079-27.384Z" fill="#fff"/>
+      <path id="a4" data-name="a" d="M173.855,92.302l-62.553,23.826-3.532-13.183,66.085-10.643Z" fill="#fff"/>
+    </g>
+    <g id="b1" data-name="b">
+      <path d="M202.536,109.536l-93,5.59v-11.18l93,5.59Z" fill="#fff"/>
+      <path id="a5" data-name="a" d="M173.855,126.77l-66.085-10.643,3.532-13.183,62.553,23.826Z" fill="#fff"/>
+      <path id="a6" data-name="a" d="M167.203,142.83l-61.079-27.384,6.824-11.82,54.255,39.204Z" fill="#fff"/>
+      <path id="a7" data-name="a" d="M156.621,156.621l-51.91-42.26,9.651-9.651,42.26,51.91Z" fill="#fff"/>
+      <path id="a8" data-name="a" d="M142.83,167.203l-39.204-54.255,11.82-6.824,27.384,61.079Z" fill="#fff"/>
+      <path id="a9" data-name="a" d="M126.77,173.855l-23.826-62.553,13.183-3.532,10.643,66.085Z" fill="#fff"/>
+    </g>
+    <g id="b2" data-name="b">
+      <path d="M109.536,202.536l-5.59-93h11.18l-5.59,93Z" fill="#fff"/>
+      <path id="a10" data-name="a" d="M92.302,173.855l10.643-66.085,13.183,3.532-23.826,62.553Z" fill="#fff"/>
+      <path id="a11" data-name="a" d="M76.242,167.203l27.384-61.079,11.82,6.824-39.204,54.255Z" fill="#fff"/>
+      <path id="a12" data-name="a" d="M62.451,156.621l42.26-51.91,9.651,9.651-51.91,42.26Z" fill="#fff"/>
+      <path id="a13" data-name="a" d="M51.869,142.83l54.255-39.204,6.824,11.82-61.079,27.384Z" fill="#fff"/>
+      <path id="a14" data-name="a" d="M45.217,126.77l62.553-23.826,3.532,13.183-66.085,10.643Z" fill="#fff"/>
+    </g>
+    <g id="b3" data-name="b">
+      <path d="M16.536,109.536l93-5.59v11.18l-93-5.59Z" fill="#fff"/>
+      <path id="a15" data-name="a" d="M45.217,92.302l66.085,10.643-3.532,13.183-62.553-23.826Z" fill="#fff"/>
+      <path id="a16" data-name="a" d="M51.869,76.242l61.079,27.384-6.824,11.82-54.255-39.204Z" fill="#fff"/>
+      <path id="a17" data-name="a" d="M62.451,62.451l51.91,42.26-9.651,9.651-42.26-51.91Z" fill="#fff"/>
+      <path id="a18" data-name="a" d="M76.242,51.869l39.204,54.255-11.82,6.824-27.384-61.079Z" fill="#fff"/>
+      <path id="a19" data-name="a" d="M92.302,45.217l23.826,62.553-13.183,3.532-10.643-66.085Z" fill="#fff"/>
+    </g>
+  </g>
+  </g>
+</svg>

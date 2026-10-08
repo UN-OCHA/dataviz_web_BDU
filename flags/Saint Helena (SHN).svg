@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69.282" height="34.641" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 60 30">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="60" height="30"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <clipPath id="clippath">
+      <polygon points="30 15 60 15 60 30 30 30 0 30 0 15 0 0 30 0 60 0 30 15" fill="none"/>
+    </clipPath>
+  </defs>
+  <path d="M0,0v30h60V0H0Z" fill="#00247d"/>
+  <g>
+    <path d="M0,0l60,30M60,0L0,30"/>
+    <polygon points="58.658 32.684 30 18.354 1.342 32.684 -1.342 27.316 23.292 15 -1.342 2.683 1.342 -2.683 30 11.646 58.658 -2.683 61.342 2.683 36.708 15 61.342 27.316 58.658 32.684" fill="#fff"/>
+  </g>
+  <g clip-path="url(#clippath)">
+    <g>
+      <path d="M0,0l60,30M60,0L0,30"/>
+      <polygon points="59.105 31.789 30 17.236 .895 31.789 -.895 28.211 25.528 15 -.895 1.789 .895 -1.789 30 12.764 59.105 -1.789 60.895 1.789 34.472 15 60.895 28.211 59.105 31.789" fill="#cf142b"/>
+    </g>
+  </g>
+  <g>
+    <path d="M30,0v30M0,15h60"/>
+    <polygon points="35 30 25 30 25 20 0 20 0 10 25 10 25 0 35 0 35 10 60 10 60 20 35 20 35 30" fill="#fff"/>
+  </g>
+  <g>
+    <path d="M30,0v30M0,15h60"/>
+    <polygon points="33 30 27 30 27 18 0 18 0 12 27 12 27 0 33 0 33 12 60 12 60 18 33 18 33 30" fill="#cf142b"/>
+  </g>
+  </g>
+</svg>

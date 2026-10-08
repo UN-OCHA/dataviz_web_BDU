@@ -1,0 +1,271 @@
+/* ══════════════════════════════════════════════
+   Humanitarian DataViz Tool — web version layout
+   ──────────────────────────────────────────────
+   The plugin's panel (#main-content) stays exactly as in Illustrator, on
+   the left at panel width. The right side replaces the artboard: a live
+   preview of the chart with Download SVG / PNG and Copy SVG above it.
+   Colours, spacing and buttons are the panel's own tokens and classes
+   (styles.css), so both shells look the same and follow light/dark mode.
+   ══════════════════════════════════════════════ */
+
+/* Illustrator-only parts of the panel (Guides, Map Maker, updater,
+   "Place in artboard", edit banner). !important beats the inline
+   style.display the panel's scripts set on some of them. */
+[data-shell="illustrator"] { display: none !important; }
+
+html[data-shell="web"] body {
+  flex-direction: row;          /* panel | preview, instead of one column */
+}
+
+html[data-shell="web"] #main-content {
+  flex: 0 0 var(--web-panel-w, 440px);   /* set by the resize handle */
+  max-width: none;
+  min-width: 0;
+}
+
+/* Drag handle between the panel and the preview */
+#web-resizer {
+  flex: 0 0 6px;
+  cursor: col-resize;
+  background: var(--border-default);
+  position: relative;
+  touch-action: none;
+  transition: background var(--md-duration-short3, 150ms);
+}
+#web-resizer::after {                    /* a wider, invisible grab area */
+  content: "";
+  position: absolute;
+  inset: 0 -5px;
+}
+#web-resizer:hover,
+#web-resizer:focus-visible,
+html.web-resizing #web-resizer { background: var(--accent); outline: none; }
+html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-select: none; }
+
+/* ── Map preview window ───────────────────────── */
+.web-asset-inner { max-width: min(960px, 94vw); }
+.web-asset-body {
+  display: grid;
+  place-items: center;
+  padding: var(--space-300);
+  background: #FFFFFF;          /* maps are drawn for a white page */
+  min-height: 240px;
+  overflow: auto;
+}
+#web-asset-img { display: block; max-width: 100%; max-height: 68vh; height: auto; }
+#web-asset-loading { color: #5A5A5A; font-size: var(--font-size-sm); }
+.web-asset-source {
+  margin-right: auto;
+  align-self: center;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+#web-asset-download { display: inline-flex; align-items: center; gap: var(--space-75); }
+#web-asset-download svg, #web-asset-close svg { width: 15px; height: 15px; }
+
+/* ── Preview side ─────────────────────────────── */
+#web-preview {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);   /* never wider than the window */
+  background: var(--bg-page);
+  position: relative;                      /* anchors the status note */
+}
+
+#web-toolbar {
+  display: flex;
+  flex-wrap: wrap;              /* buttons drop to a second row, never get cut */
+  align-items: center;
+  gap: var(--space-100) var(--space-300);
+  padding: var(--space-200) var(--space-400);
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-default);
+  min-height: 57px;             /* lines up with the panel header */
+}
+#web-toolbar .web-title {
+  flex: 1 1 220px;
+  min-width: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#web-toolbar .web-title span {
+  font-weight: normal;
+  color: var(--text-secondary);
+}
+.web-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-100);
+  margin-left: auto;
+}
+#web-toolbar .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-75);
+  white-space: nowrap;
+}
+#web-toolbar .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+#web-toolbar .btn:disabled { opacity: 0.45; cursor: default; transform: none; box-shadow: none; }
+
+/* PNG button + its size choice read as one control */
+.web-png-group { display: inline-flex; align-items: stretch; flex-shrink: 0; }
+.web-png-group .btn { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+#web-png-scale {
+  flex-shrink: 0;
+  width: auto;                  /* the panel makes every select full-width */
+  min-width: 52px;
+  border: 1px solid var(--border-default);
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--bg-layer-2);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  padding: 0 var(--space-75);
+  cursor: pointer;
+}
+
+/* Status note: floats under the toolbar, right-aligned, so a message
+   never pushes the buttons around. */
+#web-message {
+  position: absolute;
+  top: calc(100% + var(--space-100));
+  right: var(--space-400);
+  z-index: 5;
+  max-width: min(420px, 90%);
+  padding: var(--space-75) var(--space-200);
+  border-radius: var(--radius-md);
+  background: var(--bg-layer-2);
+  box-shadow: var(--md-elevation-2);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+#web-message:empty { display: none; }
+#web-message.is-error { color: #E5484D; }
+#web-message.is-success { color: var(--text-primary); }
+#web-toolbar { position: relative; }
+
+/* The "artboard": the chart on white, at its real size, centred. */
+#web-stage {
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  padding: var(--space-500);
+}
+#web-artboard {
+  background: #FFFFFF;
+  box-shadow: var(--md-elevation-2);
+  padding: var(--space-400);
+  max-width: 100%;
+}
+#web-empty {
+  max-width: 340px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+#web-empty strong { color: var(--text-primary); display: block; font-size: var(--font-size-md); margin-bottom: var(--space-100); }
+
+#web-privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-75);
+  padding: var(--space-100) var(--space-400);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  border-top: 1px solid var(--border-default);
+}
+#web-privacy svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ── Phones: the tool needs a computer or tablet ── */
+#web-phone-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: var(--space-400) var(--space-300);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  text-align: center;
+}
+#web-phone-gate .gate-card { max-width: 320px; display: grid; gap: var(--space-200); justify-items: center; }
+#web-phone-gate svg { width: 56px; height: 56px; color: var(--accent); }
+#web-phone-gate h1 { font-size: 18px; font-weight: var(--font-weight-semibold); }
+#web-phone-gate p { font-size: var(--font-size-md); color: var(--text-secondary); line-height: 1.5; }
+
+/* Tablets in portrait: give the chart the room, keep the panel usable. */
+@media (max-width: 900px) {
+  #web-toolbar { padding: var(--space-200); }
+  #web-stage { padding: var(--space-300); }
+}
+
+/* ── Sign-up (web-gate.js) ────────────────────── */
+#web-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;               /* above the app, below the phone message */
+  display: grid;
+  place-items: center;
+  padding: var(--space-400) var(--space-300);
+  background: var(--bg-page);
+  overflow-y: auto;
+}
+#web-gate .gate-card {
+  width: 100%;
+  max-width: 460px;
+  display: grid;
+  gap: var(--space-300);
+  background: var(--bg-layer-1);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--md-elevation-2);
+  padding: var(--space-500) var(--space-400);
+}
+#web-gate .gate-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+#web-gate .gate-brand svg { width: 20px; height: 20px; color: var(--accent); }
+#web-gate .gate-brand em { font-style: normal; font-weight: normal; color: var(--text-secondary); }
+#web-gate form { display: grid; gap: var(--space-100); }
+#web-gate form[hidden] { display: none; }
+#web-gate h1 { font-size: 20px; font-weight: var(--font-weight-semibold); color: var(--text-primary); margin-bottom: var(--space-75); }
+#web-gate .gate-intro { font-size: var(--font-size-md); line-height: 1.5; color: var(--text-secondary); margin-bottom: var(--space-100); }
+#web-gate label { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--text-primary); margin-top: var(--space-75); }
+#web-gate .req { color: #E5484D; }
+/* The panel styles text boxes but not email boxes; give email the same look. */
+#web-gate input[type="email"] {
+  font-family: var(--font-sans);
+  background: var(--bg-layer-2);
+  border: 1px solid var(--border-field);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+}
+#web-gate input, #web-gate select { width: 100%; font-size: var(--font-size-md); padding: var(--space-100) var(--space-150); }
+#web-gate input[hidden] { display: none; }
+#web-gate .gate-error { min-height: 1.2em; font-size: var(--font-size-sm); color: #E5484D; }
+#web-gate .gate-error:empty { min-height: 0; }
+#web-gate .btn-primary { justify-self: stretch; padding: var(--space-150); font-size: var(--font-size-md); margin-top: var(--space-75); }
+#web-gate .gate-switch { justify-self: center; font-size: var(--font-size-sm); }
+#web-gate .gate-note { font-size: var(--font-size-xs); line-height: 1.5; color: var(--text-tertiary); }
+#web-gate .gate-note a { color: inherit; }
+
+/* Full-screen toggle sits apart from the export buttons */
+#web-fullscreen { margin-right: var(--space-100); }
+#web-fullscreen[hidden] { display: none; }

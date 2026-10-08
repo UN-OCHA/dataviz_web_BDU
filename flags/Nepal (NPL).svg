@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44.371" height="54.089" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 71.571 87.246">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="71.571" height="87.246"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <g>
+    <path id="a" d="M2.582,42.238h60L2.582,4.664v80h60L2.582,24.664v17.574Z" fill="#dc143c"/>
+    <path d="M68.816,87.246H0V0l71.572,44.821H26.391l42.426,42.426ZM5.165,82.082h51.183L19.086,44.82H5.165v37.262ZM21.226,39.655h32.367L5.165,9.329v14.266l16.061,16.061ZM5.165,39.655h8.756l-8.756-8.756v8.756Z" fill="#003893"/>
+  </g>
+  <path id="a1" data-name="a" d="M2.582,42.238h60L2.582,4.664v80h60L2.582,24.664v17.574Z" fill="#dc143c"/>
+  <g>
+    <path d="M5.632,28.147c2.594,6.6,10.047,9.847,16.647,7.253,3.32-1.305,5.948-3.933,7.253-7.253,0,6.6-5.35,11.95-11.95,11.95s-11.95-5.35-11.95-11.95" fill="#fff"/>
+    <g>
+      <circle cx="17.582" cy="33.709" r="5.561" fill="#fff"/>
+      <g id="d">
+        <g id="c">
+          <path id="b" d="M19.709,28.575l-.619-2.448-1.506,2.014" fill="#fff"/>
+          <path id="b1" data-name="b" d="M21.511,29.78l.365-2.498-2.162,1.284" fill="#fff"/>
+          <path id="b2" data-name="b" d="M22.716,31.583l1.293-2.168-2.489.359" fill="#fff"/>
+        </g>
+        <g id="c1" data-name="c">
+          <path id="b3" data-name="b" d="M23.139,33.709l2.025-1.508-2.437-.621" fill="#fff"/>
+          <path id="b4" data-name="b" d="M22.716,35.836l2.448-.619-2.014-1.506" fill="#fff"/>
+          <path id="b5" data-name="b" d="M21.511,37.638l2.498.365-1.284-2.162" fill="#fff"/>
+        </g>
+      </g>
+      <g id="d1" data-name="d">
+        <g id="c2" data-name="c">
+          <path id="b6" data-name="b" d="M15.455,28.575l.619-2.448,1.506,2.014" fill="#fff"/>
+          <path id="b7" data-name="b" d="M13.653,29.78l-.365-2.498,2.162,1.284" fill="#fff"/>
+          <path id="b8" data-name="b" d="M12.448,31.583l-1.293-2.168,2.489.359" fill="#fff"/>
+        </g>
+        <g id="c3" data-name="c">
+          <path id="b9" data-name="b" d="M12.025,33.709l-2.025-1.508,2.437-.621" fill="#fff"/>
+          <path id="b10" data-name="b" d="M12.448,35.836l-2.448-.619,2.014-1.506" fill="#fff"/>
+          <path id="b11" data-name="b" d="M13.653,37.638l-2.498.365,1.284-2.162" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g>
+      <circle cx="17.582" cy="63.451" r="8.143" fill="#fff"/>
+      <g id="g">
+        <g id="f">
+          <path id="e" d="M19.691,71.318l-2.109,4.967-2.109-4.967" fill="#fff"/>
+          <path id="e1" data-name="e" d="M15.473,55.584l2.109-4.967,2.109,4.967" fill="#fff"/>
+        </g>
+        <g id="f1" data-name="f">
+          <path id="e2" data-name="e" d="M9.715,65.56l-4.967-2.109,4.967-2.109" fill="#fff"/>
+          <path id="e3" data-name="e" d="M25.449,61.342l4.967,2.109-4.967,2.109" fill="#fff"/>
+        </g>
+      </g>
+      <g id="g1" data-name="g">
+        <g id="f2" data-name="f">
+          <path id="e4" data-name="e" d="M15.475,71.318l-4.31,3.247.657-5.357" fill="#fff"/>
+          <path id="e5" data-name="e" d="M19.689,55.584l4.31-3.247-.657,5.357" fill="#fff"/>
+        </g>
+        <g id="f3" data-name="f">
+          <path id="e6" data-name="e" d="M9.715,61.344l-3.247-4.31,5.357.657" fill="#fff"/>
+          <path id="e7" data-name="e" d="M25.449,65.558l3.247,4.31-5.357-.657" fill="#fff"/>
+        </g>
+      </g>
+      <g id="g2" data-name="g">
+        <g id="f4" data-name="f">
+          <path id="e8" data-name="e" d="M11.824,69.211l-5.357.657,3.247-4.31" fill="#fff"/>
+          <path id="e9" data-name="e" d="M23.34,57.691l5.357-.657-3.247,4.31" fill="#fff"/>
+        </g>
+        <g id="f5" data-name="f">
+          <path id="e10" data-name="e" d="M11.822,57.693l-.657-5.357,4.31,3.247" fill="#fff"/>
+          <path id="e11" data-name="e" d="M23.342,69.209l.657,5.357-4.31-3.247" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  </g>
+</svg>

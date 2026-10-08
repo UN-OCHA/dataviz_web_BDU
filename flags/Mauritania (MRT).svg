@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 144 96">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="144" height="96"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <path d="M0,0h144v96H0V0Z" fill="#d01c1f"/>
+  <path d="M0,19.2h144v57.6H0V19.2Z" fill="#00a95c"/>
+  <path d="M62.352,35.712h7.344l2.304-6.912,2.304,6.912h7.344l-6.048,4.416,2.448,7.008-6.048-4.32-6.048,4.32,2.448-7.008-6.048-4.416ZM36,32.16c3.27274,16.42701,22.04356,27.55172,41.92581,24.84774,15.43542-2.09921,27.53342-12.09477,30.07419-24.84774,0,19.35206-16.11775,35.04-36,35.04s-36-15.68794-36-35.04Z" fill="gold"/>
+  </g>
+</svg>

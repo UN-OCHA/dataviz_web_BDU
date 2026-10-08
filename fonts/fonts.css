@@ -1,0 +1,15 @@
+/* Roboto and Roboto Condensed, served with the web version so charts look
+   the same everywhere (and offline / behind firewalls). Converted to WOFF
+   from the official font files; Apache License 2.0 (see LICENSE.txt).
+   web-shell.js reads this list to embed the fonts when it renders a PNG. */
+
+@font-face { font-family: 'Roboto'; src: url('Roboto-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto'; src: url('Roboto-Italic.woff') format('woff'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Roboto'; src: url('Roboto-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto'; src: url('Roboto-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto'; src: url('Roboto-BoldItalic.woff') format('woff'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Roboto Condensed'; src: url('RobotoCondensed-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto Condensed'; src: url('RobotoCondensed-Italic.woff') format('woff'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Roboto Condensed'; src: url('RobotoCondensed-SemiBold.woff') format('woff'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto Condensed'; src: url('RobotoCondensed-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roboto Condensed'; src: url('RobotoCondensed-BoldItalic.woff') format('woff'); font-weight: 700; font-style: italic; font-display: swap; }

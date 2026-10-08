@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 36 24">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="36" height="24"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h36v24H0V0Z" fill="#fff"/>
+  <polygon points="21 24 15 24 15 15 0 15 0 9 15 9 15 0 21 0 21 9 36 9 36 15 21 15 21 24" fill="#e8112d"/>
+  <path id="a" d="M9,14l1-1h9v-2h-9l-1-1v4Z" fill="#f9dd16"/>
+  <path id="a1" data-name="a" d="M16,3l1,1v9h2V4l1-1h-4Z" fill="#f9dd16"/>
+  <path id="a2" data-name="a" d="M20,21l-1-1v-9h-2v9l-1,1h4Z" fill="#f9dd16"/>
+  <path id="a3" data-name="a" d="M27,10l-1,1h-9v2h9l1,1v-4Z" fill="#f9dd16"/>
+  </g>
+</svg>

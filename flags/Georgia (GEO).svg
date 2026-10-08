@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 300 200">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="300" height="200"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <clipPath id="clippath">
+      <path d="M-44.55,143.45c57.438,0,104-46.562,104-104S12.888-64.55-44.55-64.55h218c-57.438,0-104,46.562-104,104s46.562,104,104,104H-44.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <path d="M-39.55-69.55C-39.55-12.112,7.012,34.45,64.45,34.45s104-46.562,104-104v218c0-57.438-46.562-104-104-104s-104,46.562-104,104V-69.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <path d="M126.55,264.55c57.438,0,104-46.562,104-104s-46.562-104-104-104h218c-57.438,0-104,46.562-104,104s46.562,104,104,104H126.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <path d="M131.55,51.55c0,57.438,46.562,104,104,104s104-46.562,104-104v218c0-57.438-46.562-104-104-104s-104,46.562-104,104V51.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <path d="M126.55,143.45c57.438,0,104-46.562,104-104s-46.562-104-104-104h218c-57.438,0-104,46.562-104,104s46.562,104,104,104H126.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-5">
+      <path d="M131.55-69.55c0,57.438,46.562,104,104,104s104-46.562,104-104v218c0-57.438-46.562-104-104-104s-104,46.562-104,104V-69.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-6">
+      <path d="M-44.55,264.55c57.438,0,104-46.562,104-104S12.888,56.55-44.55,56.55h218c-57.438,0-104,46.562-104,104s46.562,104,104,104H-44.55Z" fill="none"/>
+    </clipPath>
+    <clipPath id="clippath-7">
+      <path d="M-39.55,51.55c0,57.438,46.562,104,104,104s104-46.562,104-104v218c0-57.438-46.562-104-104-104s-104,46.562-104,104V51.55Z" fill="none"/>
+    </clipPath>
+  </defs>
+  <path d="M0,0h300v200H0V0Z" fill="#fff"/>
+  <path d="M130,0v80H0v40h130v80h40v-80h130v-40h-130V0h-40Z" fill="red"/>
+  <g id="c">
+    <g clip-path="url(#clippath)">
+      <path id="b" d="M9.45,113.45c0-30.376,24.624-55,55-55s55,24.624,55,55V-34.55c0,30.376-24.624,55-55,55S9.45-4.174,9.45-34.55V113.45Z" fill="red"/>
+    </g>
+    <g clip-path="url(#clippath-1)">
+      <path id="b1" data-name="b" d="M-9.55-15.55c30.376,0,55,24.624,55,55s-24.624,55-55,55h148c-30.376,0-55-24.624-55-55s24.624-55,55-55H-9.55Z" fill="red"/>
+    </g>
+  </g>
+  <g id="c1" data-name="c">
+    <g clip-path="url(#clippath-2)">
+      <path id="b2" data-name="b" d="M180.55,234.55c0-30.376,24.624-55,55-55s55,24.624,55,55V86.55c0,30.376-24.624,55-55,55s-55-24.624-55-55v148Z" fill="red"/>
+    </g>
+    <g clip-path="url(#clippath-3)">
+      <path id="b3" data-name="b" d="M161.55,105.55c30.376,0,55,24.624,55,55s-24.624,55-55,55h148c-30.376,0-55-24.624-55-55s24.624-55,55-55h-148Z" fill="red"/>
+    </g>
+  </g>
+  <g id="c2" data-name="c">
+    <g clip-path="url(#clippath-4)">
+      <path id="b4" data-name="b" d="M180.55,113.45c0-30.376,24.624-55,55-55s55,24.624,55,55V-34.55c0,30.376-24.624,55-55,55s-55-24.624-55-55V113.45Z" fill="red"/>
+    </g>
+    <g clip-path="url(#clippath-5)">
+      <path id="b5" data-name="b" d="M161.55-15.55c30.376,0,55,24.624,55,55s-24.624,55-55,55h148c-30.376,0-55-24.624-55-55s24.624-55,55-55h-148Z" fill="red"/>
+    </g>
+  </g>
+  <g id="c3" data-name="c">
+    <g clip-path="url(#clippath-6)">
+      <path id="b6" data-name="b" d="M9.45,234.55c0-30.376,24.624-55,55-55s55,24.624,55,55V86.55c0,30.376-24.624,55-55,55S9.45,116.926,9.45,86.55v148Z" fill="red"/>
+    </g>
+    <g clip-path="url(#clippath-7)">
+      <path id="b7" data-name="b" d="M-9.55,105.55c30.376,0,55,24.624,55,55s-24.624,55-55,55h148c-30.376,0-55-24.624-55-55s24.624-55,55-55H-9.55Z" fill="red"/>
+    </g>
+  </g>
+  </g>
+</svg>

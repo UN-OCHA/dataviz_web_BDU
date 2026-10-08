@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 9 6">
+  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="9" height="6"/></clipPath></defs>
+  <g clip-path="url(#flag-bounds-clip)">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M0,0h9v6H0V0Z" fill="#21468b"/>
+  <path d="M0,0h9v4H0V0Z" fill="#fff"/>
+  <path d="M0,0h9v2H0V0Z" fill="#ae1c28"/>
+  </g>
+</svg>

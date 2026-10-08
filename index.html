@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en" data-shell="web" data-channel="beta">
+<head>
+  <meta charset="utf-8">
+  <title>Humanitarian DataViz Tool — web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Make OCHA-branded charts in your browser: the Humanitarian DataViz Tool, without Adobe Illustrator.">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="web-shell.css">
+</head>
+<body>
+
+  <!-- ═══ Main Content ═══ -->
+  <div id="main-content">
+
+    <!-- Header -->
+    <div id="header">
+      <button id="btn-refresh" class="header-btn" title="Refresh panel">
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M173 172.9C254.2 91.7 385.9 91.7 467.2 172.9L494.3 200L416.1 200C402.8 200 392.1 210.7 392.1 224C392.1 237.3 402.8 248 416.1 248L552.2 248C565.5 248 576.2 237.3 576.2 224L576.2 88C576.2 74.7 565.5 64 552.2 64C538.9 64 528.2 74.7 528.2 88L528.2 166.1L501.1 139C401.1 39 239 39 139.1 139C95.9 182.2 71.3 237.1 65.5 293.5C64.1 306.7 73.7 318.5 86.9 319.8C100.1 321.1 111.9 311.6 113.2 298.4C118 252.6 137.9 208.1 173 172.9zM574.7 346.5C576.1 333.3 566.5 321.5 553.3 320.2C540.1 318.9 528.3 328.4 527 341.6C522.3 387.4 502.3 432 467.2 467.1C386 548.3 254.3 548.3 173 467.1L145.9 440L224.1 440C237.4 440 248.1 429.3 248.1 416C248.1 402.7 237.4 392 224.1 392L88 392C74.7 392 64 402.7 64 416L64 552C64 565.3 74.7 576 88 576C101.3 576 112 565.3 112 552L112 473.9L139.1 501C239.1 601 401.2 601 501.1 501C544.3 457.8 568.9 402.9 574.7 346.5z"/></svg>
+      </button>
+      <button id="header-chart-icon" class="header-chart-indicator" title="Horizontal Bar">
+        <!-- Populated by JS with active chart type SVG -->
+      </button>
+      <div class="header-spacer"></div>
+      <button id="btn-icons-header" class="header-btn" title="Humanitarian Icons">
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M252.3 240L387.7 240L320 127.1L252.3 240zM320 64C331.2 64 341.7 69.9 347.4 79.5L443.4 239.5C449.3 249.4 449.5 261.7 443.8 271.7C438.1 281.7 427.5 288 416 288L224 288C212.5 288 201.8 281.8 196.2 271.8C190.6 261.8 190.7 249.5 196.6 239.6L292.6 79.6C298.3 69.9 308.8 64 320 64zM192 512C227.3 512 256 483.3 256 448C256 412.7 227.3 384 192 384C156.7 384 128 412.7 128 448C128 483.3 156.7 512 192 512zM192 336C253.9 336 304 386.1 304 448C304 509.9 253.9 560 192 560C130.1 560 80 509.9 80 448C80 386.1 130.1 336 192 336zM400 496L496 496L496 400L400 400L400 496zM392 352L504 352C526.1 352 544 369.9 544 392L544 504C544 526.1 526.1 544 504 544L392 544C369.9 544 352 526.1 352 504L352 392C352 369.9 369.9 352 392 352z"/></svg>
+      </button>
+      <button id="btn-flags-header" class="header-btn" title="Country and territories flags">
+        <!-- Flag icon -->
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M144 88C144 74.7 133.3 64 120 64C106.7 64 96 74.7 96 88L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 452L224.3 431.9C265.4 421.6 308.9 426.4 346.8 445.3C391 467.4 442.3 470.1 488.5 452.7L523.2 439.7C535.7 435 544 423.1 544 409.7L544 130C544 107 519.8 92 499.2 102.3L489.6 107.1C443.3 130.3 388.8 130.3 342.5 107.1C307.4 89.5 267.1 85.1 229 94.6L144 116L144 88zM144 165.5L240.6 141.3C267.6 134.6 296.1 137.7 321 150.1C375.9 177.5 439.7 179.8 496 156.9L496 398.7L471.6 407.8C437.9 420.4 400.4 418.5 368.2 402.4C320 378.3 264.9 372.3 212.6 385.3L144 402.5L144 165.5z"/></svg>
+      </button>
+      <button id="btn-maps-header" class="header-btn" title="Location Maps">
+        <!-- Globe/map icon -->
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M367.2 477C345.7 520.7 325.8 528 320 528C314.2 528 294.3 520.7 272.8 477C255.8 442.5 243.6 395.4 240.7 344L399.3 344C396.3 395.5 384.1 442.6 367.2 477zM399.3 296L240.7 296C243.7 244.5 255.9 197.4 272.8 163C294.3 119.3 314.2 112 320 112C325.8 112 345.7 119.3 367.2 163C384.2 197.5 396.4 244.6 399.3 296zM447.4 344L526.6 344C518 418.6 469.9 481.3 403.8 510.4C427.8 467.6 444.1 408 447.4 344zM526.6 296L447.4 296C444.1 232 427.8 172.4 403.8 129.6C469.9 158.8 518 221.4 526.6 296zM192.6 296L113.4 296C122 221.4 170.1 158.7 236.2 129.6C212.2 172.4 195.9 232 192.6 296zM113.4 344L192.6 344C195.9 408 212.2 467.6 236.2 510.4C170.1 481.2 122 418.6 113.4 344zM320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576z"/></svg>
+      </button>
+      <!-- Map Maker hidden until rebuild is complete (feature/map-maker-rebuild branch) -->
+      <button id="btn-mapmaker-header" data-shell="illustrator" class="header-btn" title="Map Maker" style="display:none;">
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M176 252.6C176 175.7 239.7 112 320 112C400.3 112 464 175.7 464 252.6C464 298.2 440.2 354.1 405.1 409.7C376.8 454.5 344.1 494.5 320 521.8C295.9 494.5 263.3 454.6 234.9 409.7C199.8 354.2 176 298.2 176 252.6zM320 64C214 64 128 148.4 128 252.6C128 371.9 248.2 514.9 298.4 569.4C310.2 582.2 329.8 582.2 341.6 569.4C391.8 514.9 512 371.9 512 252.6C512 148.4 426 64 320 64zM288 256C288 238.3 302.3 224 320 224C337.7 224 352 238.3 352 256C352 273.7 337.7 288 320 288C302.3 288 288 273.7 288 256zM400 256C400 211.8 364.2 176 320 176C275.8 176 240 211.8 240 256C240 300.2 275.8 336 320 336C364.2 336 400 300.2 400 256z"/></svg>
+      </button>
+      <button id="btn-grid-header" data-shell="illustrator" class="header-btn" title="Guides">
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M576 152C576 138.7 565.3 128 552 128L512 128L512 88C512 74.7 501.3 64 488 64C474.7 64 464 74.7 464 88L464 128L176 128L176 88C176 74.7 165.3 64 152 64C138.7 64 128 74.7 128 88L128 128L88 128C74.7 128 64 138.7 64 152C64 165.3 74.7 176 88 176L128 176L128 464L88 464C74.7 464 64 474.7 64 488C64 501.3 74.7 512 88 512L128 512L128 552C128 565.3 138.7 576 152 576C165.3 576 176 565.3 176 552L176 512L464 512L464 552C464 565.3 474.7 576 488 576C501.3 576 512 565.3 512 552L512 512L552 512C565.3 512 576 501.3 576 488C576 474.7 565.3 464 552 464L512 464L512 176L552 176C565.3 176 576 165.3 576 152zM176 464L176 176L464 176L464 464L176 464z"/></svg>
+      </button>
+      <button id="menu-btn" class="header-btn" title="Menu">
+        <svg viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M368 144C368 170.5 346.5 192 320 192C293.5 192 272 170.5 272 144C272 117.5 293.5 96 320 96C346.5 96 368 117.5 368 144zM272 320C272 293.5 293.5 272 320 272C346.5 272 368 293.5 368 320C368 346.5 346.5 368 320 368C293.5 368 272 346.5 272 320zM368 496C368 522.5 346.5 544 320 544C293.5 544 272 522.5 272 496C272 469.5 293.5 448 320 448C346.5 448 368 469.5 368 496z"/></svg>
+      </button>
+    </div>
+
+    <!-- Hamburger Menu Dropdown -->
+    <div id="menu-dropdown">
+      <div class="menu-section">
+        <div class="menu-section-title">Theme</div>
+        <label class="menu-radio">
+          <input type="radio" name="style" value="ocha" checked> OCHA
+          <span class="style-ramp"><span style="background:#004987"></span><span style="background:#0074B7"></span><span style="background:#009EDB"></span><span style="background:#64BDEA"></span><span style="background:#C5DFEF"></span><span style="background:#E6E6E6"></span></span>
+        </label>
+        <label class="menu-radio">
+          <input type="radio" name="style" value="hnrp"> HNRP
+          <span class="style-ramp"><span style="background:#009EDB"></span><span style="background:#64BDEA"></span><span style="background:#C15025"></span><span style="background:#F58220"></span><span style="background:#F9A870"></span><span style="background:#FEDCBD"></span></span>
+        </label>
+        <label class="menu-radio">
+          <input type="radio" name="style" value="flash"> Flash Appeal
+          <span class="style-ramp"><span style="background:#780B20"></span><span style="background:#A71F36"></span><span style="background:#ED1847"></span><span style="background:#F3859B"></span><span style="background:#F9C0C5"></span><span style="background:#F7DFDF"></span></span>
+        </label>
+        <label class="menu-radio">
+          <input type="radio" name="style" value="gho"> GHO
+          <span class="style-ramp"><span style="background:#B16D03"></span><span style="background:#CF9220"></span><span style="background:#FFC800"></span><span style="background:#FFDE2F"></span><span style="background:#F8E66B"></span><span style="background:#4D4D4D"></span></span>
+        </label>
+        <div id="custom-style-list"></div>
+        <button type="button" id="manage-themes-btn" class="menu-themes-btn">Custom themes&hellip;</button>
+      </div>
+      <div class="menu-divider"></div>
+      <div class="menu-section menu-info">
+        <div class="menu-section-title">About</div>
+        <div class="menu-info-text">
+          <strong>Humanitarian DataViz Tool</strong> <span id="app-version">2026.0.30</span><br>
+          Public domain &amp; free<br><br>
+          Created by<br>
+          <strong>UN OCHA Brand &amp; Design Unit</strong><br>
+          <a href="#" class="cep-link" data-url="mailto:ochavisual@un.org">ochavisual@un.org</a><br>
+          <a href="#" class="cep-link" data-url="https://www.unocha.org">unocha.org</a>
+        </div>
+      </div>
+<!-- Appearance (light/dark) — lifted above the changelog so it is easy to find -->
+            <div class="menu-theme-toggle-row">
+              <span class="menu-theme-label">Appearance</span>
+              <button id="btn-theme-toggle" class="theme-circle-btn" title="Toggle dark/light mode">
+                <svg viewBox="0 0 640 640" fill="currentColor" class="icon-sun" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M320 496C333.3 496 344 506.7 344 520L344 584C344 597.3 333.3 608 320 608C306.7 608 296 597.3 296 584L296 520C296 506.7 306.7 496 320 496zM161.6 444.4C171 435 186.2 435 195.6 444.4C205 453.8 205 469 195.6 478.4L150.3 523.7C140.9 533.1 125.7 533.1 116.4 523.7C107.1 514.3 107 499.1 116.4 489.8L161.6 444.5zM444.4 444.4C453.8 435 469 435 478.4 444.4L523.7 489.7C533.1 499.1 533.1 514.3 523.7 523.6C514.3 532.9 499.1 533 489.8 523.6L444.5 478.3C435.1 468.9 435.1 453.7 444.5 444.3zM320 448C249.3 448 192 390.7 192 320C192 249.3 249.3 192 320 192C390.7 192 448 249.3 448 320C448 390.7 390.7 448 320 448zM320 240C275.8 240 240 275.8 240 320C240 364.2 275.8 400 320 400C364.2 400 400 364.2 400 320C400 275.8 364.2 240 320 240zM120 296C133.3 296 144 306.7 144 320C144 333.3 133.3 344 120 344L56 344C42.7 344 32 333.3 32 320C32 306.7 42.7 296 56 296L120 296zM584 296C597.3 296 608 306.7 608 320C608 333.3 597.3 344 584 344L520 344C506.7 344 496 333.3 496 320C496 306.7 506.7 296 520 296L584 296zM116.3 116.3C125.7 106.9 140.9 106.9 150.2 116.3L195.5 161.5C204.9 170.9 204.9 186.1 195.5 195.5C186.1 204.9 170.9 204.9 161.5 195.5L116.3 150.3C106.9 140.9 106.9 125.7 116.3 116.4zM489.7 116.3C499.1 106.9 514.3 106.9 523.6 116.3C532.9 125.7 533 140.9 523.6 150.2L478.3 195.5C468.9 204.9 453.7 204.9 444.3 195.5C434.9 186.1 434.9 170.9 444.3 161.5L489.6 116.3zM320 32C333.3 32 344 42.7 344 56L344 120C344 133.3 333.3 144 320 144C306.7 144 296 133.3 296 120L296 56C296 42.7 306.7 32 320 32z"/></svg>
+                <svg viewBox="0 0 640 640" fill="currentColor" class="icon-moon" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M303.3 112.7C196.2 121.2 112 210.8 112 320C112 434.9 205.1 528 320 528C353.3 528 384.7 520.2 412.6 506.3C309.2 482.9 232 390.5 232 280C232 214.2 259.4 154.9 303.3 112.7zM64 320C64 178.6 178.6 64 320 64C339.4 64 358.4 66.2 376.7 70.3C386.6 72.5 394 80.8 395.2 90.8C396.4 100.8 391.2 110.6 382.1 115.2C321.5 145.4 280 207.9 280 280C280 381.6 362.4 464 464 464C469 464 473.9 463.8 478.8 463.4C488.9 462.6 498.4 468.2 502.6 477.5C506.8 486.8 504.6 497.6 497.3 504.6C451.3 548.8 388.8 576 320 576C178.6 576 64 461.4 64 320z"/></svg>
+              </button>
+            </div>
+      <div id="whats-new-wrapper">
+      <div class="menu-divider"></div>
+      <div class="menu-section">
+        <div class="menu-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+          What's new
+          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.4</span>
+        </div>
+        <div class="menu-info-text" style="font-size:10px;line-height:1.5;">
+          <ul style="margin:0;padding-left:14px;">
+            <li><strong>Custom themes.</strong> Build your own brand theme next to the built-in OCHA styles: pick a main colour plus accents and the palette, swatches and icon colours follow automatically.</li>
+            <li><strong>Hex or CMYK.</strong> Type colours either way — CMYK from your brand book is converted for you. You can also set optional title and body fonts.</li>
+            <li><strong>Share a theme.</strong> Export a theme as a file and a colleague can Import it. Your themes are saved outside the plugin folder, so they survive updates.</li>
+            <li><strong>AI import keeps your theme.</strong> Charts you bring in with the AI assistant now use the theme you've selected — including your custom themes — instead of always defaulting to OCHA blue.</li>
+          </ul>
+        </div>
+      </div>
+      </div>
+      <div class="menu-divider"></div>
+      <div class="menu-section menu-donate">
+        <div class="menu-donate-text">Do you like this free plugin?</div>
+        <a href="#" class="menu-donate-link cep-link" data-url="https://crisisrelief.un.org/en/">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M442.9 144C415.6 144 389.9 157.1 373.9 179.2L339.5 226.8C335 233 327.8 236.7 320.1 236.7C312.4 236.7 305.2 233 300.7 226.8L266.3 179.2C250.3 157.1 224.6 144 197.3 144C150.3 144 112.2 182.1 112.2 229.1C112.2 279 144.2 327.5 180.3 371.4C221.4 421.4 271.7 465.4 306.2 491.7C309.4 494.1 314.1 495.9 320.2 495.9C326.3 495.9 331 494.1 334.2 491.7C368.7 465.4 419 421.3 460.1 371.4C496.3 327.5 528.2 279 528.2 229.1C528.2 182.1 490.1 144 443.1 144zM335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1C576 297.7 533.1 358 496.9 401.9C452.8 455.5 399.6 502 363.1 529.8C350.8 539.2 335.6 543.9 320 543.9C304.4 543.9 289.2 539.2 276.9 529.8C240.4 502 187.2 455.5 143.1 402C106.9 358.1 64 297.7 64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1L320 171.8L335 151.1z"/></svg>
+          Help people in need
+        </a>
+      </div>
+      <div class="menu-divider"></div>
+      <div class="menu-section" id="menu-update-section" data-shell="illustrator" style="padding:6px 12px;">
+        <span id="menu-update-status" style="font-size:10px;color:var(--text-secondary);display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>You have the latest version</span>
+        <a href="#" id="menu-update-link" class="cep-link" data-url="" style="display:none;color:#009EDB;font-weight:600;font-size:11px;text-decoration:underline;white-space:nowrap;"><svg viewBox="0 0 640 640" fill="currentColor" width="12" height="12" aria-hidden="true"><path fill="currentColor" d="M488 576C501.3 576 512 565.3 512 552C512 538.7 501.3 528 488 528L152 528C138.7 528 128 538.7 128 552C128 565.3 138.7 576 152 576L488 576zM303 441C312.4 450.4 327.6 450.4 336.9 441L473 305C482.4 295.6 482.4 280.4 473 271.1C463.6 261.8 448.4 261.7 439.1 271.1L344.1 366.1L344.1 88C344.1 74.7 333.4 64 320.1 64C306.8 64 296.1 74.7 296.1 88L296.1 366.1L201.1 271.1C191.7 261.7 176.5 261.7 167.2 271.1C157.9 280.5 157.8 295.7 167.2 305L303 441z"/></svg>New version available — Download</a>
+      </div>
+    </div>
+
+    <!-- Edit Mode Banner (above all panels so it always appears at top) -->
+    <div id="edit-banner" data-shell="illustrator"><svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M100.4 417.8C104.5 403.2 112.2 389.9 123 379.1L417 85.1C430.4 71.6 448.8 64 468 64C487.2 64 505.6 71.6 519.1 85.2L554.8 120.9C568.4 134.4 576 152.8 576 172C576 191.2 568.4 209.6 554.8 223.1L260.8 517.1C250.1 527.8 236.7 535.6 222.1 539.7L94.4 575.1C86.1 577.4 77.1 575.1 71 568.9C64.9 562.7 62.5 553.8 64.8 545.5L100.4 417.8zM450.8 119.1L397.9 172L468 242.1L520.9 189.2C525.5 184.6 528 178.5 528 172C528 165.5 525.4 159.4 520.9 154.8L485.2 119.1C480.6 114.6 474.4 112 468 112C461.6 112 455.4 114.6 450.8 119.1zM364 205.9L156.9 413.1C152 418 148.5 424 146.6 430.7L122.5 517.6L209.4 493.5C216 491.7 222.1 488.1 227 483.2L434.1 276L364 205.9z"/></svg><span id="edit-banner-text">Editing selected chart</span></div>
+
+    <!-- Grid / Guides Panel (slide-down) -->
+    <div id="grid-panel" data-shell="illustrator">
+      <div class="panel-top-bar">
+        <button class="panel-back-btn" data-close="grid">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M71 303C61.6 312.4 61.6 327.6 71 336.9L239 505C248.4 514.4 263.6 514.4 272.9 505C282.2 495.6 282.3 480.4 272.9 471.1L145.9 344L552 344C565.3 344 576 333.3 576 320C576 306.7 565.3 296 552 296L145.9 296L273 169C282.4 159.6 282.4 144.4 273 135.1C263.6 125.8 248.4 125.7 239.1 135.1L71 303z"/></svg>
+          Back to Charts
+        </button>
+        <button id="btn-grid-close" class="grid-close-btn" title="Close">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg>
+        </button>
+      </div>
+      <div class="grid-panel-header">
+        <span class="grid-panel-title">Guides</span>
+        <!-- Display unit toggle. Affects every numeric field in the
+             Guides panel (custom margins, column gutter, row gutter).
+             Internal storage stays in points; values convert on the fly
+             when the toggle flips. Default = px. -->
+        <div class="unit-toggle" id="grid-unit-toggle" role="group" aria-label="Display unit">
+          <button type="button" class="unit-pill active" data-unit="px" aria-pressed="true">px</button>
+          <button type="button" class="unit-pill" data-unit="mm" aria-pressed="false">mm</button>
+        </div>
+      </div>
+
+      <!-- Selection reference banner -->
+      <div id="grid-ref-banner" class="grid-ref-banner">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <span id="grid-ref-text">Select a shape to use as reference</span>
+      </div>
+
+      <!-- Columns (primary) -->
+      <div class="grid-section">
+        <div class="grid-section-label">Margins</div>
+        <div class="grid-margin-radios">
+          <label class="menu-radio"><input type="radio" name="grid-margin" value="24"> Small (24px)</label>
+          <label class="menu-radio"><input type="radio" name="grid-margin" value="52" checked> Medium (52px)</label>
+          <label class="menu-radio"><input type="radio" name="grid-margin" value="88"> Large (88px)</label>
+          <label class="menu-radio"><input type="radio" name="grid-margin" value="custom"> Custom</label>
+        </div>
+
+        <!-- Custom margin cross layout. Unit labels marked with
+             `unit-label` so JS can swap them when the px/mm toggle
+             above flips. -->
+        <div id="grid-custom-row" class="grid-margin-cross" style="display:none;">
+          <div class="gmc-top">
+            <div class="input-with-unit"><input type="number" id="grid-mt" value="0" min="0" max="9999" placeholder="Top"><span class="input-unit unit-label">px</span></div>
+          </div>
+          <div class="gmc-mid">
+            <div class="input-with-unit"><input type="number" id="grid-ml" value="0" min="0" max="9999" placeholder="Left"><span class="input-unit unit-label">px</span></div>
+            <div class="gmc-center-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><line x1="8" y1="2" x2="8" y2="22"/><line x1="16" y1="2" x2="16" y2="22"/><line x1="2" y1="8" x2="22" y2="8"/><line x1="2" y1="16" x2="22" y2="16"/></svg>
+            </div>
+            <div class="input-with-unit"><input type="number" id="grid-mr" value="0" min="0" max="9999" placeholder="Right"><span class="input-unit unit-label">px</span></div>
+          </div>
+          <div class="gmc-bottom">
+            <div class="input-with-unit"><input type="number" id="grid-mb" value="0" min="0" max="9999" placeholder="Bottom"><span class="input-unit unit-label">px</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columns — new section. Mirrors the Margins UX: a default
+           preset radio ("12-column grid") plus a Custom option that
+           reveals count + gutter inputs. Keeps the 12-col default as
+           the path of least resistance; deviating requires an active
+           Custom click. Hosts the primary "Create Grid" action since
+           this is the section that actually triggers grid creation. -->
+      <div class="grid-section">
+        <div class="grid-section-label">Columns</div>
+        <div class="grid-margin-radios">
+          <label class="menu-radio"><input type="radio" name="grid-cols" value="default" checked> 12-column grid (default)</label>
+          <label class="menu-radio"><input type="radio" name="grid-cols" value="custom"> Custom</label>
+        </div>
+
+        <div id="grid-cols-custom-row" class="grid-row-inputs" style="display:none;">
+          <div class="grid-row-field">
+            <label>Count</label>
+            <input type="number" id="grid-cols-count" value="12" min="1" placeholder="12">
+          </div>
+          <div class="grid-row-field">
+            <label>Gutter</label>
+            <div class="input-with-unit"><input type="number" id="grid-cols-gutter" value="" min="0" max="9999" placeholder="auto"><span class="input-unit unit-label">px</span></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" id="btn-grid-apply" style="width:100%; margin-top:8px;"><svg width="13" height="13" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M576 152C576 138.7 565.3 128 552 128L512 128L512 88C512 74.7 501.3 64 488 64C474.7 64 464 74.7 464 88L464 128L176 128L176 88C176 74.7 165.3 64 152 64C138.7 64 128 74.7 128 88L128 128L88 128C74.7 128 64 138.7 64 152C64 165.3 74.7 176 88 176L128 176L128 464L88 464C74.7 464 64 474.7 64 488C64 501.3 74.7 512 88 512L128 512L128 552C128 565.3 138.7 576 152 576C165.3 576 176 565.3 176 552L176 512L464 512L464 552C464 565.3 474.7 576 488 576C501.3 576 512 565.3 512 552L512 512L552 512C565.3 512 576 501.3 576 488C576 474.7 565.3 464 552 464L512 464L512 176L552 176C565.3 176 576 165.3 576 152zM176 464L176 176L464 176L464 464L176 464z"/></svg>Create Grid</button>
+        <div id="grid-result" class="panel-status grid-result-text"></div>
+      </div>
+
+      <!-- Rows (secondary) -->
+      <div class="grid-section grid-section-secondary">
+        <div class="grid-section-label">Rows</div>
+        <div class="grid-row-inputs">
+          <div class="grid-row-field">
+            <label>Count</label>
+            <input type="number" id="grid-row-count" value="" min="0" max="100" placeholder="0">
+          </div>
+          <div class="grid-row-field">
+            <label>Gutter</label>
+            <div class="input-with-unit"><input type="number" id="grid-row-gutter" value="" min="0" max="9999" placeholder="0"><span class="input-unit unit-label">px</span></div>
+          </div>
+          <div class="grid-row-btn-field">
+            <button class="btn btn-secondary btn-sm" id="btn-grid-rows"><svg width="13" height="13" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M96 104C96 90.7 106.7 80 120 80L520 80C533.3 80 544 90.7 544 104C544 117.3 533.3 128 520 128L120 128C106.7 128 96 117.3 96 104zM136 248L168 248L168 216L136 216L136 248zM96 208C96 190.3 110.3 176 128 176L176 176C193.7 176 208 190.3 208 208L208 256C208 273.7 193.7 288 176 288L128 288C110.3 288 96 273.7 96 256L96 208zM136 504L168 504L168 472L136 472L136 504zM96 464C96 446.3 110.3 432 128 432L176 432C193.7 432 208 446.3 208 464L208 512C208 529.7 193.7 544 176 544L128 544C110.3 544 96 529.7 96 512L96 464zM304 472L304 504L336 504L336 472L304 472zM296 432L344 432C361.7 432 376 446.3 376 464L376 512C376 529.7 361.7 544 344 544L296 544C278.3 544 264 529.7 264 512L264 464C264 446.3 278.3 432 296 432zM304 248L336 248L336 216L304 216L304 248zM264 208C264 190.3 278.3 176 296 176L344 176C361.7 176 376 190.3 376 208L376 256C376 273.7 361.7 288 344 288L296 288C278.3 288 264 273.7 264 256L264 208zM472 472L472 504L504 504L504 472L472 472zM464 432L512 432C529.7 432 544 446.3 544 464L544 512C544 529.7 529.7 544 512 544L464 544C446.3 544 432 529.7 432 512L432 464C432 446.3 446.3 432 464 432zM472 248L504 248L504 216L472 216L472 248zM432 208C432 190.3 446.3 176 464 176L512 176C529.7 176 544 190.3 544 208L544 256C544 273.7 529.7 288 512 288L464 288C446.3 288 432 273.7 432 256L432 208zM120 336L520 336C533.3 336 544 346.7 544 360C544 373.3 533.3 384 520 384L120 384C106.7 384 96 373.3 96 360C96 346.7 106.7 336 120 336z"/></svg>Add Row Guides</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Guides -->
+      <div class="grid-section">
+        <div class="grid-section-label">Quick Guides</div>
+        <!-- Quick guides as a 3×2 bento. Icons are the FA Regular border
+             series (a square with one edge lit) — visually literal for
+             where the guide lands. data-guide values unchanged. -->
+        <div class="quick-guide-grid">
+          <button class="quick-guide-btn" data-guide="top" title="Top edge" aria-label="Top edge">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M88 64C74.7 64 64 74.7 64 88C64 101.3 74.7 112 88 112L552 112C565.3 112 576 101.3 576 88C576 74.7 565.3 64 552 64L88 64zM240 240L240 528L176 528L176 240L240 240zM176 192C149.5 192 128 213.5 128 240L128 528C128 554.5 149.5 576 176 576L240 576C266.5 576 288 554.5 288 528L288 240C288 213.5 266.5 192 240 192L176 192zM464 240L464 400L400 400L400 240L464 240zM400 192C373.5 192 352 213.5 352 240L352 400C352 426.5 373.5 448 400 448L464 448C490.5 448 512 426.5 512 400L512 240C512 213.5 490.5 192 464 192L400 192z"/></svg>
+          </button>
+          <button class="quick-guide-btn" data-guide="hcenter" title="Horizontal centre" aria-label="Horizontal centre">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M176 144L176 496L240 496L240 144L176 144zM128 144C128 117.5 149.5 96 176 96L240 96C266.5 96 288 117.5 288 144L288 296L352 296L352 208C352 181.5 373.5 160 400 160L464 160C490.5 160 512 181.5 512 208L512 296L584 296C597.3 296 608 306.7 608 320C608 333.3 597.3 344 584 344L512 344L512 432C512 458.5 490.5 480 464 480L400 480C373.5 480 352 458.5 352 432L352 344L288 344L288 496C288 522.5 266.5 544 240 544L176 544C149.5 544 128 522.5 128 496L128 344L56 344C42.7 344 32 333.3 32 320C32 306.7 42.7 296 56 296L128 296L128 144zM400 208L400 432L464 432L464 208L400 208z"/></svg>
+          </button>
+          <button class="quick-guide-btn" data-guide="bottom" title="Bottom edge" aria-label="Bottom edge">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M88 576C74.7 576 64 565.3 64 552C64 538.7 74.7 528 88 528L552 528C565.3 528 576 538.7 576 552C576 565.3 565.3 576 552 576L88 576zM240 400L240 112L176 112L176 400L240 400zM176 448C149.5 448 128 426.5 128 400L128 112C128 85.5 149.5 64 176 64L240 64C266.5 64 288 85.5 288 112L288 400C288 426.5 266.5 448 240 448L176 448zM464 400L464 240L400 240L400 400L464 400zM400 448C373.5 448 352 426.5 352 400L352 240C352 213.5 373.5 192 400 192L464 192C490.5 192 512 213.5 512 240L512 400C512 426.5 490.5 448 464 448L400 448z"/></svg>
+          </button>
+          <button class="quick-guide-btn" data-guide="left" title="Left edge" aria-label="Left edge">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M64 88C64 74.7 74.7 64 88 64C101.3 64 112 74.7 112 88L112 552C112 565.3 101.3 576 88 576C74.7 576 64 565.3 64 552L64 88zM240 240L528 240L528 176L240 176L240 240zM192 176C192 149.5 213.5 128 240 128L528 128C554.5 128 576 149.5 576 176L576 240C576 266.5 554.5 288 528 288L240 288C213.5 288 192 266.5 192 240L192 176zM240 464L400 464L400 400L240 400L240 464zM192 400C192 373.5 213.5 352 240 352L400 352C426.5 352 448 373.5 448 400L448 464C448 490.5 426.5 512 400 512L240 512C213.5 512 192 490.5 192 464L192 400z"/></svg>
+          </button>
+          <button class="quick-guide-btn" data-guide="vcenter" title="Vertical centre" aria-label="Vertical centre">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M344 56C344 42.7 333.3 32 320 32C306.7 32 296 42.7 296 56L296 128L144 128C117.5 128 96 149.5 96 176L96 240C96 266.5 117.5 288 144 288L296 288L296 352L208 352C181.5 352 160 373.5 160 400L160 464C160 490.5 181.5 512 208 512L296 512L296 584C296 597.3 306.7 608 320 608C333.3 608 344 597.3 344 584L344 512L432 512C458.5 512 480 490.5 480 464L480 400C480 373.5 458.5 352 432 352L344 352L344 288L496 288C522.5 288 544 266.5 544 240L544 176C544 149.5 522.5 128 496 128L344 128L344 56zM496 176L496 240L144 240L144 176L496 176zM432 400L432 464L208 464L208 400L432 400z"/></svg>
+          </button>
+          <button class="quick-guide-btn" data-guide="right" title="Right edge" aria-label="Right edge">
+            <svg width="18" height="18" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true"><path d="M576 88C576 74.7 565.3 64 552 64C538.7 64 528 74.7 528 88L528 552C528 565.3 538.7 576 552 576C565.3 576 576 565.3 576 552L576 88zM400 240L112 240L112 176L400 176L400 240zM448 176C448 149.5 426.5 128 400 128L112 128C85.5 128 64 149.5 64 176L64 240C64 266.5 85.5 288 112 288L400 288C426.5 288 448 266.5 448 240L448 176zM400 464L240 464L240 400L400 400L400 464zM448 400C448 373.5 426.5 352 400 352L240 352C213.5 352 192 373.5 192 400L192 464C192 490.5 213.5 512 240 512L400 512C426.5 512 448 490.5 448 464L448 400z"/></svg>
+          </button>
+        </div>
+        <div class="grid-quick-caption">Uses selection or artboard</div>
+      </div>
+
+      <!-- Clear -->
+      <button class="btn btn-danger btn-sm" id="btn-grid-clear" style="width:100%;"><svg viewBox="0 0 640 640" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M262.2 48C248.9 48 236.9 56.3 232.2 68.8L216 112L120 112C106.7 112 96 122.7 96 136C96 149.3 106.7 160 120 160L520 160C533.3 160 544 149.3 544 136C544 122.7 533.3 112 520 112L424 112L407.8 68.8C403.1 56.3 391.2 48 377.8 48L262.2 48zM128 208L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 208L464 208L464 512C464 520.8 456.8 528 448 528L192 528C183.2 528 176 520.8 176 512L176 208L128 208zM288 280C288 266.7 277.3 256 264 256C250.7 256 240 266.7 240 280L240 456C240 469.3 250.7 480 264 480C277.3 480 288 469.3 288 456L288 280zM400 280C400 266.7 389.3 256 376 256C362.7 256 352 266.7 352 280L352 456C352 469.3 362.7 480 376 480C389.3 480 400 469.3 400 456L400 280z"/></svg>Clear All Guides</button>
+    </div>
+
+    <!-- Maps Panel (slide-down, same pattern as grid panel) -->
+    <div id="maps-panel">
+      <div class="panel-top-bar">
+        <button class="panel-back-btn" data-close="maps">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M71 303C61.6 312.4 61.6 327.6 71 336.9L239 505C248.4 514.4 263.6 514.4 272.9 505C282.2 495.6 282.3 480.4 272.9 471.1L145.9 344L552 344C565.3 344 576 333.3 576 320C576 306.7 565.3 296 552 296L145.9 296L273 169C282.4 159.6 282.4 144.4 273 135.1C263.6 125.8 248.4 125.7 239.1 135.1L71 303z"/></svg>
+          Back to Charts
+        </button>
+        <button id="btn-maps-close" class="grid-close-btn" title="Close">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg>
+        </button>
+      </div>
+      <div class="maps-panel-header">
+        <span class="maps-panel-title">OCHA Location Maps</span>
+      </div>
+      <div class="maps-filters">
+        <input type="text" id="maps-search" class="maps-search" placeholder="Search country or region…" autocomplete="off">
+      </div>
+      <div class="maps-region-bar" id="maps-region-bar">
+        <label class="maps-region-chip active" data-region="">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>All</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Africa">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Africa</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Asia">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Asia</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Central and South America">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Central and South America</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Europe">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Europe</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Middle East">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Middle East</span>
+        </label>
+        <label class="maps-region-chip active" data-region="North America">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>North America</span>
+        </label>
+        <label class="maps-region-chip active" data-region="Pacific">
+          <svg class="maps-check" viewBox="0 0 18 18"><path d="M3.5 9l3.5 3.5L14.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Pacific</span>
+        </label>
+      </div>
+      <div id="maps-list" class="maps-list"></div>
+      <div id="maps-progress" class="maps-progress" style="display:none;">
+        <div class="maps-progress-label"><span id="maps-progress-text">Downloading…</span></div>
+        <div class="maps-progress-track"><div id="maps-progress-bar" class="maps-progress-fill"></div></div>
+      </div>
+      <div class="panel-disclaimer maps-disclaimer">The boundaries and names shown and the designations used on this map do not imply official endorsement or acceptance by the United Nations.</div>
+      <div class="maps-source">Source: <a id="maps-source-link" href="#">reliefweb.int/location-maps</a> — More versions and formats available there.</div>
+      <div class="maps-footer">
+        <div id="maps-status" class="panel-status"></div>
+        <button id="btn-maps-update" data-shell="illustrator" class="maps-update-btn" title="Re-fetch catalog and maps from ReliefWeb">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M272 96C183.6 96 112 167.6 112 256C112 260.9 112.2 265.8 112.7 270.6C64.9 294 32 343.1 32 400C32 479.5 96.5 544 176 544L480 544C550.7 544 608 486.7 608 416C608 366.1 579.5 323 537.9 301.8C541.9 289.9 544 277.2 544 264C544 197.7 490.3 144 424 144C412.5 144 401.3 145.6 390.7 148.7C361.4 116.4 319.1 96 272 96zM160 256C160 194.1 210.1 144 272 144C309.7 144 343 162.6 363.3 191.1C370 200.6 382.6 203.9 393.1 198.9C402.4 194.5 412.8 192 423.9 192C463.7 192 495.9 224.2 495.9 264C495.9 278.1 491.9 291.2 484.9 302.3C480.8 308.8 480.1 316.9 482.9 324C485.7 331.1 491.9 336.5 499.4 338.3C534.2 347 559.9 378.5 559.9 415.9C559.9 460.1 524.1 495.9 479.9 495.9L175.9 495.9C122.9 495.9 79.9 452.9 79.9 399.9C79.9 357.2 107.8 320.9 146.5 308.5C158.3 304.7 165.3 292.5 162.6 280.4C160.8 272.5 159.9 264.3 159.9 255.9zM337 441L401 377C410.4 367.6 410.4 352.4 401 343.1C391.6 333.8 376.4 333.7 367.1 343.1L344.1 366.1L344.1 280C344.1 266.7 333.4 256 320.1 256C306.8 256 296.1 266.7 296.1 280L296.1 366.1L273.1 343.1C263.7 333.7 248.5 333.7 239.2 343.1C229.9 352.5 229.8 367.7 239.2 377L303.2 441C312.6 450.4 327.8 450.4 337.1 441z"/></svg>
+          Update catalog
+        </button>
+      </div>
+    </div>
+
+    <!-- Icons Panel (slide-down, same pattern as maps panel) -->
+    <div id="icons-panel">
+      <div class="panel-top-bar">
+        <button class="panel-back-btn" data-close="icons">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M71 303C61.6 312.4 61.6 327.6 71 336.9L239 505C248.4 514.4 263.6 514.4 272.9 505C282.2 495.6 282.3 480.4 272.9 471.1L145.9 344L552 344C565.3 344 576 333.3 576 320C576 306.7 565.3 296 552 296L145.9 296L273 169C282.4 159.6 282.4 144.4 273 135.1C263.6 125.8 248.4 125.7 239.1 135.1L71 303z"/></svg>
+          Back to Charts
+        </button>
+        <button id="btn-icons-close" class="grid-close-btn" title="Close">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg>
+        </button>
+      </div>
+      <div class="icons-panel-header">
+        <span class="icons-panel-title">OCHA Humanitarian Icons</span>
+      </div>
+      <div class="icons-filters">
+        <input type="text" id="icons-search" class="icons-search" placeholder="Search icons…" autocomplete="off">
+      </div>
+      <div class="icons-color-bar" id="icons-color-bar">
+        <span class="icons-color-label">Color</span>
+        <!-- Swatches populated by JS from active style palette -->
+      </div>
+      <div class="icons-family-wrap" id="icons-family-wrap">
+        <div class="icons-family-bar" id="icons-family-bar">
+          <!-- Family chips populated by JS -->
+        </div>
+        <button class="icons-family-toggle" id="icons-family-toggle" title="Show all families">
+          <svg class="icons-family-toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div id="icons-list" class="icons-list"></div>
+      <div id="icons-progress" class="icons-progress" style="display:none;">
+        <div class="icons-progress-label"><span id="icons-progress-text">Downloading…</span></div>
+        <div class="icons-progress-track"><div id="icons-progress-bar" class="icons-progress-fill"></div></div>
+      </div>
+      <div class="panel-disclaimer">UN OCHA does not intend to establish an official meaning or endorsement for each Humanitarian Icon. Their meaning and representation do not imply acceptance or endorsement by the United Nations. These icons are provided solely as indicative resources, open to interpretation and flexible labeling, to support reporting and advocacy efforts around humanitarian crises.</div>
+      <div class="icons-footer">
+        <div id="icons-status" class="panel-status"></div>
+        <button id="btn-icons-update" data-shell="illustrator" class="icons-update-btn" title="Re-fetch icons from GitHub">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M272 96C183.6 96 112 167.6 112 256C112 260.9 112.2 265.8 112.7 270.6C64.9 294 32 343.1 32 400C32 479.5 96.5 544 176 544L480 544C550.7 544 608 486.7 608 416C608 366.1 579.5 323 537.9 301.8C541.9 289.9 544 277.2 544 264C544 197.7 490.3 144 424 144C412.5 144 401.3 145.6 390.7 148.7C361.4 116.4 319.1 96 272 96zM160 256C160 194.1 210.1 144 272 144C309.7 144 343 162.6 363.3 191.1C370 200.6 382.6 203.9 393.1 198.9C402.4 194.5 412.8 192 423.9 192C463.7 192 495.9 224.2 495.9 264C495.9 278.1 491.9 291.2 484.9 302.3C480.8 308.8 480.1 316.9 482.9 324C485.7 331.1 491.9 336.5 499.4 338.3C534.2 347 559.9 378.5 559.9 415.9C559.9 460.1 524.1 495.9 479.9 495.9L175.9 495.9C122.9 495.9 79.9 452.9 79.9 399.9C79.9 357.2 107.8 320.9 146.5 308.5C158.3 304.7 165.3 292.5 162.6 280.4C160.8 272.5 159.9 264.3 159.9 255.9zM337 441L401 377C410.4 367.6 410.4 352.4 401 343.1C391.6 333.8 376.4 333.7 367.1 343.1L344.1 366.1L344.1 280C344.1 266.7 333.4 256 320.1 256C306.8 256 296.1 266.7 296.1 280L296.1 366.1L273.1 343.1C263.7 333.7 248.5 333.7 239.2 343.1C229.9 352.5 229.8 367.7 239.2 377L303.2 441C312.6 450.4 327.8 450.4 337.1 441z"/></svg>
+          Update icons
+        </button>
+      </div>
+    </div>
+
+    <!-- Flags Panel (slide-down, same pattern as icons panel) -->
+    <div id="flags-panel">
+      <div class="panel-top-bar">
+        <button class="panel-back-btn" data-close="flags">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M71 303C61.6 312.4 61.6 327.6 71 336.9L239 505C248.4 514.4 263.6 514.4 272.9 505C282.2 495.6 282.3 480.4 272.9 471.1L145.9 344L552 344C565.3 344 576 333.3 576 320C576 306.7 565.3 296 552 296L145.9 296L273 169C282.4 159.6 282.4 144.4 273 135.1C263.6 125.8 248.4 125.7 239.1 135.1L71 303z"/></svg>
+          Back to Charts
+        </button>
+        <button id="btn-flags-close" class="grid-close-btn" title="Close">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg>
+        </button>
+      </div>
+      <div class="flags-panel-header">
+        <span class="flags-panel-title">Country and territories flags</span>
+      </div>
+      <div class="flags-filters">
+        <input type="text" id="flags-search" class="flags-search" placeholder="Search countries…" autocomplete="off">
+      </div>
+      <div id="flags-list" class="flags-list"></div>
+      <div class="panel-disclaimer">The designations employed and the presentation of material in this page do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries.</div>
+      <div class="flags-footer">
+        <div id="flags-status" class="panel-status"></div>
+      </div>
+    </div>
+
+    <!-- Map Maker Panel (slide-down, same pattern as maps/icons/flags panels) -->
+    <div id="mapmaker-panel" data-shell="illustrator">
+      <div class="panel-top-bar">
+        <button class="panel-back-btn" data-close="mapmaker">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M71 303C61.6 312.4 61.6 327.6 71 336.9L239 505C248.4 514.4 263.6 514.4 272.9 505C282.2 495.6 282.3 480.4 272.9 471.1L145.9 344L552 344C565.3 344 576 333.3 576 320C576 306.7 565.3 296 552 296L145.9 296L273 169C282.4 159.6 282.4 144.4 273 135.1C263.6 125.8 248.4 125.7 239.1 135.1L71 303z"/></svg>
+          Back to Charts
+        </button>
+        <button id="btn-mapmaker-close" class="grid-close-btn" title="Close">
+          <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg>
+        </button>
+      </div>
+      <div class="mapmaker-header">
+        <span class="mapmaker-title">Map Maker</span>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Country</div>
+        <select id="mapmaker-country-select">
+          <option value="" disabled selected>Select a country…</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Admin levels</div>
+        <div class="mapmaker-checks">
+          <label><input type="checkbox" id="mapmaker-adm0" checked>
+            Admin <span class="mapmaker-adm-badge">0</span></label>
+          <label><input type="checkbox" id="mapmaker-adm1" checked>
+            Admin <span class="mapmaker-adm-badge">1</span></label>
+          <label><input type="checkbox" id="mapmaker-adm2">
+            Admin <span class="mapmaker-adm-badge">2</span></label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Map type</div>
+        <div class="mapmaker-radios">
+          <label><input type="radio" name="mapmaker-type" id="mapmaker-type-choropleth" checked> Choropleth</label>
+          <label><input type="radio" name="mapmaker-type" id="mapmaker-type-bubble"> Bubble</label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Data</div>
+        <div class="data-import-hint">Paste region + value data, or type directly in the grid.</div>
+        <div class="mapmaker-grid-scroll">
+          <table class="mapmaker-grid" id="mapmaker-grid">
+            <thead><tr><th>Region</th><th>Value</th></tr></thead>
+            <tbody id="mapmaker-grid-body">
+              <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+              <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+              <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button class="btn-link" id="btn-mapmaker-add-row" style="font-size:11px;">+ Add row</button>
+          <button class="btn-link" id="btn-mapmaker-clear-data" style="font-size:11px;color:var(--text-tertiary);">Clear</button>
+        </div>
+        <div id="mapmaker-match-report" class="mapmaker-match-report"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Options</div>
+        <div class="slider-row" style="margin-bottom:6px;">
+          <span class="slider-label">Classes</span>
+          <select id="mapmaker-num-classes" class="mapmaker-select" style="flex:1;">
+            <option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option>
+          </select>
+        </div>
+        <label class="mapmaker-check-label"><input type="checkbox" id="mapmaker-labels" checked> Show region labels</label>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Width</div>
+        <div class="slider-row">
+          <input type="range" id="mapmaker-width" min="200" max="1200" value="500" step="10">
+          <span class="slider-val" id="mapmaker-width-display">500px</span>
+        </div>
+      </div>
+
+      <div id="mapmaker-status" class="panel-status" style="display:none;"></div>
+      <div id="mapmaker-progress" class="mapmaker-progress" style="display:none;">
+        <div id="mapmaker-progress-bar" class="mapmaker-progress-fill"></div>
+      </div>
+
+      <div class="panel-disclaimer">The boundaries and names shown and the designations used on this map do not imply official endorsement or acceptance by the United Nations.</div>
+    </div>
+
+    <!-- Update Banner — three states driven by classes on the banner:
+         (default)     manual download — clicking opens the Dropbox folder
+         .auto-update  one-click in-plugin update available
+         .downloading  download in progress; shows progress bar
+         .ready        download complete; user needs to quit Illustrator to apply
+         .applied      previous launch applied an update — confirmation pill
+         .failed       previous helper run failed — surfaces the error -->
+    <div id="update-banner" data-shell="illustrator">
+      <span id="update-link" style="color:#000;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex:1;">
+        <svg viewBox="0 0 640 640" fill="currentColor" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M488 576C501.3 576 512 565.3 512 552C512 538.7 501.3 528 488 528L152 528C138.7 528 128 538.7 128 552C128 565.3 138.7 576 152 576L488 576zM303 441C312.4 450.4 327.6 450.4 336.9 441L473 305C482.4 295.6 482.4 280.4 473 271.1C463.6 261.8 448.4 261.7 439.1 271.1L344.1 366.1L344.1 88C344.1 74.7 333.4 64 320.1 64C306.8 64 296.1 74.7 296.1 88L296.1 366.1L201.1 271.1C191.7 261.7 176.5 261.7 167.2 271.1C157.9 280.5 157.8 295.7 167.2 305L303 441z"/></svg>
+        <span id="update-message">
+          New version available (<strong id="update-version"></strong>) — <u id="update-action-label">Download</u>
+        </span>
+      </span>
+      <!-- Progress bar overlays the message during download. Width is
+           updated inline by auto-updater.js progress callbacks. -->
+      <div id="update-progress" style="display:none;flex:1;height:6px;background:rgba(0,0,0,0.15);border-radius:3px;overflow:hidden;margin:0 8px;">
+        <div id="update-progress-fill" style="height:100%;background:#009EDB;width:0%;transition:width 0.15s ease;"></div>
+      </div>
+      <button id="update-dismiss" class="update-dismiss" title="Dismiss" style="color:#000;"><svg viewBox="0 0 640 640" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg></button>
+    </div>
+
+    <!-- Tab Bar -->
+    <div id="tab-bar">
+      <button class="tab-btn active" data-tab="data">Data</button>
+      <button class="tab-btn" data-tab="chart">Chart</button>
+      <button class="tab-btn" data-tab="design">Design</button>
+      <button class="tab-btn" data-tab="text">Text</button>
+    </div>
+
+    <!-- Scrollable Body -->
+    <div id="panel-body">
+
+      <!-- Place tip banner -->
+      <div id="place-tip" style="display:none; margin:0 0 8px; padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; line-height:1.4; color:var(--text-secondary); background:rgba(255,179,0,0.08); border:1px solid rgba(255,179,0,0.2);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFB300" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><span>Use the <strong>Design</strong> tab to edit colors, sizes and labels.</span>
+      </div>
+
+      <!-- ═══ DATA TAB ═══ -->
+      <div class="tab-panel active" data-tab="data">
+
+
+        <!-- Data Import -->
+        <div class="section" id="data-import-section">
+          <div class="section-label">Data</div>
+          <div class="data-import-hint">Click any cell and paste (Ctrl/Cmd+V), type directly, or upload a CSV file.</div>
+          <div class="btn-row" style="align-items:center;">
+            <button class="btn btn-secondary btn-sm" id="btn-upload-file"><svg viewBox="0 0 640 640" fill="currentColor" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M337 71C327.6 61.6 312.4 61.6 303.1 71L167 207C157.6 216.4 157.6 231.6 167 240.9C176.4 250.2 191.6 250.3 200.9 240.9L295.9 145.9L295.9 392C295.9 405.3 306.6 416 319.9 416C333.2 416 343.9 405.3 343.9 392L343.9 145.9L438.9 240.9C448.3 250.3 463.5 250.3 472.8 240.9C482.1 231.5 482.2 216.3 472.8 207L337 71zM144 408C144 394.7 133.3 384 120 384C106.7 384 96 394.7 96 408L96 480C96 533 139 576 192 576L448 576C501 576 544 533 544 480L544 408C544 394.7 533.3 384 520 384C506.7 384 496 394.7 496 408L496 480C496 506.5 474.5 528 448 528L192 528C165.5 528 144 506.5 144 480L144 408z"/></svg>Upload CSV</button>
+            <button class="btn btn-secondary btn-sm btn-use-ai" id="btn-use-ai" title="Generate a chart with the help of an AI assistant (Copilot, ChatGPT, Claude, etc.).">
+              <svg viewBox="0 0 640 640" fill="currentColor" class="btn-icon-ai" aria-hidden="true"><path fill="currentColor" d="M288 32C291.3 32 294.2 34 295.4 37L310.2 73.8L347 88.6C350 89.8 352 92.8 352 96C352 99.2 350 102.2 347 103.4L310.2 118.2L295.4 155C294.2 158 291.2 160 288 160C284.8 160 281.8 158 280.6 155L265.8 118.2L229 103.4C226 102.2 224 99.2 224 96C224 92.8 226 89.8 229 88.6L265.8 73.8L280.6 37C281.8 34 284.8 32 288 32zM492 112C490.7 112 489.4 112.5 488.5 113.5L381.9 220L420 258.1L526.5 151.5C527.4 150.6 528 149.3 528 148C528 146.7 527.5 145.4 526.5 144.5L495.5 113.5C494.6 112.6 493.3 112 492 112zM113.5 488.5C112.6 489.4 112 490.7 112 492C112 493.3 112.5 494.6 113.5 495.5L144.5 526.5C145.4 527.4 146.7 528 148 528C149.3 528 150.6 527.5 151.5 526.5L386.1 292L348 253.9L113.5 488.5zM454.6 79.5C464.5 69.6 478 64 492 64C506 64 519.5 69.6 529.5 79.5L560.5 110.5C570.4 120.5 576 134 576 148C576 162 570.4 175.5 560.5 185.5L185.5 560.5C175.5 570.4 162 576 148 576C134 576 120.5 570.4 110.5 560.5L79.5 529.5C69.6 519.5 64 506 64 492C64 478 69.6 464.5 79.5 454.5L454.5 79.5zM142.7 105.7L164.2 155.8L214.3 177.3C220.2 179.8 224 185.6 224 192C224 198.4 220.2 204.2 214.3 206.7L164.2 228.2L142.7 278.3C140.2 284.2 134.4 288 128 288C121.6 288 115.8 284.2 113.3 278.3L91.8 228.2L41.7 206.7C35.8 204.2 32 198.4 32 192C32 185.6 35.8 179.8 41.7 177.3L91.8 155.8L113.3 105.7C115.8 99.8 121.6 96 128 96C134.4 96 140.2 99.8 142.7 105.7zM510.7 377.7L532.2 427.8L582.3 449.3C588.2 451.8 592 457.6 592 464C592 470.4 588.2 476.2 582.3 478.7L532.2 500.2L510.7 550.3C508.2 556.2 502.4 560 496 560C489.6 560 483.8 556.2 481.3 550.3L459.8 500.2L409.7 478.7C403.8 476.2 400 470.4 400 464C400 457.6 403.8 451.8 409.7 449.3L459.8 427.8L481.3 377.7C483.8 371.8 489.6 368 496 368C502.4 368 508.2 371.8 510.7 377.7z"/></svg>
+              Use AI
+            </button>
+            <button class="btn-link" id="btn-sample-data">Load sample data</button>
+            <span id="sankey-sample-links" style="display:none;">
+              <button class="btn-link" id="btn-sankey-2">2-level sample</button>
+              <span style="color:var(--text-tertiary);font-size:11px;">·</span>
+              <button class="btn-link" id="btn-sankey-3">3-level sample</button>
+            </span>
+          </div>
+        </div>
+
+        <!-- Data Grid -->
+        <div id="data-grid-container"></div>
+
+        <!-- Auto-sort option -->
+        <div class="chart-option visible" id="auto-sort-option" style="margin-top:6px;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" id="auto-sort-check" checked>
+            <span style="font-size:11px;">Sort chart data largest to smallest</span>
+          </label>
+        </div>
+
+        <!-- Column Selectors (single value) -->
+        <div class="section" id="col-selector-section">
+          <div class="col-selectors">
+            <div class="col-label-wrap">
+              <label>Label column</label>
+              <select id="sel-label-col"></select>
+            </div>
+            <div class="col-value-wrap">
+              <label>Value column</label>
+              <select id="sel-value-col"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-value Column Selector (stacked) -->
+        <div class="section" id="multi-col-section">
+          <div class="section-label">Value Columns</div>
+          <div class="checkbox-list" id="multi-col-list"></div>
+        </div>
+
+        <!-- Chart import / export: copy / save / load JSON -->
+        <div class="section" id="chart-config-section" style="margin-top:18px;">
+          <div class="section-label">Import / Export</div>
+          <div class="data-import-hint">JSON snapshot of every setting in this chart (data + layout + style). Useful for sharing a chart with a colleague or saving it for reuse.</div>
+          <div class="btn-row" style="align-items:center;flex-wrap:wrap;gap:6px;">
+            <button class="btn btn-secondary btn-sm" id="btn-copy-config"><svg viewBox="0 0 640 640" fill="currentColor" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M480 400L288 400C279.2 400 272 392.8 272 384L272 128C272 119.2 279.2 112 288 112L421.5 112C425.7 112 429.8 113.7 432.8 116.7L491.3 175.2C494.3 178.2 496 182.3 496 186.5L496 384C496 392.8 488.8 400 480 400zM288 448L480 448C515.3 448 544 419.3 544 384L544 186.5C544 169.5 537.3 153.2 525.3 141.2L466.7 82.7C454.7 70.7 438.5 64 421.5 64L288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L368 496L368 512C368 520.8 360.8 528 352 528L160 528C151.2 528 144 520.8 144 512L144 256C144 247.2 151.2 240 160 240L176 240L176 192L160 192z"/></svg>Copy JSON</button>
+            <button class="btn btn-secondary btn-sm" id="btn-save-config"><svg viewBox="0 0 640 640" fill="currentColor" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M160 144C151.2 144 144 151.2 144 160L144 480C144 488.8 151.2 496 160 496L480 496C488.8 496 496 488.8 496 480L496 237.3C496 233.1 494.3 229 491.3 226L416 150.6L416 240C416 257.7 401.7 272 384 272L224 272C206.3 272 192 257.7 192 240L192 144L160 144zM240 144L240 224L368 224L368 144L240 144zM96 160C96 124.7 124.7 96 160 96L402.7 96C419.7 96 436 102.7 448 114.7L525.3 192C537.3 204 544 220.3 544 237.3L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 160zM256 384C256 348.7 284.7 320 320 320C355.3 320 384 348.7 384 384C384 419.3 355.3 448 320 448C284.7 448 256 419.3 256 384z"/></svg>Save…</button>
+            <button class="btn btn-secondary btn-sm" id="btn-load-config"><svg viewBox="0 0 640 640" fill="currentColor" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M129.5 464L179.5 304L558.9 304L508.9 464L129.5 464zM320.2 512L509 512C530 512 548.6 498.4 554.8 478.3L604.8 318.3C614.5 287.4 591.4 256 559 256L179.6 256C158.6 256 140 269.6 133.8 289.7L112.2 358.4L112.2 160C112.2 151.2 119.4 144 128.2 144L266.9 144C270.4 144 273.7 145.1 276.5 147.2L314.9 176C328.7 186.4 345.6 192 362.9 192L480.2 192C489 192 496.2 199.2 496.2 208L544.2 208C544.2 172.7 515.5 144 480.2 144L362.9 144C356 144 349.2 141.8 343.7 137.6L305.3 108.8C294.2 100.5 280.8 96 266.9 96L128.2 96C92.9 96 64.2 124.7 64.2 160L64.2 448C64.2 483.3 92.9 512 128.2 512L320.2 512z"/></svg>Load…</button>
+          </div>
+        </div>
+
+      </div><!-- end data tab -->
+
+      <!-- ═══ CHART TAB ═══ -->
+      <div class="tab-panel" data-tab="chart">
+        <div class="section">
+          <!-- "Chart Type" header row: section label on the left,
+               compact "Use AI" button on the right. The button is
+               literally the same one as on the Data tab — same class,
+               same icon, same modal — just placed here too so users
+               browsing chart types can launch the AI helper without
+               having to switch tabs. -->
+          <div class="section-label-row">
+            <div class="section-label">Chart Type</div>
+            <button class="btn btn-secondary btn-sm btn-use-ai" id="btn-use-ai-chart" title="Get an AI assistant to recommend a chart type and build it for you.">
+              <svg viewBox="0 0 640 640" fill="currentColor" class="btn-icon-ai" aria-hidden="true"><path fill="currentColor" d="M288 32C291.3 32 294.2 34 295.4 37L310.2 73.8L347 88.6C350 89.8 352 92.8 352 96C352 99.2 350 102.2 347 103.4L310.2 118.2L295.4 155C294.2 158 291.2 160 288 160C284.8 160 281.8 158 280.6 155L265.8 118.2L229 103.4C226 102.2 224 99.2 224 96C224 92.8 226 89.8 229 88.6L265.8 73.8L280.6 37C281.8 34 284.8 32 288 32zM492 112C490.7 112 489.4 112.5 488.5 113.5L381.9 220L420 258.1L526.5 151.5C527.4 150.6 528 149.3 528 148C528 146.7 527.5 145.4 526.5 144.5L495.5 113.5C494.6 112.6 493.3 112 492 112zM113.5 488.5C112.6 489.4 112 490.7 112 492C112 493.3 112.5 494.6 113.5 495.5L144.5 526.5C145.4 527.4 146.7 528 148 528C149.3 528 150.6 527.5 151.5 526.5L386.1 292L348 253.9L113.5 488.5zM454.6 79.5C464.5 69.6 478 64 492 64C506 64 519.5 69.6 529.5 79.5L560.5 110.5C570.4 120.5 576 134 576 148C576 162 570.4 175.5 560.5 185.5L185.5 560.5C175.5 570.4 162 576 148 576C134 576 120.5 570.4 110.5 560.5L79.5 529.5C69.6 519.5 64 506 64 492C64 478 69.6 464.5 79.5 454.5L454.5 79.5zM142.7 105.7L164.2 155.8L214.3 177.3C220.2 179.8 224 185.6 224 192C224 198.4 220.2 204.2 214.3 206.7L164.2 228.2L142.7 278.3C140.2 284.2 134.4 288 128 288C121.6 288 115.8 284.2 113.3 278.3L91.8 228.2L41.7 206.7C35.8 204.2 32 198.4 32 192C32 185.6 35.8 179.8 41.7 177.3L91.8 155.8L113.3 105.7C115.8 99.8 121.6 96 128 96C134.4 96 140.2 99.8 142.7 105.7zM510.7 377.7L532.2 427.8L582.3 449.3C588.2 451.8 592 457.6 592 464C592 470.4 588.2 476.2 582.3 478.7L532.2 500.2L510.7 550.3C508.2 556.2 502.4 560 496 560C489.6 560 483.8 556.2 481.3 550.3L459.8 500.2L409.7 478.7C403.8 476.2 400 470.4 400 464C400 457.6 403.8 451.8 409.7 449.3L459.8 427.8L481.3 377.7C483.8 371.8 489.6 368 496 368C502.4 368 508.2 371.8 510.7 377.7z"/></svg>
+              Use AI
+            </button>
+          </div>
+          <!-- Purpose filter: multi-tag chips. A chart can match several
+               (a column is comparison AND trend). Clicking dims non-matching
+               tiles. Tailored to our 16 types — see chart-picker-filter.js. -->
+          <div class="chart-filter" id="chart-purpose-filter">
+            <span class="chart-filter-lbl">Show charts for&hellip;</span>
+            <button type="button" class="chart-chip" data-purpose="comparison">Comparison</button>
+            <button type="button" class="chart-chip" data-purpose="time">Trend</button>
+            <button type="button" class="chart-chip" data-purpose="part">Part-to-whole</button>
+            <button type="button" class="chart-chip" data-purpose="relflow">Relationship &amp; flow</button>
+            <button type="button" class="chart-chip" data-purpose="single">Single values</button>
+            <button type="button" class="chart-filter-clear" id="chart-filter-clear" style="display:none;">clear</button>
+          </div>
+          <!-- Tiles grouped by visual family (a bar is always a bar — never
+               mis-filed). data-purpose carries the multi-tag set for the
+               filter above. Selection wiring keys on data-chart + .active,
+               which the family wrappers don't affect. -->
+          <div id="chart-sidebar">
+            <div class="chart-fam">
+              <div class="chart-fam-label">Bars &amp; columns</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn active" data-chart="hbar" data-purpose="comparison">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="fill-el" x="4" y="5" width="20" height="4.5" rx="1.5"/>
+                    <rect class="fill-el" x="4" y="13.5" width="13" height="4.5" rx="1.5"/>
+                    <rect class="fill-el" x="4" y="22" width="24" height="4.5" rx="1.5"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Horizontal Bar</span>
+                </button>
+                <button class="sidebar-btn" data-chart="vbar" data-purpose="comparison time">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="fill-el" x="4" y="12" width="5.5" height="16" rx="1.5"/>
+                    <rect class="fill-el" x="13" y="4" width="5.5" height="24" rx="1.5"/>
+                    <rect class="fill-el" x="22.5" y="16" width="5.5" height="12" rx="1.5"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Column</span>
+                </button>
+                <button class="sidebar-btn" data-chart="stacked-bar" data-purpose="comparison part">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="fill-el" x="4" y="5" width="12" height="4.5" rx="1.5"/>
+                    <rect class="fill-el" x="16" y="5" width="8" height="4.5" rx="1.5" opacity="0.4"/>
+                    <rect class="fill-el" x="4" y="13.5" width="8" height="4.5" rx="1.5"/>
+                    <rect class="fill-el" x="12" y="13.5" width="14" height="4.5" rx="1.5" opacity="0.4"/>
+                    <rect class="fill-el" x="4" y="22" width="15" height="4.5" rx="1.5"/>
+                    <rect class="fill-el" x="19" y="22" width="7" height="4.5" rx="1.5" opacity="0.4"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Stacked Bar</span>
+                </button>
+                <button class="sidebar-btn" data-chart="stacked-col" data-purpose="comparison part time">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="fill-el" x="4" y="17" width="5.5" height="11" rx="1.5"/>
+                    <rect class="fill-el" x="4" y="9" width="5.5" height="8" rx="1.5" opacity="0.4"/>
+                    <rect class="fill-el" x="13" y="13" width="5.5" height="15" rx="1.5"/>
+                    <rect class="fill-el" x="13" y="4" width="5.5" height="9" rx="1.5" opacity="0.4"/>
+                    <rect class="fill-el" x="22.5" y="20" width="5.5" height="8" rx="1.5"/>
+                    <rect class="fill-el" x="22.5" y="13" width="5.5" height="7" rx="1.5" opacity="0.4"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Stacked Column</span>
+                </button>
+                <button class="sidebar-btn" data-chart="cluster" data-purpose="comparison">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="fill-el" x="4" y="4" width="20" height="3.5" rx="1"/>
+                    <rect class="fill-el" x="4" y="9" width="14" height="3.5" rx="1" opacity="0.4"/>
+                    <rect class="fill-el" x="4" y="15" width="24" height="3.5" rx="1"/>
+                    <rect class="fill-el" x="4" y="20" width="10" height="3.5" rx="1" opacity="0.4"/>
+                    <rect class="fill-el" x="4" y="26" width="17" height="3.5" rx="1"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Cluster Bar</span>
+                </button>
+              </div>
+            </div>
+            <div class="chart-fam">
+              <div class="chart-fam-label">Lines</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn" data-chart="line" data-purpose="time comparison">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4,24 11,13 19,18 28,6"/>
+                    <circle cx="4" cy="24" r="2.2" class="fill-el"/>
+                    <circle cx="11" cy="13" r="2.2" class="fill-el"/>
+                    <circle cx="19" cy="18" r="2.2" class="fill-el"/>
+                    <circle cx="28" cy="6" r="2.2" class="fill-el"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Line Chart</span>
+                </button>
+                <button class="sidebar-btn" data-chart="cluster-line" data-purpose="time comparison">
+                  <!-- Four mini line plots in a 2x2 grid → small multiples. -->
+                  <svg viewBox="0 0 32 32" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="2,12 5,7 8,10 11,4"/>
+                    <polyline points="18,12 21,9 24,11 27,5" opacity="0.6"/>
+                    <polyline points="2,28 5,24 8,26 11,21" opacity="0.6"/>
+                    <polyline points="18,28 21,22 24,26 27,23" opacity="0.4"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Cluster Line</span>
+                </button>
+              </div>
+            </div>
+            <div class="chart-fam">
+              <div class="chart-fam-label">Circular</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn" data-chart="pie" data-purpose="part">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="0">
+                    <path d="M16,4 A12,12 0 1,1 9,26 L16,16 Z" class="fill-el"/>
+                    <path d="M9,26 A12,12 0 0,1 10,6 L16,16 Z" class="fill-el" opacity="0.35"/>
+                    <path d="M10,6 A12,12 0 0,1 16,4 L16,16 Z" class="fill-el" opacity="0.5"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Pie Chart</span>
+                </button>
+                <button class="sidebar-btn" data-chart="donut" data-purpose="part">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="0">
+                    <path d="M16,4 A12,12 0 1,1 9,26 L12.5,21 A6,6 0 1,0 16,10 Z" class="fill-el"/>
+                    <path d="M9,26 A12,12 0 0,1 10,6 L13,11 A6,6 0 0,0 12.5,21 Z" class="fill-el" opacity="0.35"/>
+                    <path d="M10,6 A12,12 0 0,1 16,4 L16,10 A6,6 0 0,0 13,11 Z" class="fill-el" opacity="0.5"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Donut Chart</span>
+                </button>
+                <button class="sidebar-btn" data-chart="cluster-donut" data-purpose="part comparison">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="0">
+                    <!-- Four small donuts in a 2 x 2 grid. Each donut is a
+                         compound path (outer ring + inner hole) carved out
+                         with fill-rule="evenodd". Opacities vary so the
+                         four read as a small-multiples cluster, not just
+                         four identical shapes. -->
+                    <path d="M9,4.5 a4.5,4.5 0 1,0 0,9 a4.5,4.5 0 1,0 0,-9 M9,7.2 a1.8,1.8 0 1,0 0,3.6 a1.8,1.8 0 1,0 0,-3.6" fill-rule="evenodd" class="fill-el"/>
+                    <path d="M23,4.5 a4.5,4.5 0 1,0 0,9 a4.5,4.5 0 1,0 0,-9 M23,7.2 a1.8,1.8 0 1,0 0,3.6 a1.8,1.8 0 1,0 0,-3.6" fill-rule="evenodd" class="fill-el" opacity="0.7"/>
+                    <path d="M9,18.5 a4.5,4.5 0 1,0 0,9 a4.5,4.5 0 1,0 0,-9 M9,21.2 a1.8,1.8 0 1,0 0,3.6 a1.8,1.8 0 1,0 0,-3.6" fill-rule="evenodd" class="fill-el" opacity="0.7"/>
+                    <path d="M23,18.5 a4.5,4.5 0 1,0 0,9 a4.5,4.5 0 1,0 0,-9 M23,21.2 a1.8,1.8 0 1,0 0,3.6 a1.8,1.8 0 1,0 0,-3.6" fill-rule="evenodd" class="fill-el" opacity="0.4"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Cluster Donut</span>
+                </button>
+              </div>
+            </div>
+            <div class="chart-fam">
+              <div class="chart-fam-label">Relationship &amp; flow</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn" data-chart="bubble" data-purpose="relflow">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round">
+                    <circle cx="9" cy="17" r="7" class="fill-el"/>
+                    <circle cx="21" cy="17" r="4.5" class="fill-el"/>
+                    <circle cx="28" cy="17" r="2.5" class="fill-el"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Bubble Chart</span>
+                </button>
+                <button class="sidebar-btn" data-chart="sankey" data-purpose="relflow part">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="none">
+                    <rect class="fill-el" x="3" y="4" width="4" height="10" rx="1"/>
+                    <rect class="fill-el" x="3" y="18" width="4" height="10" rx="1"/>
+                    <rect class="fill-el" x="25" y="2" width="4" height="12" rx="1"/>
+                    <rect class="fill-el" x="25" y="18" width="4" height="12" rx="1"/>
+                    <path d="M7,7 C16,7 16,5 25,5" stroke="currentColor" stroke-width="3" opacity="0.3" fill="none"/>
+                    <path d="M7,11 C16,11 16,22 25,22" stroke="currentColor" stroke-width="2" opacity="0.3" fill="none"/>
+                    <path d="M7,21 C16,21 16,10 25,10" stroke="currentColor" stroke-width="3" opacity="0.3" fill="none"/>
+                    <path d="M7,25 C16,25 16,27 25,27" stroke="currentColor" stroke-width="2" opacity="0.3" fill="none"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Sankey / Alluvial</span>
+                </button>
+              </div>
+            </div>
+            <div class="chart-fam">
+              <div class="chart-fam-label">Numbers</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn" data-chart="icon" data-purpose="single part">
+                  <svg viewBox="0 0 32 32" stroke="none" stroke-width="0">
+                    <circle cx="8" cy="8" r="3.2" class="fill-el"/><circle cx="16" cy="8" r="3.2" class="fill-el"/><circle cx="24" cy="8" r="3.2" class="fill-el"/>
+                    <circle cx="8" cy="16" r="3.2" class="fill-el"/><circle cx="16" cy="16" r="3.2" class="fill-el"/><circle cx="24" cy="16" r="3.2" class="fill-el" opacity="0.4"/>
+                    <circle cx="8" cy="24" r="3.2" class="fill-el" opacity="0.4"/><circle cx="16" cy="24" r="3.2" class="fill-el" opacity="0.4"/><circle cx="24" cy="24" r="3.2" class="fill-el" opacity="0.4"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Icon Chart</span>
+                </button>
+                <button class="sidebar-btn" data-chart="keyfigures" data-purpose="single">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="none">
+                    <rect class="fill-el" x="3" y="4" width="12" height="3" rx="0.5"/>
+                    <rect x="3" y="9" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect class="fill-el" x="18" y="4" width="12" height="3" rx="0.5"/>
+                    <rect x="18" y="9" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect class="fill-el" x="3" y="17" width="12" height="3" rx="0.5"/>
+                    <rect x="3" y="22" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect class="fill-el" x="18" y="17" width="12" height="3" rx="0.5"/>
+                    <rect x="18" y="22" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <line x1="16" y1="2" x2="16" y2="13" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>
+                    <line x1="16" y1="15" x2="16" y2="26" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Key Figures</span>
+                </button>
+              </div>
+            </div>
+            <div class="chart-fam">
+              <div class="chart-fam-label">Detail &amp; time</div>
+              <div class="chart-fam-grid">
+                <button class="sidebar-btn" data-chart="table" data-purpose="">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="24" height="24" rx="3"/>
+                    <line x1="4" y1="12" x2="28" y2="12"/>
+                    <line x1="4" y1="20" x2="28" y2="20"/>
+                    <line x1="14" y1="4" x2="14" y2="28"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Data Table</span>
+                </button>
+                <button class="sidebar-btn" data-chart="timeline" data-purpose="time">
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="16" x2="29" y2="16" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="7" cy="16" r="2.5" class="fill-el"/>
+                    <circle cx="16" cy="16" r="2.5" class="fill-el"/>
+                    <circle cx="25" cy="16" r="2.5" class="fill-el"/>
+                    <rect x="4" y="6" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect x="13" y="6" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect x="22" y="6" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+                    <rect x="4" y="23" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.5"/>
+                    <rect x="13" y="23" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.5"/>
+                    <rect x="22" y="23" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.5"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Timeline</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end chart tab -->
+
+      <!-- ═══ DESIGN TAB ═══ -->
+      <div class="tab-panel" data-tab="design">
+
+        <!-- Width Slider -->
+        <div class="section" id="width-section">
+          <div class="section-label">Width</div>
+          <div class="slider-row">
+            <input type="range" id="width-slider" min="100" max="1200" value="500" step="10">
+            <span class="slider-val" id="width-display">500px</span>
+            <span class="bp-badge" id="bp-display">md</span>
+          </div>
+        </div>
+
+        <!-- Height Slider (vertical padding) with auto checkbox -->
+        <div class="section" id="height-section">
+          <div class="section-label">Height</div>
+          <div class="slider-row">
+            <input type="range" id="height-slider" min="-100" max="400" value="0" step="5" class="auto-active">
+            <span class="slider-val" id="height-display">Auto</span>
+          </div>
+          <div class="auto-check">
+            <input type="checkbox" id="height-auto" checked>
+            <label for="height-auto">Auto</label>
+          </div>
+        </div>
+
+        <!-- Scale: fixed axis maximum for cross-chart comparison
+             (hbar, vbar, stacked-bar/col, cluster, line, bubble) -->
+        <div class="section" id="scale-section" style="display:none;">
+          <div class="section-label">Scale</div>
+          <div class="control-row" style="gap:8px;align-items:center;">
+            <label for="axis-max-input" style="font-size:11px;color:var(--text-secondary);white-space:nowrap;">Maximum value</label>
+            <input type="text" id="axis-max-input" class="input-field"
+              placeholder="Auto" style="flex:1;font-size:11px;text-align:left;">
+            <button type="button" id="axis-max-reset" class="slider-reset" title="Auto">↺</button>
+          </div>
+          <div style="font-size:10px;color:var(--text-tertiary);margin-top:4px;line-height:1.3;">
+            Type the same number in two charts to make them comparable. Accepts plain numbers (e.g. 100000) or K / M / B (e.g. 2.5M).
+          </div>
+        </div>
+
+        <!-- Hide "0" value labels — applies to hbar, vbar, line, bubble,
+             cluster, stacked-bar, stacked-col -->
+        <div class="section" id="hide-zero-section" style="display:none;">
+          <label class="toggle-label" style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;">
+            <input type="checkbox" id="hide-zero-labels"> Hide "0" value labels
+          </label>
+        </div>
+
+        <!-- Bar Thickness with auto checkbox (hbar/vbar/stacked only) -->
+        <div class="section" id="bar-thickness-section">
+          <div class="section-label">Bar Thickness</div>
+          <div class="slider-row">
+            <input type="range" id="bar-thickness-slider" min="2" max="60" value="20" step="1" class="auto-active">
+            <span class="slider-val" id="bar-thickness-display">Auto</span>
+          </div>
+          <div class="auto-check">
+            <input type="checkbox" id="bar-thickness-auto" checked>
+            <label for="bar-thickness-auto">Auto</label>
+          </div>
+        </div>
+
+        <!-- Bar Spacing — gap between columns (vbar / stacked-col /
+             cluster-v) or rows (hbar / stacked-bar / cluster-h). Auto
+             uses the responsive default. -->
+        <div class="section" id="bar-spacing-section">
+          <div class="section-label">Bar Spacing</div>
+          <div class="slider-row">
+            <input type="range" id="bar-spacing-slider" min="0" max="60" value="10" step="1" class="auto-active">
+            <span class="slider-val" id="bar-spacing-display">Auto</span>
+          </div>
+          <div class="auto-check">
+            <input type="checkbox" id="bar-spacing-auto" checked>
+            <label for="bar-spacing-auto">Auto</label>
+          </div>
+        </div>
+
+        <!-- Bar/Column Value Labels -->
+        <div class="section" id="bar-label-section" style="display:none;">
+          <div class="section-label">Value Labels</div>
+          <div class="text-fields">
+            <select id="bar-label-mode">
+              <option value="outside">Show (outside bars)</option>
+              <option value="inside">Inside bars</option>
+              <option value="total">Totals only</option>
+              <option value="none">Hide</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Value Format (number abbreviation + prefix/suffix) -->
+        <div class="section" id="value-format-section">
+          <div class="section-label">Value Format</div>
+          <select id="number-format">
+            <option value="auto">Auto (1k, 1M, 1B)</option>
+            <option value="full">Full number (1,000)</option>
+            <option value="K">Thousands (k)</option>
+            <option value="M">Millions (M)</option>
+            <option value="B">Billions (B)</option>
+          </select>
+          <div class="btn-row" style="gap:8px; margin-top:var(--space-200);">
+            <div style="flex:1;">
+              <label class="field-label" for="value-prefix">Prefix</label>
+              <input type="text" id="value-prefix" placeholder="e.g. US$ ">
+            </div>
+            <div style="flex:1;">
+              <label class="field-label" for="value-suffix">Suffix</label>
+              <input type="text" id="value-suffix" placeholder="e.g. %">
+            </div>
+          </div>
+        </div>
+
+        <!-- Stacked Charts: Series Colors -->
+        <div class="section" id="stacked-colors-section" style="display:none;">
+          <div class="section-label">Series Colors</div>
+          <div class="icon-legend-rows" id="stacked-color-rows">
+            <!-- Dynamically populated: one row per value column -->
+          </div>
+        </div>
+
+        <!-- Stacked Legend Toggle -->
+        <div class="section" id="stacked-legend-section" style="display:none;">
+          <div class="section-label">Legend</div>
+          <div class="control-row" style="gap:8px;align-items:center;">
+            <label class="toggle-label" style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;">
+              <input type="checkbox" id="stacked-legend-toggle"> Show legend above chart
+            </label>
+          </div>
+        </div>
+
+        <!-- Cluster Donut Legend Toggle (separate field; default ON) -->
+        <div class="section" id="cluster-donut-legend-section" style="display:none;">
+          <div class="section-label">Legend</div>
+          <div class="control-row" style="gap:8px;align-items:center;">
+            <label class="toggle-label" style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;">
+              <input type="checkbox" id="cluster-donut-legend-toggle" checked> Show legend above chart
+            </label>
+          </div>
+        </div>
+
+        <!-- Stacked Stroke Options -->
+        <div class="section" id="stacked-stroke-section" style="display:none;">
+          <div class="section-label">Segment Stroke</div>
+          <div class="control-row" style="gap:8px;align-items:center;">
+            <label class="toggle-label" style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;">
+              <input type="checkbox" id="stacked-stroke-toggle"> Enable
+            </label>
+            <div id="stacked-stroke-options" style="display:none;gap:8px;align-items:center;flex:1;">
+              <div style="display:flex;align-items:center;gap:4px;flex:1;">
+                <label style="font-size:10px;color:var(--text-secondary);white-space:nowrap;">Width</label>
+                <input type="range" id="stacked-stroke-width-range" min="1" max="8" step="1" value="2"
+                  style="flex:1;min-width:50px;">
+                <div class="input-with-unit" style="width:48px;">
+                  <input type="text" id="stacked-stroke-width" value="2"
+                    class="input-field" style="width:100%;text-align:center;-moz-appearance:textfield;font-size:11px;">
+                  <span class="input-unit">px</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <label style="font-size:10px;color:var(--text-secondary);">Color</label>
+                <button id="stacked-stroke-color" class="swatch-btn"
+                  style="width:20px;height:20px;border-radius:4px;border:1px solid var(--border-default);background:#FFFFFF;cursor:pointer;padding:0;">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row Icons / Flags -->
+        <div class="section" id="icon-col-section" style="display:none;">
+          <div class="section-label">Row Icons/Flags</div>
+          <div class="icon-col-radios">
+            <label class="radio-label"><input type="radio" name="icon-type" id="rad-none" value="none" checked> None</label>
+            <label class="radio-label"><input type="radio" name="icon-type" id="rad-flags" value="flags"> Country Flags</label>
+            <label class="radio-label"><input type="radio" name="icon-type" id="rad-icons" value="icons"> Humanitarian Icons</label>
+          </div>
+          <div id="icon-autofill-wrap" class="icon-autofill-wrap" style="display:none;">
+            <div class="icon-autofill-row">
+              <div class="icon-autofill-col-wrap">
+                <label>Match column</label>
+                <select id="sel-icon-match-col"></select>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btn-icon-autofill"><svg viewBox="0 0 640 640" fill="currentColor" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M488.5 113.5C489.4 112.6 490.7 112 492 112C493.3 112 494.6 112.5 495.5 113.5L526.5 144.5C527.4 145.4 528 146.7 528 148C528 149.3 527.5 150.6 526.5 151.5L420 258.1L381.9 220L488.5 113.5zM348 253.9L386.1 292L151.5 526.5C150.6 527.4 149.3 528 148 528C146.7 528 145.4 527.5 144.5 526.5L113.5 495.5C112.6 494.6 112 493.3 112 492C112 490.7 112.5 489.4 113.5 488.5L348 253.9zM492 64C478 64 464.5 69.6 454.5 79.5L79.5 454.5C69.6 464.5 64 478 64 492C64 506 69.6 519.5 79.5 529.5L110.5 560.5C120.5 570.4 134 576 148 576C162 576 175.5 570.4 185.5 560.5L560.5 185.5C570.4 175.5 576 162 576 148C576 134 570.4 120.5 560.5 110.5L529.5 79.5C519.5 69.6 506 64 492 64z"/></svg>Auto-fill</button>
+            </div>
+            <div id="icon-color-wrap" class="icon-color-wrap" style="display:none;">
+              <label>Icon color</label>
+              <div class="icon-color-swatch-row">
+                <div class="icon-color-swatch" id="icon-color-swatch" style="background:#009EDB;"></div>
+                <span class="icon-color-name" id="icon-color-name">UN Blue</span>
+              </div>
+            </div>
+            <div class="icon-col-hint" id="icon-col-hint">
+              Select icons per row below, or auto-fill from a column.
+            </div>
+          </div>
+          <div id="icon-row-list" class="icon-row-list"></div>
+        </div>
+
+        <!-- Single-value Chart Color (hbar, vbar, line, pie, donut, bubble, table) -->
+        <div class="section" id="chart-color-section" style="display:none;">
+          <div class="section-label">Chart Color</div>
+          <div class="icon-legend-row">
+            <div class="icon-legend-color" id="chart-color-swatch" style="background:#009EDB;"></div>
+            <span style="font-size:11px;color:var(--text-secondary);" id="chart-color-name">UN Blue</span>
+          </div>
+        </div>
+
+        <!-- Label Color (chart labels only — not title/subtitle/footer) -->
+        <div class="section" id="label-color-section">
+          <div class="section-label">Label Color</div>
+          <div class="icon-legend-row" id="label-color-row">
+            <div class="icon-legend-color" id="label-color-swatch" style="background:var(--text-primary); position:relative;">
+              <span class="label-color-auto-mark">A</span>
+            </div>
+            <span style="font-size:11px;color:var(--text-secondary);" id="label-color-name">Auto</span>
+          </div>
+        </div>
+
+        <!-- Line Chart Options -->
+        <div class="section" id="line-options-section" style="display:none;">
+          <div class="section-label">Line Options</div>
+          <div class="line-option-row" id="line-value-labels-row">
+            <label class="check-label"><input type="checkbox" id="line-value-labels" checked> Value labels (on points)</label>
+          </div>
+          <!-- Value labels dodge every line and each other; a dashed
+               leader line connects a label to its point when it's moved
+               to clear an overlap. The "Which value labels to show" table
+               at the bottom of this section picks exactly which points
+               get a label. -->
+
+          <div class="line-option-row" id="line-yaxis-row">
+            <label class="check-label"><input type="checkbox" id="line-show-yaxis"> Y axis with values</label>
+          </div>
+          <!-- Small multiples only. Off by default = one shared scale so
+               panels are comparable. On = each panel scales to its own
+               data, for reading trends regardless of magnitude. Turning
+               it on also switches the Y axis off (trend focus); the user
+               can turn the Y axis back on. -->
+          <div class="line-option-row" id="line-indep-scale-row" style="display:none;">
+            <label class="check-label"><input type="checkbox" id="line-indep-scale"> Separate scale per chart</label>
+          </div>
+          <!-- Multi-series only. Hidden by JS when the chart has a single
+               line (a lone series doesn't need naming or a legend). -->
+          <div class="line-option-row" id="line-end-labels-row" style="display:none;">
+            <label class="check-label"><input type="checkbox" id="line-end-labels" checked> Label lines at their end</label>
+          </div>
+          <div class="line-option-row" id="line-legend-row" style="display:none;">
+            <label class="check-label"><input type="checkbox" id="line-legend"> Legend</label>
+          </div>
+          <div class="line-option-row">
+            <label class="check-label"><input type="checkbox" id="shade-check"> Area fill (shade)</label>
+          </div>
+          <div class="line-option-row">
+            <label class="check-label"><input type="checkbox" id="line-show-dots"> Show data points</label>
+          </div>
+          <div class="slider-row" id="line-dot-size-row" style="margin-top:4px;">
+            <span class="slider-label">Data Point Size</span>
+            <input type="range" id="line-dot-size" min="2" max="12" value="4" step="1" style="flex:1;">
+            <span class="slider-val" id="line-dot-size-display">4px</span>
+          </div>
+          <div class="line-option-group" id="line-pos-group">
+            <div class="sub-label">Label Position</div>
+            <select id="line-label-pos">
+              <option value="auto">Auto (avoid overlaps)</option>
+              <option value="above">Always above</option>
+              <option value="below">Always below</option>
+            </select>
+          </div>
+          <div class="line-option-group" id="line-bg-group">
+            <div class="sub-label">Label Background</div>
+            <div class="icon-legend-row" id="line-label-bg-row">
+              <div class="icon-legend-color" id="line-label-bg-swatch" style="background:var(--bg-layer-1); position:relative; border:1.5px dashed var(--text-tertiary);">
+                <span class="label-color-auto-mark" style="font-size:7px;">OFF</span>
+              </div>
+              <span style="font-size:11px;color:var(--text-secondary);" id="line-label-bg-name">None</span>
+            </div>
+          </div>
+
+          <!-- Which value labels to show — a grid mirroring the data
+               (one checkbox per value). Lets the user label only the
+               points that matter (endpoints, peaks) instead of every
+               point. Built by DesignControlsUI.buildLineLabelTable from
+               the current data; hidden when value labels are off. -->
+          <div class="line-option-group" id="line-label-table-group" style="display:none;">
+            <div class="sub-label" style="display:flex;justify-content:space-between;align-items:center;">
+              Which value labels to show
+              <span style="font-weight:normal;">
+                <a href="#" id="line-labels-all" style="font-size:10px;color:var(--accent);text-decoration:none;">All</a>
+                <span style="color:var(--text-tertiary);font-size:10px;">·</span>
+                <a href="#" id="line-labels-none" style="font-size:10px;color:var(--accent);text-decoration:none;">None</a>
+              </span>
+            </div>
+            <div id="line-label-table" class="line-label-table"></div>
+          </div>
+        </div>
+
+        <!-- Bubble Chart: Orientation Toggle -->
+        <div class="toggle-group" id="bubble-orientation">
+          <button class="toggle-btn active" data-orient="horizontal">Horizontal</button>
+          <button class="toggle-btn" data-orient="vertical">Vertical</button>
+        </div>
+
+        <!-- Timeline: Orientation Toggle -->
+        <div class="toggle-group" id="timeline-orientation">
+          <button class="toggle-btn active" data-orient="horizontal">Horizontal</button>
+          <button class="toggle-btn" data-orient="vertical">Vertical</button>
+        </div>
+
+        <!-- Cluster Bar: Orientation Toggle -->
+        <div class="toggle-group" id="cluster-orientation">
+          <button class="toggle-btn active" data-orient="horizontal">Horizontal</button>
+          <button class="toggle-btn" data-orient="vertical">Vertical</button>
+        </div>
+
+        <!-- Timeline: Event Spacing Slider -->
+        <div class="section" id="timeline-spacing-section" style="display:none;">
+          <div class="section-label">Event Spacing</div>
+          <div class="slider-row">
+            <input type="range" id="timeline-spacing-slider" min="60" max="250" value="90" step="5">
+            <span class="slider-val" id="timeline-spacing-display">90px</span>
+            <button type="button" id="timeline-spacing-reset" class="slider-reset" title="Reset to default"><svg viewBox="0 0 640 640" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M88 64C101.3 64 112 74.7 112 88L112 166.1L139.1 139C239.1 39 401.2 39 501.1 139C601 239 601.1 401.1 501.1 501C401.1 600.9 239 601 139.1 501C124.2 486.1 111.5 469.8 101 452.5C94.1 441.2 97.8 426.4 109.1 419.5C120.4 412.6 135.2 416.3 142.1 427.6C150.6 441.6 160.9 454.9 173.1 467C254.3 548.2 386 548.2 467.3 467C548.6 385.8 548.5 254.1 467.3 172.8C386.1 91.5 254.4 91.6 173.1 172.8L146 199.9L224.2 199.9C237.5 199.9 248.2 210.6 248.2 223.9C248.2 237.2 237.5 247.9 224.2 247.9L88 248C74.7 248 64 237.3 64 224L64 88C64 74.7 74.7 64 88 64z"/></svg></button>
+          </div>
+          <label class="check-label" style="margin-top:6px;"><input type="checkbox" id="timeline-compact-arcs"> Compact rows</label>
+          <div class="slider-row" style="margin-top:6px;">
+            <input type="range" id="timeline-rowgap-slider" min="14" max="80" value="30" step="2">
+            <span class="slider-val" id="timeline-rowgap-display">30px</span>
+            <button type="button" id="timeline-rowgap-reset" class="slider-reset" title="Reset to default"><svg viewBox="0 0 640 640" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M88 64C101.3 64 112 74.7 112 88L112 166.1L139.1 139C239.1 39 401.2 39 501.1 139C601 239 601.1 401.1 501.1 501C401.1 600.9 239 601 139.1 501C124.2 486.1 111.5 469.8 101 452.5C94.1 441.2 97.8 426.4 109.1 419.5C120.4 412.6 135.2 416.3 142.1 427.6C150.6 441.6 160.9 454.9 173.1 467C254.3 548.2 386 548.2 467.3 467C548.6 385.8 548.5 254.1 467.3 172.8C386.1 91.5 254.4 91.6 173.1 172.8L146 199.9L224.2 199.9C237.5 199.9 248.2 210.6 248.2 223.9C248.2 237.2 237.5 247.9 224.2 247.9L88 248C74.7 248 64 237.3 64 224L64 88C64 74.7 74.7 64 88 64z"/></svg></button>
+          </div>
+          <div class="section-label" style="font-size:11px;color:var(--text-secondary, #888);margin-top:2px;">Row gap</div>
+        </div>
+
+        <!-- Bubble Chart: Separation Slider -->
+        <div class="section" id="bubble-separation-section" style="display:none;">
+          <div class="section-label">Bubble Spacing</div>
+          <div class="slider-row">
+            <label class="toggle-label" style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;white-space:nowrap;">
+              <input type="checkbox" id="bubble-separation-auto" checked> Auto
+            </label>
+            <input type="range" id="bubble-separation-slider" min="-200" max="200" value="0" step="5">
+            <span class="slider-val" id="bubble-separation-display">Auto</span>
+          </div>
+        </div>
+
+        <!-- Timeline: per-category dot colours -->
+        <div class="section" id="timeline-categories-section" style="display:none;">
+          <div class="section-label">Timeline categories</div>
+          <label class="check-label"><input type="checkbox" id="timeline-legend-toggle" checked> Show legend above chart</label>
+          <div id="timeline-category-rows"></div>
+          <div id="timeline-categories-hint" style="display:none;font-size:11px;color:var(--text-secondary, #888);font-style:italic;">
+            Add a "Category" column to your data to colour-code the timeline dots.
+          </div>
+        </div>
+
+        <!-- Donut Chart: Center Text -->
+        <div class="section" id="donut-center-section" style="display:none;">
+          <div class="section-label">Donut Center Text</div>
+          <label class="check-label"><input type="checkbox" id="donut-center-auto" checked> Auto (show total)</label>
+          <div class="text-fields">
+            <input type="text" id="donut-center-title" placeholder="Heading (e.g. Total)">
+            <input type="text" id="donut-center-label" placeholder="Label (e.g. 1.2M)">
+          </div>
+        </div>
+
+        <!-- Donut Hole Size -->
+        <div class="section" id="donut-hole-section" style="display:none;">
+          <div class="section-label">Inner Circle Size</div>
+          <div class="slider-row">
+            <input type="range" id="donut-hole-slider" min="20" max="80" value="60" step="5">
+            <span class="slider-val" id="donut-hole-display">60%</span>
+          </div>
+        </div>
+
+        <!-- Sankey Options -->
+        <div class="section" id="sankey-options-section" style="display:none;">
+          <div class="section-label" style="display:flex;justify-content:space-between;align-items:center;">
+            Sankey / Alluvial Options
+            <label style="font-weight:normal;font-size:11px;color:#888;cursor:pointer;"><input type="checkbox" id="sankey-auto-defaults" checked style="margin-right:3px;vertical-align:middle;">Reset to defaults</label>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Node Width</span>
+            <input type="range" id="sankey-node-width" min="15" max="40" value="20" step="1">
+            <span class="slider-val" id="sankey-node-width-display">20</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Node Padding</span>
+            <input type="range" id="sankey-node-padding" min="5" max="40" value="15" step="1">
+            <span class="slider-val" id="sankey-node-padding-display">15</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Link Opacity</span>
+            <input type="range" id="sankey-link-opacity" min="20" max="80" value="40" step="5">
+            <span class="slider-val" id="sankey-link-opacity-display">40%</span>
+          </div>
+          <div class="text-fields">
+            <select id="sankey-label-mode">
+              <option value="both">Name + Value</option>
+              <option value="name">Name only</option>
+              <option value="value">Value only</option>
+              <option value="none">No labels</option>
+            </select>
+          </div>
+          <!-- Same-label handling. By default the Source column is the
+               left stage and the Target column is the right stage, so a
+               label in both (e.g. Niger as an origin AND a destination)
+               shows as two nodes, one on each side. "Connect into a
+               flow" instead chains repeated labels into a multi-step
+               pipeline (e.g. Funding → Sector → Country). -->
+          <div class="slider-row" style="margin-top:6px;">
+            <span class="slider-label">Repeated labels</span>
+            <select id="sankey-node-mode" style="flex:1;">
+              <option value="auto" selected>Respect columns</option>
+              <option value="connect">Connect into a flow</option>
+            </select>
+          </div>
+          <div class="slider-row" style="margin-top:6px;">
+            <span class="slider-label">Color Mode</span>
+            <select id="sankey-color-mode" style="flex:1;">
+              <option value="single" selected>Single color</option>
+              <option value="multi">Multicolor</option>
+            </select>
+          </div>
+          <div id="sankey-single-color-row" class="slider-row" style="margin-top:4px;">
+            <span class="slider-label">Color</span>
+            <div id="sankey-color-swatches" style="display:flex;gap:3px;flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <!-- Key Figures Options -->
+        <div class="section" id="keyfigures-options-section" style="display:none;">
+          <div class="section-label">Key Figures Options</div>
+          <div class="slider-row">
+            <span class="slider-label">Column Number</span>
+            <label style="font-size:11px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:3px;margin-right:4px;">
+              <input type="checkbox" id="kf-auto-cols" checked> Auto
+            </label>
+            <input type="range" id="kf-max-cols" min="1" max="6" value="3" step="1" style="flex:1;" class="auto-active">
+            <span class="slider-val" id="kf-max-cols-display">3</span>
+          </div>
+          <div class="slider-row" style="margin-top:4px;">
+            <span class="slider-label">Column Width</span>
+            <label style="font-size:11px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:3px;margin-right:4px;">
+              <input type="checkbox" id="kf-auto-width" checked> Auto
+            </label>
+            <input type="range" id="kf-col-width" min="80" max="300" value="150" step="5" style="flex:1;" class="auto-active">
+            <span class="slider-val" id="kf-col-width-display">150px</span>
+          </div>
+          <div class="slider-row" style="margin-top:4px;">
+            <span class="slider-label">Icon/Flag Position</span>
+            <select id="kf-icon-position" style="flex:1;">
+              <option value="left" selected>Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+          <div class="slider-row" id="kf-icon-color-row" style="margin-top:4px;">
+            <span class="slider-label">Icon Color</span>
+            <button id="kf-icon-color-swatch" class="icon-legend-color" style="background:#009EDB;"></button>
+            <span class="icon-color-name" id="kf-icon-color-name" style="font-size:11px;color:var(--text-secondary);">UN Blue</span>
+          </div>
+          <div class="slider-row" style="margin-top:4px;">
+            <span class="slider-label">Text Color</span>
+            <button id="kf-text-color-swatch" class="icon-legend-color" style="background:#000000;position:relative;"></button>
+            <span class="icon-color-name" id="kf-text-color-name" style="font-size:11px;color:var(--text-secondary);">Black</span>
+          </div>
+          <div class="slider-row" style="margin-top:4px;">
+            <label style="font-size:11px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:4px;">
+              <input type="checkbox" id="kf-show-separators" checked> Show separators
+            </label>
+          </div>
+          <div class="slider-row" style="margin-top:8px;">
+            <label style="font-size:11px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:4px;">
+              <input type="checkbox" id="kf-default-padding" checked> Default padding
+            </label>
+          </div>
+          <div id="kf-padding-sliders">
+            <div class="slider-row">
+              <span class="slider-label">Horizontal Padding</span>
+              <input type="range" id="kf-pad-h" min="0" max="40" value="12" step="2">
+              <span class="slider-val" id="kf-pad-h-display">12px</span>
+            </div>
+            <div class="slider-row">
+              <span class="slider-label">Vertical Padding</span>
+              <input type="range" id="kf-pad-v" min="0" max="40" value="10" step="2">
+              <span class="slider-val" id="kf-pad-v-display">10px</span>
+            </div>
+            <div class="slider-row">
+              <span class="slider-label">Gap</span>
+              <input type="range" id="kf-gap" min="0" max="30" value="8" step="2">
+              <span class="slider-val" id="kf-gap-display">8px</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Options -->
+        <div class="section" id="timeline-options-section" style="display:none;">
+          <div class="section-label">Event Icons</div>
+          <div class="icon-legend-rows" id="timeline-icon-rows">
+            <!-- Populated dynamically: one row per event -->
+          </div>
+        </div>
+
+        <!-- Label Size (Design tab — controls chart label scaling) -->
+        <div class="section" id="label-scale-section">
+          <div class="section-label">Label Size</div>
+          <div class="slider-row">
+            <input type="range" id="label-scale-slider" min="50" max="200" value="100" step="5">
+            <span class="slider-val" id="label-scale-display">100%</span>
+          </div>
+        </div>
+
+        <!-- Pie/Donut Label Options -->
+        <div class="section" id="pie-label-section" style="display:none;">
+          <div class="section-label">Labels</div>
+          <div class="text-fields">
+            <select id="pie-label-mode">
+              <option value="auto">Auto (inside/outside)</option>
+              <option value="outside">Outside</option>
+              <option value="inside">Inside slices</option>
+              <option value="none">Hide labels</option>
+            </select>
+            <select id="pie-label-content">
+              <option value="label-pct">Label (XX%)</option>
+              <option value="pct">Percentage only</option>
+              <option value="value">Absolute value</option>
+              <option value="label-value">Label (value)</option>
+              <option value="label-value-pct">Label (value, XX%)</option>
+              <option value="value-pct">Value (XX%)</option>
+            </select>
+          </div>
+          <div class="chart-option visible" id="leader-lines-option">
+            <label>
+              <input type="checkbox" id="leader-lines-check" checked> Show leader lines
+            </label>
+          </div>
+          <div class="slider-row" style="margin-top:6px;">
+            <span class="slider-label">Label Distance</span>
+            <input type="range" id="pie-label-distance" min="8" max="60" value="24" step="1" style="flex:1;">
+            <span class="slider-val" id="pie-label-distance-display">24px</span>
+          </div>
+          <label class="check-label" style="margin-top:6px;"><input type="checkbox" id="pie-legend-toggle"> Show legend above chart</label>
+        </div>
+
+        <!-- Per-slice colour picker (pie / donut) -->
+        <div class="section" id="slice-colors-section" style="display:none;">
+          <div class="section-label">Slice colours</div>
+          <div id="slice-color-rows"></div>
+          <div id="slice-colors-hint" style="display:none;font-size:11px;color:var(--text-secondary, #888);font-style:italic;">
+            Add data rows to assign per-slice colours.
+          </div>
+        </div>
+
+        <!-- Per-category colour picker (cluster donut) -->
+        <div class="section" id="cluster-donut-categories-section" style="display:none;">
+          <div class="section-label">Category colours</div>
+          <div id="cluster-donut-category-rows"></div>
+          <div id="cluster-donut-categories-hint" style="display:none;font-size:11px;color:var(--text-secondary, #888);font-style:italic;">
+            Add a multi-column dataset to assign per-category colours.
+          </div>
+        </div>
+
+        <!-- Icon Chart: Series (per-row icon + color) -->
+        <div class="section" id="icon-series-section" style="display:none;">
+          <div class="section-label">Icon Series</div>
+          <div class="icon-legend-rows" id="icon-legend-rows">
+            <!-- Dynamically populated: one row per data row -->
+          </div>
+          <div class="section-label" style="margin-top:8px;">Icon Size</div>
+          <div class="slider-row">
+            <input type="range" id="icon-size-slider" min="12" max="48" value="20" step="2">
+            <span class="slider-val" id="icon-size-display">20</span>
+          </div>
+        </div>
+
+        <!-- Icon Chart: Legend Settings -->
+        <div class="section" id="icon-legend-section" style="display:none;">
+          <div class="section-label">Legend</div>
+          <div class="chart-option visible" style="margin-bottom:6px;">
+            <label>
+              <input type="checkbox" id="icon-show-legend" checked> Show legend
+            </label>
+          </div>
+          <div id="icon-legend-layout-row" style="margin-bottom:4px;">
+            <div class="section-label" style="margin-top:0;margin-bottom:4px;font-size:10px;">Layout</div>
+            <div class="icon-shape-picker" id="icon-legend-layout-picker">
+              <button data-layout="horizontal" class="icon-pick active" title="Horizontal (inline)">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="10" width="4" height="4" rx="1"/><rect x="7" y="10" width="6" height="4" rx="1" opacity=".4"/><rect x="15" y="10" width="4" height="4" rx="1"/><rect x="21" y="10" width="2" height="4" rx="1" opacity=".4"/></svg>
+              </button>
+              <button data-layout="vertical" class="icon-pick" title="Vertical (stacked)">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="4" height="4" rx="1"/><rect x="8" y="4" width="8" height="4" rx="1" opacity=".4"/><rect x="2" y="10" width="4" height="4" rx="1"/><rect x="8" y="10" width="10" height="4" rx="1" opacity=".4"/><rect x="2" y="16" width="4" height="4" rx="1"/><rect x="8" y="16" width="6" height="4" rx="1" opacity=".4"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden legacy ref (kept for JS DOM reparenting logic) -->
+        <div id="icon-options-section" style="display:none;"></div>
+
+      </div><!-- end design tab -->
+
+      <!-- ═══ TEXT TAB ═══ -->
+      <div class="tab-panel" data-tab="text">
+
+        <div class="section" id="text-labels-section">
+          <div class="section-label">Chart Labels</div>
+          <div class="text-fields">
+            <!-- Title / Subtitle / Footer — textareas so the user can drag the bottom-right
+                 corner to expand the visible area for long copy. rows=1 keeps the default
+                 height equal to a single-line input. The m3-field-text-grow class flags
+                 this single-line-default + resizable pattern in CSS. -->
+            <div class="m3-field m3-field-text-grow">
+              <textarea id="chart-title" rows="1" placeholder=" "></textarea>
+              <label for="chart-title">Title</label>
+            </div>
+            <div class="m3-field m3-field-text-grow">
+              <textarea id="chart-subtitle" rows="1" placeholder=" "></textarea>
+              <label for="chart-subtitle">Subtitle</label>
+            </div>
+            <div class="m3-field m3-field-textarea">
+              <textarea id="chart-comments" rows="2" placeholder=" "></textarea>
+              <label for="chart-comments">Comments (max 3 lines)</label>
+            </div>
+            <div class="m3-field m3-field-text-grow">
+              <textarea id="chart-footer" rows="1" placeholder=" "></textarea>
+              <label for="chart-footer">Footer / Source</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Size (all charts) -->
+        <div class="section" id="text-scale-section">
+          <div class="section-label">Text Size</div>
+          <div class="slider-row">
+            <input type="range" id="text-scale-slider" min="50" max="200" value="100" step="5">
+            <span class="slider-val" id="text-scale-display">100%</span>
+          </div>
+        </div>
+
+        <!-- Text Width — narrows the wrap zone for header/footer text
+             without moving the left anchor. Default 100% = full chart width. -->
+        <div class="section" id="text-width-section">
+          <div class="section-label">Text Width</div>
+          <div class="slider-row">
+            <input type="range" id="header-text-width-slider" min="30" max="100" value="100" step="5">
+            <span class="slider-val" id="header-text-width-display">100%</span>
+            <button type="button" id="header-text-width-reset" class="slider-reset" title="Reset to default">↺</button>
+          </div>
+          <div class="section-label" style="font-size:11px;color:var(--text-secondary, #888);margin-top:2px;">Title / subtitle / comments</div>
+          <div class="slider-row" style="margin-top:6px;">
+            <input type="range" id="footer-text-width-slider" min="30" max="100" value="100" step="5">
+            <span class="slider-val" id="footer-text-width-display">100%</span>
+            <button type="button" id="footer-text-width-reset" class="slider-reset" title="Reset to default">↺</button>
+          </div>
+          <div class="section-label" style="font-size:11px;color:var(--text-secondary, #888);margin-top:2px;">Footer / source</div>
+        </div>
+
+      </div><!-- end text tab -->
+
+    </div><!-- end panel-body -->
+
+    <!-- Status (floating above bottom bar) -->
+    <div id="status"></div>
+
+    <!-- Bottom Bar -->
+    <div id="bottom-bar" data-shell="illustrator">
+      <button class="btn btn-primary" id="btn-place"><svg viewBox="0 0 640 640" fill="currentColor" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M223.1 85.2C209.6 71.6 191.2 64 172 64C152.8 64 134.4 71.6 120.9 85.2L85.2 120.9C71.6 134.4 64 152.8 64 172C64 191.2 71.6 209.6 85.2 223.1L159.7 297.6C175.5 292 192.4 288.7 210.1 288L214.1 284L119.2 189.1C114.6 184.6 112 178.4 112 172C112 165.6 114.6 159.4 119.1 154.8L154.8 119.1C159.4 114.5 165.5 112 172 112C178.5 112 184.6 114.6 189.2 119.1L284.1 214L318 180.1L223.1 85.2zM379.1 517.1C389.8 527.8 403.2 535.6 417.8 539.7L545.6 575.2C553.9 577.5 562.9 575.2 569 569C575.1 562.8 577.5 553.9 575.2 545.6L539.6 417.8C535.5 403.2 527.8 389.9 517 379.1L491.8 353.9L457.9 387.8L483.1 413C488 417.9 491.5 423.9 493.4 430.6L517.5 517.5L430.6 493.4C424 491.6 417.9 488 413 483.1L387.8 457.9L383.8 461.9C383.2 479.5 379.9 496.4 374.2 512.3L379 517.1zM533.1 112C548 112 560 124 560 138.9C560 146 557.2 152.9 552.1 157.9L317.7 392.3C308.1 376.9 295 363.9 279.6 354.2L514.1 119.9C519.1 114.9 526 112 533.1 112zM480.1 85.9L229.3 336.7C224.9 336.2 220.5 336 216 336C149.7 336 96 389.7 96 456C96 462.2 96.5 468.4 97.4 474.4C100.1 492.3 88.1 512 70 512L64 512C46.3 512 32 526.3 32 544C32 561.7 46.3 576 64 576L216 576C282.3 576 336 522.3 336 456C336 451.5 335.8 447 335.3 442.7L586.1 191.9C600.2 177.9 608 158.8 608 138.9C608 97.5 574.5 64 533.1 64C513.2 64 494.2 71.9 480.1 85.9zM216 528L130.4 528L131.1 527.1C142.7 510.2 148.2 488.5 144.9 467.1C144.4 463.5 144.1 459.8 144.1 456C144.1 416.2 176.3 384 216.1 384C255.9 384 288.1 416.2 288.1 456C288.1 495.8 255.9 528 216.1 528z"/></svg>Place in artboard</button>
+    </div>
+
+    <!-- Beta Banner — pinned at the bottom of the window for the
+         duration of the beta period. Stays visible regardless of which
+         panel/menu is open, since it lives after the bottom bar in the
+         body flex column. Telegraphs "this is unfinished, please
+         report issues" and gives a one-click feedback path. Remove
+         this block when the plugin exits beta. -->
+    <div id="beta-banner">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span class="beta-banner-text">
+        Beta — feedback to <a href="#" class="cep-link beta-banner-link" data-url="mailto:ochavisual@un.org?subject=DataViz%20plugin%20feedback">ochavisual@un.org</a>
+      </span>
+      <!-- No dismiss button on purpose: while the plugin is in beta the
+           banner stays visible so the feedback channel is always one
+           click away. -->
+    </div>
+
+    <!-- ═══ Use AI modal ═══
+         Two-step flow in one dialog:
+           1) Copy prompt → paste into user's AI assistant
+           2) Paste JSON back in → validate + import
+    -->
+    <div id="ai-import-modal" class="ai-import-modal" style="display:none;">
+      <div class="ai-import-modal-inner">
+        <div class="ai-import-modal-header">
+          <span class="ai-import-modal-title">
+            <svg viewBox="0 0 640 640" fill="currentColor" class="ai-import-header-icon" aria-hidden="true"><path fill="currentColor" d="M288 32C291.3 32 294.2 34 295.4 37L310.2 73.8L347 88.6C350 89.8 352 92.8 352 96C352 99.2 350 102.2 347 103.4L310.2 118.2L295.4 155C294.2 158 291.2 160 288 160C284.8 160 281.8 158 280.6 155L265.8 118.2L229 103.4C226 102.2 224 99.2 224 96C224 92.8 226 89.8 229 88.6L265.8 73.8L280.6 37C281.8 34 284.8 32 288 32zM492 112C490.7 112 489.4 112.5 488.5 113.5L381.9 220L420 258.1L526.5 151.5C527.4 150.6 528 149.3 528 148C528 146.7 527.5 145.4 526.5 144.5L495.5 113.5C494.6 112.6 493.3 112 492 112zM113.5 488.5C112.6 489.4 112 490.7 112 492C112 493.3 112.5 494.6 113.5 495.5L144.5 526.5C145.4 527.4 146.7 528 148 528C149.3 528 150.6 527.5 151.5 526.5L386.1 292L348 253.9L113.5 488.5zM454.6 79.5C464.5 69.6 478 64 492 64C506 64 519.5 69.6 529.5 79.5L560.5 110.5C570.4 120.5 576 134 576 148C576 162 570.4 175.5 560.5 185.5L185.5 560.5C175.5 570.4 162 576 148 576C134 576 120.5 570.4 110.5 560.5L79.5 529.5C69.6 519.5 64 506 64 492C64 478 69.6 464.5 79.5 454.5L454.5 79.5zM142.7 105.7L164.2 155.8L214.3 177.3C220.2 179.8 224 185.6 224 192C224 198.4 220.2 204.2 214.3 206.7L164.2 228.2L142.7 278.3C140.2 284.2 134.4 288 128 288C121.6 288 115.8 284.2 113.3 278.3L91.8 228.2L41.7 206.7C35.8 204.2 32 198.4 32 192C32 185.6 35.8 179.8 41.7 177.3L91.8 155.8L113.3 105.7C115.8 99.8 121.6 96 128 96C134.4 96 140.2 99.8 142.7 105.7zM510.7 377.7L532.2 427.8L582.3 449.3C588.2 451.8 592 457.6 592 464C592 470.4 588.2 476.2 582.3 478.7L532.2 500.2L510.7 550.3C508.2 556.2 502.4 560 496 560C489.6 560 483.8 556.2 481.3 550.3L459.8 500.2L409.7 478.7C403.8 476.2 400 470.4 400 464C400 457.6 403.8 451.8 409.7 449.3L459.8 427.8L481.3 377.7C483.8 371.8 489.6 368 496 368C502.4 368 508.2 371.8 510.7 377.7z"/></svg>
+            AI assistant
+          </span>
+          <button id="ai-import-close" class="ai-import-modal-close" title="Close"><svg viewBox="0 0 640 640" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg></button>
+        </div>
+        <div class="ai-import-modal-body">
+
+          <div class="ai-import-step">
+            <div class="ai-import-step-num">1</div>
+            <div class="ai-import-step-content">
+              <div class="ai-import-step-title">Copy the prompt</div>
+              <div class="ai-import-step-desc">
+                Paste it into Copilot (or ChatGPT, Claude, Gemini) as a first message.
+                Then send your data, screenshot, Excel/Word file, or just a description —
+                the AI will help you in the process and return the JSON code to paste below.
+              </div>
+              <button id="ai-import-copy-prompt" class="btn btn-secondary btn-sm">
+                <svg viewBox="0 0 640 640" fill="currentColor" class="btn-icon-copy" aria-hidden="true"><path fill="currentColor" d="M480 400L288 400C279.2 400 272 392.8 272 384L272 128C272 119.2 279.2 112 288 112L421.5 112C425.7 112 429.8 113.7 432.8 116.7L491.3 175.2C494.3 178.2 496 182.3 496 186.5L496 384C496 392.8 488.8 400 480 400zM288 448L480 448C515.3 448 544 419.3 544 384L544 186.5C544 169.5 537.3 153.2 525.3 141.2L466.7 82.7C454.7 70.7 438.5 64 421.5 64L288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L368 496L368 512C368 520.8 360.8 528 352 528L160 528C151.2 528 144 520.8 144 512L144 256C144 247.2 151.2 240 160 240L176 240L176 192L160 192z"/></svg>
+                Copy prompt and paste in your AI
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-import-step">
+            <div class="ai-import-step-num">2</div>
+            <div class="ai-import-step-content">
+              <div class="ai-import-step-title">Share your data to your AI</div>
+              <div class="ai-import-step-desc">
+                Paste text, upload a file, or describe what you want. The AI returns a JSON object.
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-import-step">
+            <div class="ai-import-step-num">3</div>
+            <div class="ai-import-step-content">
+              <div class="ai-import-step-title">Paste the JSON the AI returned</div>
+              <div class="ai-import-step-desc">
+                The AI should return a single JSON object. Paste it below and click
+                Import. If anything is off, you'll get a one-click "Copy fix prompt"
+                you can paste back into the AI.
+              </div>
+              <textarea id="ai-import-textarea" placeholder='{ "chartType": "hbar", "title": "…", "headers": [ … ], "rows": [ … ] }' spellcheck="false"></textarea>
+              <div id="ai-import-error" class="ai-import-error" style="display:none;">
+                <div id="ai-import-error-msg" class="ai-import-error-msg"></div>
+                <div class="ai-import-error-actions">
+                  <button id="ai-import-copy-fix" class="btn btn-secondary btn-sm"><svg viewBox="0 0 640 640" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M480 400L288 400C279.2 400 272 392.8 272 384L272 128C272 119.2 279.2 112 288 112L421.5 112C425.7 112 429.8 113.7 432.8 116.7L491.3 175.2C494.3 178.2 496 182.3 496 186.5L496 384C496 392.8 488.8 400 480 400zM288 448L480 448C515.3 448 544 419.3 544 384L544 186.5C544 169.5 537.3 153.2 525.3 141.2L466.7 82.7C454.7 70.7 438.5 64 421.5 64L288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L368 496L368 512C368 520.8 360.8 528 352 528L160 528C151.2 528 144 520.8 144 512L144 256C144 247.2 151.2 240 160 240L176 240L176 192L160 192z"/></svg>Copy fix prompt</button>
+                  <button id="ai-import-try-again" class="btn-link"><svg viewBox="0 0 640 640" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M561.4 65.8C552.4 62.1 542.1 64.1 535.2 71L483.4 122.8C382.8 39.3 233.3 44.7 139.1 139C39.1 239 39.1 401 139.1 501C239.1 601 401.2 601 501.1 501C516 486.1 528.7 469.8 539.2 452.5C546.1 441.2 542.4 426.4 531.1 419.5C519.8 412.6 505 416.3 498.1 427.6C489.6 441.6 479.3 454.9 467.1 467C385.9 548.2 254.2 548.2 172.9 467C91.6 385.8 91.7 254.1 172.9 172.8C248.4 97.3 367.5 92 449.1 156.8L399.1 207C392.2 213.9 390.2 224.2 393.9 233.2C397.6 242.2 406.4 248 416.1 248L552.2 248C565.5 248 576.2 237.3 576.2 224L576.2 88C576.2 78.3 570.4 69.5 561.4 65.8zM528.2 145.9L528.2 200L474.1 200L528.2 145.9z"/></svg>Try again</button>
+                </div>
+                <div class="ai-import-error-hint">
+                  Paste the fix prompt back into your AI — it will return corrected JSON you can paste above.
+                </div>
+              </div>
+              <!--
+                Batch review pane — populated by ai-import.js when the paste
+                contains a JSON ARRAY of charts. Hidden in single-chart mode.
+                The textarea + error block are CSS-hidden when the modal has
+                the `ai-import-batch-mode` class.
+              -->
+              <div id="ai-import-batch-summary" class="ai-import-batch-summary" style="display:none;"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="ai-import-modal-footer">
+          <button id="ai-import-cancel" class="btn btn-secondary btn-sm">Cancel</button>
+          <button id="ai-import-submit" class="btn btn-primary btn-sm">Import chart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Load chart modal ═══
+         Reuses the AI-modal shell. Two ways to load a saved chart's
+         JSON snapshot: paste it, or upload a .json file. -->
+    <div id="load-config-modal" class="ai-import-modal" style="display:none;">
+      <div class="ai-import-modal-inner">
+        <div class="ai-import-modal-header">
+          <span class="ai-import-modal-title">Load chart</span>
+          <button id="load-config-close" class="ai-import-modal-close" title="Close"><svg viewBox="0 0 640 640" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg></button>
+        </div>
+        <div class="ai-import-modal-body">
+          <div class="ai-import-step-desc" style="margin-bottom:10px;">
+            Paste a chart's JSON below, or upload a saved <code>.json</code> file.
+            (Produced by another chart's “Copy JSON” or “Save…”.)
+          </div>
+          <button id="load-config-upload" class="btn btn-secondary btn-sm"><svg viewBox="0 0 640 640" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M337 71C327.6 61.6 312.4 61.6 303.1 71L167 207C157.6 216.4 157.6 231.6 167 240.9C176.4 250.2 191.6 250.3 200.9 240.9L295.9 145.9L295.9 392C295.9 405.3 306.6 416 319.9 416C333.2 416 343.9 405.3 343.9 392L343.9 145.9L438.9 240.9C448.3 250.3 463.5 250.3 472.8 240.9C482.1 231.5 482.2 216.3 472.8 207L337 71zM144 408C144 394.7 133.3 384 120 384C106.7 384 96 394.7 96 408L96 480C96 533 139 576 192 576L448 576C501 576 544 533 544 480L544 408C544 394.7 533.3 384 520 384C506.7 384 496 394.7 496 408L496 480C496 506.5 474.5 528 448 528L192 528C165.5 528 144 506.5 144 480L144 408z"/></svg>Upload .json file…</button>
+          <textarea id="load-config-textarea" placeholder='{ "chartType": "hbar", "title": "…", "headers": [ … ], "rows": [ … ] }' spellcheck="false" style="margin-top:10px;"></textarea>
+          <div id="load-config-error" class="ai-import-error" style="display:none;">
+            <div id="load-config-error-msg" class="ai-import-error-msg"></div>
+          </div>
+        </div>
+        <div class="ai-import-modal-footer">
+          <button id="load-config-cancel" class="btn btn-secondary btn-sm">Cancel</button>
+          <button id="load-config-submit" class="btn btn-primary btn-sm">Load</button>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Batch placement progress overlay.
+      Shown while AI Import places several charts in sequence (one per
+      new artboard). Hidden by default; populated and shown by
+      panel.js's showBatchProgress / updateBatchProgress / hideBatchProgress.
+      Sits as a thin bar near the top of the panel so it's visible without
+      blocking the chart preview behind it.
+    -->
+    <div id="batch-progress-overlay" class="batch-progress-overlay" style="display:none;">
+      <div class="batch-progress-row">
+        <span class="batch-progress-label" id="batch-progress-label">Starting…</span>
+        <span class="batch-progress-count" id="batch-progress-count">0 / 0</span>
+      </div>
+      <div class="batch-progress-track">
+        <div class="batch-progress-fill" id="batch-progress-fill"></div>
+      </div>
+    </div>
+
+    <!--
+      Batch placement pause-on-error modal.
+      Shown when a single chart inside a batch fails (silent artboard
+      overflow, render error, host timeout, etc.). Pauses the loop and
+      asks the user whether to skip the failed chart and keep going, or
+      to stop the whole batch. If the failure is plausibly fixable by
+      regenerating the JSON, a "Copy fix prompt" button is shown so the
+      user can paste the corrected JSON back into the AI.
+    -->
+    <div id="batch-pause-modal" class="batch-pause-modal" style="display:none;">
+      <div class="batch-pause-modal-inner">
+        <div class="batch-pause-header">
+          <span class="batch-pause-title" id="batch-pause-title">Chart placement paused</span>
+        </div>
+        <div class="batch-pause-body">
+          <div class="batch-pause-message" id="batch-pause-message"></div>
+          <div class="batch-pause-progress" id="batch-pause-progress"></div>
+          <div class="batch-pause-hint">
+            You can skip the failed chart and continue placing the rest, or stop the batch entirely. Already-placed charts stay on the artboards.
+          </div>
+        </div>
+        <div class="batch-pause-actions">
+          <button id="batch-pause-copy-fix" class="btn btn-secondary btn-sm" style="display:none;"><svg viewBox="0 0 640 640" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M480 400L288 400C279.2 400 272 392.8 272 384L272 128C272 119.2 279.2 112 288 112L421.5 112C425.7 112 429.8 113.7 432.8 116.7L491.3 175.2C494.3 178.2 496 182.3 496 186.5L496 384C496 392.8 488.8 400 480 400zM288 448L480 448C515.3 448 544 419.3 544 384L544 186.5C544 169.5 537.3 153.2 525.3 141.2L466.7 82.7C454.7 70.7 438.5 64 421.5 64L288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L368 496L368 512C368 520.8 360.8 528 352 528L160 528C151.2 528 144 520.8 144 512L144 256C144 247.2 151.2 240 160 240L176 240L176 192L160 192z"/></svg>Copy fix prompt</button>
+          <button id="batch-pause-stop" class="btn btn-secondary btn-sm">Stop batch</button>
+          <button id="batch-pause-continue" class="btn btn-primary btn-sm">Skip and continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row Icon Picker Popup (shared overlay — positioned fixed) -->
+    <div id="row-icon-picker-popup" class="icon-picker-popup" style="display:none;">
+      <div class="icon-picker-popup-header">
+        <input type="text" id="row-icon-picker-search" placeholder="Search…" autocomplete="off">
+        <button id="row-icon-picker-close" class="icon-picker-popup-close"><svg viewBox="0 0 640 640" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg></button>
+      </div>
+      <div id="row-icon-picker-family-pills" class="icon-picker-family-pills" style="display:none;"></div>
+      <div id="row-icon-picker-grid" class="icon-picker-grid"></div>
+    </div>
+
+  </div><!-- end main-content -->
+
+  <!-- ═══ Scripts ═══ -->
+  <!-- Custom colour themes modal -->
+  <div id="themes-modal" class="ai-import-modal" style="display:none;">
+    <div class="ai-import-modal-inner">
+      <div class="ai-import-modal-header">
+        <span class="ai-import-modal-title">Custom themes</span>
+        <button id="themes-close" class="ai-import-modal-close" title="Close"><svg viewBox="0 0 640 640" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M135.5 169C126.1 159.6 126.1 144.4 135.5 135.1C144.9 125.8 160.1 125.7 169.4 135.1L320.4 286.1L471.4 135.1C480.8 125.7 496 125.7 505.3 135.1C514.6 144.5 514.7 159.7 505.3 169L354.3 320L505.3 471C514.7 480.4 514.7 495.6 505.3 504.9C495.9 514.2 480.7 514.3 471.4 504.9L320.4 353.9L169.4 504.9C160 514.3 144.8 514.3 135.5 504.9C126.2 495.5 126.1 480.3 135.5 471L286.5 320L135.5 169z"/></svg></button>
+      </div>
+      <div class="ai-import-modal-body">
+        <p class="themes-intro">Build a colour palette (e.g. your organisation&rsquo;s brand) &mdash; it appears in the Theme list. Export to share with colleagues.</p>
+
+        <div class="themes-editor-title">Your themes</div>
+        <button type="button" id="themes-import" class="themes-mini-btn themes-import-btn">Import theme&hellip;</button>
+        <div id="themes-list" class="themes-list"></div>
+
+        <div class="themes-divider"></div>
+
+        <div class="themes-editor">
+          <div class="themes-editor-title" id="themes-editor-title">New theme</div>
+          <label class="themes-field">Name
+            <input type="text" id="theme-name" placeholder="e.g. OCHA WHD campaign">
+          </label>
+          <div class="themes-editor-cols">
+            <div class="themes-col">
+              <div class="themes-field-label">Palette colours</div>
+              <div class="themes-colormode">
+                <button type="button" id="cmode-hex" class="cmode-btn is-active">HEX</button>
+                <button type="button" id="cmode-cmyk" class="cmode-btn">CMYK</button>
+              </div>
+              <div id="theme-colors" class="theme-colors"></div>
+              <button type="button" id="theme-add-color" class="themes-mini-btn">+ Add colour</button>
+            </div>
+            <div class="themes-col">
+              <div class="themes-field-label">Fonts <span class="themes-hint">(optional)</span></div>
+              <label class="themes-field">Title font
+                <select id="theme-font-title"><option value="">Default (Roboto)</option></select>
+              </label>
+              <label class="themes-field">Body font
+                <select id="theme-font-body"><option value="">Default (Roboto)</option></select>
+              </label>
+              <p class="themes-font-note">Use a font installed in your system so it imports cleanly &mdash; <strong>Mac:</strong> Font Book (or a <em>Library &rsaquo; Fonts</em> folder); <strong>Windows:</strong> right-click the font file &rsaquo; Install. Fonts bundled with Adobe apps (e.g.&nbsp;Myriad Pro) live in Adobe&rsquo;s private folder and may not import.</p>
+            </div>
+          </div>
+          <div class="themes-editor-actions">
+            <button type="button" id="theme-save" class="themes-primary-btn">Save theme</button>
+            <button type="button" id="theme-cancel" class="themes-ghost-btn">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div id="themes-msg"></div>
+    </div>
+  </div>
+
+  <!-- Shell connector: everything Illustrator-specific goes through the
+       global Connector (connector-illustrator.js). Scripts marked
+       data-shell="illustrator" are plugin-only — the web build leaves them
+       out and loads its own connector instead. Unmarked scripts are shared
+       by both shells and must not use CEP / Node directly
+       (tests/shell/check-shared.js enforces this). Page elements marked
+       data-shell="illustrator" (Guides, Map Maker, updater, placing) are
+       hidden by the web version's stylesheet. -->
+  <script src="lib/papaparse.min.js"></script>
+  <script src="panel-utils.js"></script>
+  <script src="browser-files.js"></script>
+  <script src="connector-web.js"></script>
+  <script src="data-store.js"></script>
+  <script src="chart-registry.js"></script>
+  <script src="themes-store.js"></script>
+  <script src="chart-hbar.js"></script>
+  <script src="chart-vbar.js"></script>
+  <script src="chart-line.js"></script>
+  <script src="chart-cluster-line.js"></script>
+  <script src="chart-pie.js"></script>
+  <script src="chart-donut.js"></script>
+  <script src="chart-cluster-donut.js"></script>
+  <script src="chart-stacked-bar.js"></script>
+  <script src="chart-stacked-col.js"></script>
+  <script src="chart-cluster.js"></script>
+  <script src="chart-bubble.js"></script>
+  <script src="chart-table.js"></script>
+  <script src="icon-library.js"></script>
+  <script src="chart-icon.js"></script>
+  <script src="chart-sankey.js"></script>
+  <script src="chart-keyfigures.js"></script>
+  <script src="keyfigures-ui.js"></script>
+  <script src="chart-timeline.js"></script>
+  <script src="timeline-ui.js"></script>
+  <script src="data-grid.js"></script>
+  <script src="data-input.js"></script>
+  <script src="http-utils.js"></script>
+  <script src="maps-panel.js"></script>
+  <script src="icons-panel.js"></script>
+  <script src="flags-data.js"></script>
+  <script src="flags-panel.js"></script>
+  <script src="svg-inline-utils.js"></script>
+  <script src="geo-projection.js"></script>
+  <script src="chart-map.js"></script>
+  <script src="status-ui.js"></script>
+  <script src="theme-manager.js"></script>
+  <script src="analytics.js"></script>
+  <script src="color-pickers-ui.js"></script>
+  <script src="icon-flag-ui.js"></script>
+  <script src="series-legend-ui.js"></script>
+  <script src="design-controls-ui.js"></script>
+  <script src="chart-builder.js"></script>
+  <script src="panel-coordinator.js"></script>
+  <script src="chart-picker-filter.js"></script>
+  <script src="ai-prompt-template.js"></script>
+  <script src="ai-import.js"></script>
+  <script src="themes-ui.js"></script>
+
+  <script src="zip-store.js"></script>
+  <script src="web-icons.js"></script>
+  <script src="signup-lists.js"></script>
+  <script src="web-shell.js"></script>
+  <script src="web-gate.js"></script>
+
+  <script src="panel.js"></script>
+  <script src="design-groups.js"></script>
+  <script src="data-groups.js"></script>
+  <script src="text-tab-ui.js"></script>
+  <script src="auto-pill.js"></script>
+  <script src="auto-resolved.js"></script>
+  <script src="text-format.js"></script>
+  <script src="compact-layout.js"></script>
+
+  <!-- Placement overlay — blocks UI during chart/map placement -->
+  <div id="placing-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:var(--bg-primary,#fff);padding:16px 24px;border-radius:8px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+      <div id="placing-overlay-text" style="font-size:13px;font-weight:600;color:var(--text-primary,#333);">Placing in artboard…</div>
+      <div style="margin-top:8px;height:3px;border-radius:2px;background:var(--border,#ddd);overflow:hidden;">
+        <div style="height:100%;width:40%;background:var(--accent,#009EDB);border-radius:2px;animation:placeProgress 1.2s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </div>
+  <style>@keyframes placeProgress{0%{transform:translateX(-100%)}50%{transform:translateX(150%)}100%{transform:translateX(-100%)}}</style>
+</body>
+</html>
