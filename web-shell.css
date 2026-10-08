@@ -266,6 +266,9 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
 #web-gate .gate-note { font-size: var(--font-size-xs); line-height: 1.5; color: var(--text-tertiary); }
 #web-gate .gate-note a { color: inherit; }
 
+#web-newtab { text-decoration: none; }
+#web-newtab[hidden] { display: none; }
+
 /* Full-screen toggle sits apart from the export buttons */
 #web-fullscreen { margin-right: var(--space-100); }
 #web-fullscreen[hidden] { display: none; }

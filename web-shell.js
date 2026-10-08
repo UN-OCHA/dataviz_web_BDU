@@ -64,6 +64,8 @@
       '<div class="web-title">Humanitarian DataViz Tool <span>— web <span id="web-version"></span></span></div>' +
       '<span id="web-message" role="status" aria-live="polite"></span>' +
       '<div class="web-actions">' +
+      '<a class="btn btn-secondary btn-sm" id="web-newtab" hidden target="_blank" rel="noopener" title="Open the tool in its own browser tab">' +
+        icon("arrow-up-right-from-square") + "Open in new tab</a>" +
       '<button type="button" class="btn btn-secondary btn-sm" id="web-fullscreen" hidden title="Use the whole screen">' +
         icon("expand") + '<span class="fs-label">Full screen</span></button>' +
       '<button type="button" class="btn btn-primary btn-sm" id="web-dl-svg" disabled title="Download the chart as an SVG file with live, editable text">' +
@@ -148,6 +150,17 @@
   // signed up; see connector-web.js). Same style as the plugin's events.
   function count(event) {
     if (typeof window.sendAnalyticsPing === "function") window.sendAnalyticsPing(event);
+  }
+
+  // ── Inside an embed (e.g. the brand portal page) ────────────
+  // Offer the tool in its own tab: more room, and its own browser storage.
+  var inFrame = false;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  if (inFrame) {
+    var nt = document.getElementById("web-newtab");
+    nt.href = location.href.split("#")[0];
+    nt.hidden = false;
+    nt.addEventListener("click", function () { count("tool:newtab"); });
   }
 
   // ── Full screen ─────────────────────────────────────────────
