@@ -480,6 +480,17 @@ body {
 
 /* Donate section in menu */
 .menu-donate { text-align: left; padding: var(--space-75) var(--space-200); }
+
+/* OCHA logo at the bottom of the menu. Official files, never recoloured:
+   the white logo on the dark menu, the blue one on the light menu. At 96 px
+   wide the UN emblem is ~23 px across, so the clear space (half the emblem)
+   is at least 12 px on every side (--space-200 is 12–16 px). 96 px is above
+   the 57 px screen minimum. */
+.menu-logo { padding: var(--space-200); }
+.menu-logo-img { display: block; width: 96px; height: auto; }
+.menu-logo--on-light { display: none; }
+[data-theme="light"] .menu-logo--on-light { display: block; }
+[data-theme="light"] .menu-logo--on-dark { display: none; }
 .menu-donate-text {
   font-size: var(--font-size-xs);
   color: var(--text-secondary);

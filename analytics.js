@@ -22,7 +22,6 @@
 var Analytics = (function () {
   "use strict";
 
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbx2I49l5B3V0Q51xyggJBWGd30rJBFSVVeCR5rVaNrjkoBbpdoWKJKOMG8Ba7MLvslA/exec";
 
   var _version = "";
   var _location = "unknown";
@@ -78,18 +77,12 @@ var Analytics = (function () {
     setTimeout(firePending, 6000);
   }
 
+  // Where a count goes is the shell's business (Connector.analytics.send):
+  // the plugin's usage sheet, or the web version's own tab.
   function ping(event) {
-    if (!ENDPOINT || !_enabled) return;
+    if (!_enabled) return;
     try {
-      var xhr = new XMLHttpRequest();
-      var params = "?v=" + encodeURIComponent(_version) +
-                   "&e=" + encodeURIComponent(event || "open") +
-                   "&loc=" + encodeURIComponent(_location) +
-                   (_shell && _shell.params ? _shell.params() : "");
-      xhr.open("GET", ENDPOINT + params, true);
-      xhr.timeout = 5000;
-      xhr.onerror = function () {};
-      xhr.send();
+      _shell.send({ v: _version, e: event || "open", loc: _location });
     } catch (e) { /* silent */ }
   }
 

@@ -203,7 +203,7 @@ var Connector = (function () {
   // Switched on only once the usage sheet's script sends ch=web counts to
   // their own tab ("Web usage"). While false, the web version sends nothing:
   // counts would otherwise mix into the plugin's numbers.
-  var WEB_COUNTS_ON = false;
+  var WEB_COUNTS_ON = true;     // "Web usage" tab live since 8 Oct 2026
 
   // Region only, from the time zone the browser reports ("Europe/Madrid"
   // → "Europe"): no IP lookup, nothing more precise than a continent.
@@ -221,9 +221,11 @@ var Connector = (function () {
       if (!WEB_COUNTS_ON || typeof WebGate === "undefined") return;
       WebGate.whenSignedIn(cb);
     },
-    params: function () {
-      var u = (typeof WebGate !== "undefined") ? WebGate.userCode() : "";
-      return "&ch=web" + (u ? "&u=" + encodeURIComponent(u) : "");
+    // To the web version's own tab ("Web usage"), through the sign-up
+    // service (see web-gate.js), with the anonymous user code.
+    send: function (f) {
+      if (typeof WebGate === "undefined") return;
+      WebGate.sendUsage({ ch: "web", v: f.v, e: f.e, loc: f.loc, u: WebGate.userCode() });
     },
     location: function (cb) { cb(regionFromTimeZone()); }
   };

@@ -20,7 +20,8 @@
  * not kept here.
  *
  * API: WebGate.whenSignedIn(cb) — cb once the person is signed in (now, or
- * after the form); WebGate.userCode() — the anonymous code, or "".
+ * after the form); WebGate.userCode() — the anonymous code, or "";
+ * WebGate.sendUsage({ch, v, e, loc, u}) — one usage count.
  */
 
 /* global SIGNUP_LISTS, WEB_ICONS */
@@ -35,7 +36,7 @@ var WebGate = (function () {
   // and the "registered before" check ("kind": "check"). While false, the
   // gate works locally but sends nothing: the current script would otherwise
   // file a web sign-up as a plugin download.
-  var BACKEND_READY = false;
+  var BACKEND_READY = true;     // download-form script, deployed 8 Oct 2026
 
   var STORE_KEY = "ocha-dataviz-web:user";
   var waiting = [];
@@ -50,6 +51,15 @@ var WebGate = (function () {
   }
 
   function userCode() { return (user && user.code) || ""; }
+
+  // One usage count → the same Apps Script, "kind": "usage" (it files ch
+  // "web" counts on the "Web usage" tab). Fire-and-forget.
+  function sendUsage(fields) {
+    if (!BACKEND_READY) return;
+    var body = { kind: "usage" };
+    for (var k in fields) if (Object.prototype.hasOwnProperty.call(fields, k)) body[k] = fields[k];
+    try { post(body, false).catch(function () {}); } catch (e) { /* offline: drop it */ }
+  }
 
   function whenSignedIn(cb) {
     if (user) cb(); else waiting.push(cb);
@@ -260,5 +270,5 @@ var WebGate = (function () {
   // go nowhere. Until then nobody is "signed in", so no usage counts start.
   if (BACKEND_READY && !user && !document.getElementById("web-phone-gate")) show();
 
-  return { whenSignedIn: whenSignedIn, userCode: userCode, collecting: BACKEND_READY };
+  return { whenSignedIn: whenSignedIn, userCode: userCode, sendUsage: sendUsage, collecting: BACKEND_READY };
 })();
