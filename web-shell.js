@@ -332,8 +332,23 @@
     var isGzip = bytes.length > 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
     return inflate(bytes, isGzip ? "gzip" : "deflate-raw").catch(function () { return bytes; });
   }
+  // The fragment is "<kind>=<payload>" optionally followed by "&key=value"
+  // options. Splitting on the first "&" is safe: base64url never contains
+  // "&", and encodeURIComponent (for #json=) encodes it.
+  function splitHash(hash) {
+    var h = String(hash || ""), amp = h.indexOf("&");
+    var opts = {};
+    if (amp !== -1) {
+      h.slice(amp + 1).split("&").forEach(function (kv) {
+        var eq = kv.indexOf("=");
+        if (eq > 0) opts[kv.slice(0, eq)] = kv.slice(eq + 1);
+      });
+      h = h.slice(0, amp);
+    }
+    return { main: h, opts: opts };
+  }
   function chartFromHash(hash) {
-    var m = /^#(chart|d|json)=(.+)$/.exec(hash || "");
+    var m = /^#(chart|d|json)=(.+)$/.exec(splitHash(hash).main);
     if (!m) return Promise.resolve(null);
     if (m[1] === "json") {
       try { return Promise.resolve(decodeURIComponent(m[2])); } catch (e) { return Promise.reject(e); }
@@ -362,7 +377,24 @@
     go.click();
     return true;
   }
+  // Option "&download=png" / "&download=svg": once the chart is loaded, run
+  // exactly what that button does (PNG at the chosen size, 2× by default;
+  // the usual sign-up rule applies). Used by the charts connector, whose
+  // previews can't save files themselves. Unknown values are ignored; the
+  // tab stays on the chart afterwards.
+  function autoDownload(kind) {
+    var btn = kind === "png" ? btnPng : kind === "svg" ? btnSvg : null;
+    if (!btn) return;
+    // Let the chart render first (the Load path renders synchronously; an
+    // AI-import chart a moment later).
+    var tries = 0;
+    (function go() {
+      if (currentSvg && !btn.disabled) { count("tool:link-download:" + kind); btn.click(); return; }
+      if (++tries < 40) setTimeout(go, 100);
+    })();
+  }
   function openFromHash(hash) {
+    var opts = splitHash(hash).opts;
     return chartFromHash(hash).then(function (json) {
       if (!json) return false;
       // Not even shaped like JSON (a damaged or truncated link): say so
@@ -374,6 +406,8 @@
         throw new Error("no AI import box");
       }
       count("tool:link");
+      // A multi-chart import waits in the Use AI box for a click; no auto-download.
+      if (opts.download && document.getElementById("ai-import-modal").style.display !== "flex") autoDownload(opts.download);
       return true;
     }).catch(function () {
       // Any failure — undecodable, not JSON, no AI box — ends here.
@@ -382,7 +416,7 @@
     });
   }
   document.addEventListener("DOMContentLoaded", function () {
-    if (!/^#(chart|d|json)=/.test(location.hash)) return;
+    if (!/^#(chart|d|json)=/.test(location.hash)) return;   // "&download=…" may follow
     var hash = location.hash;
     // Clear the link from the address bar first, so a reload never
     // re-imports it over the person's edits.
