@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.4";
+  var APP_VERSION = "2026.1.5";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
