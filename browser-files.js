@@ -94,8 +94,26 @@ var BrowserFiles = (function () {
    */
   function streamThrough(bytes, Stream, format) {
     if (typeof Stream === "undefined") return Promise.reject(new Error("no " + format + " support"));
-    var out = new Blob([bytes]).stream().pipeThrough(new Stream(format));
-    return new Response(out).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+    // Always a promise, never a throw: an unsupported format makes the
+    // constructor throw, and a throw here once left the Share chart window
+    // stuck on “Making the link…” (Illustrator's Chrome 99, Oct 2026).
+    try {
+      var out = new Blob([bytes]).stream().pipeThrough(new Stream(format));
+      return new Response(out).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+    } catch (e) { return Promise.reject(e); }
+  }
+  // Which formats this browser's streams really handle. Having
+  // CompressionStream is not enough: "deflate-raw" only arrived in Chrome
+  // 103, and Illustrator's panel ran Chrome 99 (gzip/deflate only) in Oct 2026.
+  var formatCache = {};
+  function supportsFormat(format) {
+    if (!(format in formatCache)) {
+      try {
+        new CompressionStream(format); new DecompressionStream(format);   // eslint-disable-line no-new
+        formatCache[format] = true;
+      } catch (e) { formatCache[format] = false; }
+    }
+    return formatCache[format];
   }
   function compress(bytes, format) {
     return streamThrough(bytes, typeof CompressionStream === "undefined" ? undefined : CompressionStream, format);
@@ -139,6 +157,7 @@ var BrowserFiles = (function () {
   return {
     openText: openText, saveText: saveText,
     compress: compress, decompress: decompress, hasStreams: hasStreams,
+    supportsFormat: function (format) { return hasStreams && supportsFormat(format); },
     copyBySelection: copyBySelection
   };
 })();

@@ -1397,10 +1397,11 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 .share-chart-done:empty { display: none; }
 #share-chart-busy[hidden] { display: none; }
 
-/* Save window: each step carries its own button, like the Use AI window's
-   first step; the step circles carry the action's icon. */
-.save-chart-body .ai-import-step-content .btn { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-75); }
-.save-chart-body .ai-import-step-num svg { width: 11px; height: 11px; }
+/* Windows whose steps each carry their own button (Save; the web version's
+   Help), like the Use AI window's first step; the step circles carry the
+   action's icon. */
+.steps-with-actions .ai-import-step-content .btn { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-75); }
+.steps-with-actions .ai-import-step-num svg { width: 11px; height: 11px; }
 #share-chart-modal .ai-import-modal-footer .btn { display: inline-flex; align-items: center; gap: var(--space-75); }
 
 /* Save & share help window: the Use AI window's steps, with each button's

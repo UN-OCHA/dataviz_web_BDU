@@ -56,7 +56,9 @@ var ChartLink = (function () {
 
   /** The chart link for a chart's JSON text. Promise of the full link. */
   function build(json) {
-    return Connector.codec.deflateRaw(utf8(json)).then(function (bytes) {
+    // Promise.resolve().then(): any throw inside becomes a rejection, so the
+    // Share chart window always shows its error instead of hanging.
+    return Promise.resolve().then(function () { return Connector.codec.deflateRaw(utf8(json)); }).then(function (bytes) {
       return BASE + "#chart=" + toBase64url(bytes);
     });
   }

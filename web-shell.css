@@ -192,6 +192,7 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
   overflow: auto;
   display: grid;
   place-items: center;
+  align-content: center;        /* the first-visit card sits right above the chart */
   padding: var(--space-500);
 }
 /* The chart and, right below it, its downloads */
@@ -338,3 +339,44 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
 /* Full-screen toggle sits apart from the export buttons */
 #web-fullscreen { margin-right: var(--space-100); }
 #web-fullscreen[hidden] { display: none; }
+
+/* ── Guides (web-guides.js) ───────────────────── */
+/* The coachmark is the OCHA App Kit's component (vendor/ocha-app-kit.css,
+   synced from the kit). Its theming hooks are mapped to the panel's tokens
+   here, so the guides follow the light / dark theme like everything else. */
+.cd-coachmark, .cd-coachmark-scrim, .cd-coachmark-ring {
+  --cd-coachmark-bg:     var(--bg-layer-1);
+  --cd-coachmark-ink:    var(--text-primary);
+  --cd-coachmark-muted:  var(--text-secondary);
+  --cd-coachmark-line:   var(--border-default);
+  --cd-coachmark-accent: var(--accent);
+  --cd-coachmark-scrim:  rgba(0, 0, 0, 0.55);   /* the same dim as the panel's windows (.ai-import-modal) */
+  --cd-coachmark-radius: var(--radius-lg);
+  --cd-coachmark-font:   var(--font-sans);
+}
+#web-help svg { width: 15px; height: 15px; }
+
+/* First-visit card: in the flow above the preview, never over anything */
+#web-welcome {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-200) var(--space-300);
+  max-width: 560px;
+  width: 100%;
+  margin-bottom: var(--space-300);
+  padding: var(--space-200) var(--space-300);
+  background: var(--bg-layer-1);
+  border: 1px solid var(--border-default);      /* the panel's own card look (.dgroup): no accent bar */
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+}
+.web-welcome-icon { display: inline-flex; color: var(--accent); }
+.web-welcome-icon svg { width: 22px; height: 22px; }
+.web-welcome-actions { display: flex; gap: var(--space-100); flex-wrap: wrap; }
+@media (max-width: 900px) {
+  #web-welcome { grid-template-columns: auto minmax(0, 1fr); }
+  .web-welcome-actions { grid-column: 1 / -1; }
+}
