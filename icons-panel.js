@@ -244,7 +244,7 @@ var IconsPanel = (function () {
   // ── Color swatches ──────────────────────────────────────
 
   // The active chart style's MAIN colour (OCHA blue, HNRP orange, Flash red,
-  // GHO gold) — the first entry of the style palette, which is also present in
+  // GHO yellow) — the first entry of the style palette, which is also present in
   // the swatch ramp so the bar highlights it. Icon previews default to this so
   // they follow the selected theme.
   function styleMainColor() {

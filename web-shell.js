@@ -495,7 +495,7 @@
   // Icon colours: brand colours only, read from the plugin's own swatch
   // lists and styles (chart-registry.js), never retyped here. OCHA blue
   // first (the default), then the selected style's main colour (HNRP
-  // orange, Flash Appeal red, GHO gold; none extra for OCHA), white for dark
+  // orange, Flash Appeal red, GHO yellow; none extra for OCHA), white for dark
   // backgrounds, dark grey, then the active custom theme's icon colours.
   function brandSwatch(name) {
     var R = window.ChartRegistry || {};
@@ -803,6 +803,22 @@
   document.addEventListener("DOMContentLoaded", function () {
     var donate = document.querySelector(".menu-donate-text");
     if (donate) donate.textContent = "Do you like this free tool?";
+    // Save & share help (index.html carries the plugin's wording): on the
+    // web, Save… is a download, Load… uploads, and the page doesn't keep
+    // the chart, so the chart file is how you come back to it.
+    var HELP = {
+      "save-share-help-save": "Downloads the chart as a small chart file (.json), like any other download. " +
+        "Keep it to come back to the chart later, or send it to a colleague.",
+      "save-share-help-load": "Brings a chart back exactly as it was: paste chart text someone sent you, " +
+        "or upload a chart file.",
+      "save-share-help-note": "This page doesn’t keep your chart when you close or reload it, so save a chart " +
+        "file to come back to it. Chart files open in both the web version and the plugin for Illustrator. " +
+        "A chart file isn’t the SVG or PNG picture: it holds the chart’s data and settings, for editing it again."
+    };
+    Object.keys(HELP).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = HELP[id];
+    });
     var v = document.getElementById("app-version");
     var wv = document.getElementById("web-version");
     var isBeta = document.documentElement.getAttribute("data-channel") === "beta";

@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.5";
+  var APP_VERSION = "2026.1.6";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -2014,7 +2014,7 @@
       // loadFromConfig answers { ok: true } or { error: "…" } — an object
       // either way, so test .error (a bare truthiness check took every
       // rejected paste for a success and said "Loaded chart").
-      if (!ok || ok.error) throw new Error("That doesn't look like a chart configuration. Paste the JSON from another chart's Copy JSON / Save.");
+      if (!ok || ok.error) throw new Error("That doesn't look like a chart configuration. Paste the JSON from another chart's Copy chart / Save.");
       DataGrid.pushUndo();
       syncUIFromStore();
       updateChartOptions();

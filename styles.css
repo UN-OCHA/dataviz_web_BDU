@@ -1382,6 +1382,17 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   text-underline-offset: 2px;
 }
 .btn-link:hover { color: var(--text-secondary); }
+/* "How it works" link with its info icon (Save & share group) */
+.btn-link-help { display: inline-flex; align-items: center; gap: var(--space-75); flex-shrink: 0; }
+.btn-link-help svg { flex-shrink: 0; }
+
+/* Save & share help window: the Use AI window's steps, with each button's
+   icon in the step circle instead of a number. */
+.save-share-help-body .ai-import-step-num svg { width: 11px; height: 11px; }
+.save-share-help-body .save-share-help-note {
+  padding-top: var(--space-200);
+  border-top: 1px solid var(--border-default);
+}
 
 /* ── Column Selectors ──────────────────────── */
 #col-selector-section { display: none; }
