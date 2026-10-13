@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Humanitarian DataViz Tool mark: three rising bars on OCHA blue
+       (same mark as the plugin's Adobe Exchange listing icon). -->
+  <rect width="192" height="192" fill="#009EDB"/>
+  <rect x="38" y="96" width="32" height="59" rx="5" fill="#FFFFFF"/>
+  <rect x="80" y="67" width="32" height="88" rx="5" fill="#FFFFFF"/>
+  <rect x="122" y="38" width="32" height="117" rx="5" fill="#FFFFFF"/>
+</svg>

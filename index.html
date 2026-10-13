@@ -4,10 +4,24 @@
   <meta charset="utf-8">
   <title>Humanitarian DataViz Tool — web</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Make OCHA-branded charts in your browser: the Humanitarian DataViz Tool, without Adobe Illustrator.">
-  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.5-b947f62">
-  <link rel="stylesheet" href="styles.css?v=2026.1.5-b947f62">
-  <link rel="stylesheet" href="web-shell.css?v=2026.1.5-b947f62">
+  <meta name="description" content="Make OCHA-branded charts in your web browser and download them as SVG or PNG.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#009EDB">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OCHA">
+  <meta property="og:title" content="Humanitarian DataViz Tool">
+  <meta property="og:description" content="Make OCHA-branded charts in your web browser and download them as SVG or PNG.">
+  <meta property="og:url" content="https://un-ocha.github.io/dataviz_web_BDU/">
+  <meta property="og:image" content="https://un-ocha.github.io/dataviz_web_BDU/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Humanitarian DataViz Tool, in your web browser. OCHA Brand and Design Unit.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.5-6a76970">
+  <link rel="stylesheet" href="styles.css?v=2026.1.5-6a76970">
+  <link rel="stylesheet" href="web-shell.css?v=2026.1.5-6a76970">
 </head>
 <body>
 
@@ -1740,70 +1754,70 @@
        (tests/shell/check-shared.js enforces this). Page elements marked
        data-shell="illustrator" (Guides, Map Maker, updater, placing) are
        hidden by the web version's stylesheet. -->
-  <script src="lib/papaparse.min.js?v=2026.1.5-b947f62"></script>
-  <script src="panel-utils.js?v=2026.1.5-b947f62"></script>
-  <script src="browser-files.js?v=2026.1.5-b947f62"></script>
-  <script src="connector-web.js?v=2026.1.5-b947f62"></script>
-  <script src="data-store.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-registry.js?v=2026.1.5-b947f62"></script>
-  <script src="themes-store.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-hbar.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-vbar.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-line.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-cluster-line.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-pie.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-donut.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-cluster-donut.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-stacked-bar.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-stacked-col.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-cluster.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-bubble.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-table.js?v=2026.1.5-b947f62"></script>
-  <script src="icon-library.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-icon.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-sankey.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-keyfigures.js?v=2026.1.5-b947f62"></script>
-  <script src="keyfigures-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-timeline.js?v=2026.1.5-b947f62"></script>
-  <script src="timeline-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="data-grid.js?v=2026.1.5-b947f62"></script>
-  <script src="data-input.js?v=2026.1.5-b947f62"></script>
-  <script src="http-utils.js?v=2026.1.5-b947f62"></script>
-  <script src="maps-panel.js?v=2026.1.5-b947f62"></script>
-  <script src="icons-panel.js?v=2026.1.5-b947f62"></script>
-  <script src="flags-data.js?v=2026.1.5-b947f62"></script>
-  <script src="flags-panel.js?v=2026.1.5-b947f62"></script>
-  <script src="svg-inline-utils.js?v=2026.1.5-b947f62"></script>
-  <script src="geo-projection.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-map.js?v=2026.1.5-b947f62"></script>
-  <script src="status-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="theme-manager.js?v=2026.1.5-b947f62"></script>
-  <script src="analytics.js?v=2026.1.5-b947f62"></script>
-  <script src="color-pickers-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="icon-flag-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="series-legend-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="design-controls-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-builder.js?v=2026.1.5-b947f62"></script>
-  <script src="panel-coordinator.js?v=2026.1.5-b947f62"></script>
-  <script src="chart-picker-filter.js?v=2026.1.5-b947f62"></script>
-  <script src="ai-prompt-template.js?v=2026.1.5-b947f62"></script>
-  <script src="ai-import.js?v=2026.1.5-b947f62"></script>
-  <script src="themes-ui.js?v=2026.1.5-b947f62"></script>
+  <script src="lib/papaparse.min.js?v=2026.1.5-6a76970"></script>
+  <script src="panel-utils.js?v=2026.1.5-6a76970"></script>
+  <script src="browser-files.js?v=2026.1.5-6a76970"></script>
+  <script src="connector-web.js?v=2026.1.5-6a76970"></script>
+  <script src="data-store.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-registry.js?v=2026.1.5-6a76970"></script>
+  <script src="themes-store.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-hbar.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-vbar.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-line.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-cluster-line.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-pie.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-donut.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-cluster-donut.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-stacked-bar.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-stacked-col.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-cluster.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-bubble.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-table.js?v=2026.1.5-6a76970"></script>
+  <script src="icon-library.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-icon.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-sankey.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-keyfigures.js?v=2026.1.5-6a76970"></script>
+  <script src="keyfigures-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-timeline.js?v=2026.1.5-6a76970"></script>
+  <script src="timeline-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="data-grid.js?v=2026.1.5-6a76970"></script>
+  <script src="data-input.js?v=2026.1.5-6a76970"></script>
+  <script src="http-utils.js?v=2026.1.5-6a76970"></script>
+  <script src="maps-panel.js?v=2026.1.5-6a76970"></script>
+  <script src="icons-panel.js?v=2026.1.5-6a76970"></script>
+  <script src="flags-data.js?v=2026.1.5-6a76970"></script>
+  <script src="flags-panel.js?v=2026.1.5-6a76970"></script>
+  <script src="svg-inline-utils.js?v=2026.1.5-6a76970"></script>
+  <script src="geo-projection.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-map.js?v=2026.1.5-6a76970"></script>
+  <script src="status-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="theme-manager.js?v=2026.1.5-6a76970"></script>
+  <script src="analytics.js?v=2026.1.5-6a76970"></script>
+  <script src="color-pickers-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="icon-flag-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="series-legend-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="design-controls-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-builder.js?v=2026.1.5-6a76970"></script>
+  <script src="panel-coordinator.js?v=2026.1.5-6a76970"></script>
+  <script src="chart-picker-filter.js?v=2026.1.5-6a76970"></script>
+  <script src="ai-prompt-template.js?v=2026.1.5-6a76970"></script>
+  <script src="ai-import.js?v=2026.1.5-6a76970"></script>
+  <script src="themes-ui.js?v=2026.1.5-6a76970"></script>
 
-  <script src="zip-store.js?v=2026.1.5-b947f62"></script>
-  <script src="web-icons.js?v=2026.1.5-b947f62"></script>
-  <script src="signup-lists.js?v=2026.1.5-b947f62"></script>
-  <script src="web-shell.js?v=2026.1.5-b947f62"></script>
-  <script src="web-gate.js?v=2026.1.5-b947f62"></script>
+  <script src="zip-store.js?v=2026.1.5-6a76970"></script>
+  <script src="web-icons.js?v=2026.1.5-6a76970"></script>
+  <script src="signup-lists.js?v=2026.1.5-6a76970"></script>
+  <script src="web-shell.js?v=2026.1.5-6a76970"></script>
+  <script src="web-gate.js?v=2026.1.5-6a76970"></script>
 
-  <script src="panel.js?v=2026.1.5-b947f62"></script>
-  <script src="design-groups.js?v=2026.1.5-b947f62"></script>
-  <script src="data-groups.js?v=2026.1.5-b947f62"></script>
-  <script src="text-tab-ui.js?v=2026.1.5-b947f62"></script>
-  <script src="auto-pill.js?v=2026.1.5-b947f62"></script>
-  <script src="auto-resolved.js?v=2026.1.5-b947f62"></script>
-  <script src="text-format.js?v=2026.1.5-b947f62"></script>
-  <script src="compact-layout.js?v=2026.1.5-b947f62"></script>
+  <script src="panel.js?v=2026.1.5-6a76970"></script>
+  <script src="design-groups.js?v=2026.1.5-6a76970"></script>
+  <script src="data-groups.js?v=2026.1.5-6a76970"></script>
+  <script src="text-tab-ui.js?v=2026.1.5-6a76970"></script>
+  <script src="auto-pill.js?v=2026.1.5-6a76970"></script>
+  <script src="auto-resolved.js?v=2026.1.5-6a76970"></script>
+  <script src="text-format.js?v=2026.1.5-6a76970"></script>
+  <script src="compact-layout.js?v=2026.1.5-6a76970"></script>
 
   <!-- Placement overlay — blocks UI during chart/map placement -->
   <div id="placing-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
