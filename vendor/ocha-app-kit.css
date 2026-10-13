@@ -406,6 +406,17 @@
 }
 .cd-coachmark__close:hover { color: var(--cd-coachmark-ink); }
 .cd-coachmark__close svg { inline-size: 0.875rem; block-size: 0.875rem; }
+/* Intro variant (variant: "intro"): one card in the centre of the dimmed
+   page — a welcome or an announcement, with the app's own buttons (e.g.
+   Start / No thanks) instead of Back / Next. No element is highlighted. */
+.cd-coachmark--intro {
+  inline-size: min(26rem, calc(100vw - 2 * var(--sp-16)));
+  gap: var(--sp-12);
+  padding: var(--sp-24);
+}
+.cd-coachmark--intro .cd-coachmark__title { font-size: var(--cd-font-size--medium); }
+.cd-coachmark--intro .cd-coachmark__text { font-size: var(--cd-font-size--ref); }
+.cd-coachmark--intro .cd-coachmark__actions { margin-top: var(--sp-8); }
 .cd-coachmark__live {                                  /* screen-reader announcements */
   position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden;
   clip-path: inset(50%); white-space: nowrap;

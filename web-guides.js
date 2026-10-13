@@ -4,9 +4,12 @@
  *   - Help button in the toolbar → a Help window (same window as the rest of
  *     the panel) with: Make your first chart · Quick tour of the screen ·
  *     Save & share: how it works.
- *   - First visit: a small card above the preview, “New here? …”, with
- *     Start / No thanks. Remembered per browser; not shown when the page was
- *     opened from a chart link (that person came to see a chart).
+ *   - First visit: the page dims and a welcome card sits in the centre,
+ *     “New here? Make your first chart in 1 minute”, with Start / No thanks
+ *     (Esc or a click on the dimmed page = No thanks). It is the kit
+ *     coachmark's intro variant. Shown once per browser; not shown when the
+ *     page was opened from a chart link (that person came to see a specific
+ *     chart, which the card would cover — Help is still there).
  *   - The guides run on the OCHA App Kit's coachmark component
  *     (vendor/cd-coachmark.js + vendor/ocha-app-kit.css, synced from the kit
  *     by app-kit/sync.py — never edit those copies). Colours follow the
@@ -117,7 +120,7 @@ var WebGuides = (function () {
     var g = GUIDES[id];
     if (!g || typeof CdCoachmark === "undefined") return null;
     closeHelp();
-    hideCard(id === "first-chart" ? "started" : null);
+    if (id === "first-chart") remember("started");
     count("guide:" + id + ":start");
     return CdCoachmark.start({
       steps: g.steps,
@@ -189,29 +192,23 @@ var WebGuides = (function () {
     };
   }
 
-  // ── First-visit card ────────────────────────────────────────
-  var card = null;
-  function hideCard(value) {
-    if (value) remember(value);
-    if (card && card.parentNode) card.parentNode.removeChild(card);
-    card = null;
-  }
-  function showCard() {
-    var stage = $("web-stage");
-    if (!stage) return;
-    card = document.createElement("section");
-    card.id = "web-welcome";
-    card.setAttribute("aria-label", "Getting started");
-    card.innerHTML =
-      '<span class="web-welcome-icon">' + icon("chart-simple") + "</span>" +
-      '<div class="web-welcome-text"><strong>New here?</strong> Make your first chart in 1 minute.</div>' +
-      '<div class="web-welcome-actions">' +
-        '<button type="button" class="btn btn-primary btn-sm" id="web-welcome-start">Start</button>' +
-        '<button type="button" class="btn btn-secondary btn-sm" id="web-welcome-no">No thanks</button>' +
-      "</div>";
-    stage.insertBefore(card, stage.firstChild);
-    $("web-welcome-start").addEventListener("click", function () { start("first-chart"); });
-    $("web-welcome-no").addEventListener("click", function () { hideCard("dismissed"); count("guide:welcome:dismissed"); });
+  // ── First-visit welcome ─────────────────────────────────────
+  function showWelcome() {
+    if (typeof CdCoachmark === "undefined") return;
+    count("guide:welcome:shown");
+    CdCoachmark.start({
+      variant: "intro", modal: true, closeOnScrim: true, showCount: false,
+      steps: [{ title: "New here?", text: "<p>Make your first chart in 1 minute.</p>" }],
+      actions: [{ label: "Start", value: "start", primary: true }, { label: "No thanks", value: "no" }],
+      labels: { close: "Close" },
+      buttonClass: "btn btn-primary btn-sm",
+      secondaryButtonClass: "btn btn-secondary btn-sm",
+      onEnd: function (reason) {
+        if (reason === "start") { start("first-chart"); return; }
+        remember("dismissed");
+        count("guide:welcome:dismissed");
+      }
+    });
   }
 
   // ── Wire up ─────────────────────────────────────────────────
@@ -230,8 +227,9 @@ var WebGuides = (function () {
       b.addEventListener("click", openHelp);
       actions.insertBefore(b, actions.firstChild);
     }
-    if (!remembered() && !openedFromLink && !document.getElementById("web-phone-gate")) showCard();
+    // After the panel's first render, so the welcome dims a finished page.
+    if (!remembered() && !openedFromLink && !document.getElementById("web-phone-gate")) setTimeout(showWelcome, 400);
   });
 
-  return { start: start, guides: GUIDES, hideCard: hideCard };
+  return { start: start, guides: GUIDES, welcome: showWelcome };
 })();

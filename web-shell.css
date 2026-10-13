@@ -192,7 +192,6 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
   overflow: auto;
   display: grid;
   place-items: center;
-  align-content: center;        /* the first-visit card sits right above the chart */
   padding: var(--space-500);
 }
 /* The chart and, right below it, its downloads */
@@ -356,27 +355,3 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
 }
 #web-help svg { width: 15px; height: 15px; }
 
-/* First-visit card: in the flow above the preview, never over anything */
-#web-welcome {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-200) var(--space-300);
-  max-width: 560px;
-  width: 100%;
-  margin-bottom: var(--space-300);
-  padding: var(--space-200) var(--space-300);
-  background: var(--bg-layer-1);
-  border: 1px solid var(--border-default);      /* the panel's own card look (.dgroup): no accent bar */
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  line-height: 1.45;
-}
-.web-welcome-icon { display: inline-flex; color: var(--accent); }
-.web-welcome-icon svg { width: 22px; height: 22px; }
-.web-welcome-actions { display: flex; gap: var(--space-100); flex-wrap: wrap; }
-@media (max-width: 900px) {
-  #web-welcome { grid-template-columns: auto minmax(0, 1fr); }
-  .web-welcome-actions { grid-column: 1 / -1; }
-}

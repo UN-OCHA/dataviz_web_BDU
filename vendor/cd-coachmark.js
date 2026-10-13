@@ -19,8 +19,19 @@
        labels: { next, back, done, skip, close, count: "Step {n} of {total}" },
        buttonClass: "…", secondaryButtonClass: "…",   // the app's own buttons
        onStep: function (index) {},                   // optional
-       onEnd: function (reason, index) {}             // "done" | "skip"
+       onEnd: function (reason, index) {}             // "done" | "skip" | an action's value
      });
+
+   Intro variant — one centred card over the dimmed page (a welcome):
+     CdCoachmark.start({
+       variant: "intro", modal: true, closeOnScrim: true, showCount: false,
+       steps: [{ title: "New here?", text: "<p>…</p>" }],          // no target
+       actions: [{ label: "Start", value: "start", primary: true },
+                 { label: "No thanks", value: "no" }],
+       onEnd: function (reason) { … }                  // "start" | "no" | "skip"
+     });
+   modal: focus stays inside the card and starts on the primary action.
+   closeOnScrim: a click on the dimmed page closes it (reason "skip").
      tour.next(); tour.back(); tour.end("skip");
      CdCoachmark.active()  → the running tour or null
 
@@ -74,18 +85,24 @@ var CdCoachmark = (function () {
     // ── Markup ──
     var scrim = el("div", "cd-coachmark-scrim", { "aria-hidden": "true" });
     var ring = el("div", "cd-coachmark-ring", { "aria-hidden": "true" });
-    var box = el("div", "cd-coachmark", { role: "dialog", "aria-modal": "false", tabindex: "-1",
+    var box = el("div", "cd-coachmark" + (opts.variant ? " cd-coachmark--" + opts.variant : ""), {
+      role: "dialog", "aria-modal": opts.modal ? "true" : "false", tabindex: "-1",
       "aria-labelledby": id + "-title", "aria-describedby": id + "-text" });
+    function attr(t) { return String(t).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+    // Buttons: the app's own actions (intro variant), or Skip · Back · Next.
+    var actionsHtml = opts.actions
+      ? opts.actions.map(function (a, k) {
+          return '<button type="button" class="' + (a.primary ? btn : btn2) + '" data-cm-action="' + k + '">' + attr(a.label) + "</button>";
+        }).join("")
+      : '<button type="button" class="cd-coachmark__skip">' + labels.skip + "</button>" +
+        '<button type="button" class="' + btn2 + '" data-cm="back">' + labels.back + "</button>" +
+        '<button type="button" class="' + btn + '" data-cm="next">' + labels.next + "</button>";
     box.innerHTML =
       '<button type="button" class="cd-coachmark__close" aria-label="' + labels.close + '" title="' + labels.close + '">' + XMARK + "</button>" +
-      '<p class="cd-coachmark__count" id="' + id + '-count"></p>' +
+      '<p class="cd-coachmark__count" id="' + id + '-count"' + (opts.showCount === false ? " hidden" : "") + "></p>" +
       '<h2 class="cd-coachmark__title" id="' + id + '-title"></h2>' +
       '<div class="cd-coachmark__text" id="' + id + '-text"></div>' +
-      '<div class="cd-coachmark__actions">' +
-        '<button type="button" class="cd-coachmark__skip">' + labels.skip + "</button>" +
-        '<button type="button" class="' + btn2 + '" data-cm="back">' + labels.back + "</button>" +
-        '<button type="button" class="' + btn + '" data-cm="next">' + labels.next + "</button>" +
-      "</div>";
+      '<div class="cd-coachmark__actions">' + actionsHtml + "</div>";
     var live = el("div", "cd-coachmark__live", { "aria-live": "polite" });
     var q = function (sel) { return box.querySelector(sel); };
     document.body.appendChild(scrim);
@@ -94,10 +111,31 @@ var CdCoachmark = (function () {
     document.body.appendChild(live);
 
     q(".cd-coachmark__close").addEventListener("click", function () { end("skip"); });
-    q(".cd-coachmark__skip").addEventListener("click", function () { end("skip"); });
-    q('[data-cm="back"]').addEventListener("click", function () { go(index - 1); });
-    q('[data-cm="next"]').addEventListener("click", function () { go(index + 1); });
-    function onKey(e) { if (e.key === "Escape") { e.preventDefault(); end("skip"); } }
+    if (opts.actions) {
+      Array.prototype.forEach.call(box.querySelectorAll("[data-cm-action]"), function (b) {
+        b.addEventListener("click", function () { end(opts.actions[+b.getAttribute("data-cm-action")].value); });
+      });
+    } else {
+      q(".cd-coachmark__skip").addEventListener("click", function () { end("skip"); });
+      q('[data-cm="back"]').addEventListener("click", function () { go(index - 1); });
+      q('[data-cm="next"]').addEventListener("click", function () { go(index + 1); });
+    }
+    if (opts.closeOnScrim) scrim.addEventListener("click", function () { end("skip"); });
+    function focusables() {
+      return Array.prototype.filter.call(box.querySelectorAll("button, [href], input, select, textarea"),
+        function (n) { return !n.disabled && !n.hidden && n.getClientRects().length > 0; });
+    }
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); end("skip"); return; }
+      // modal: Tab and Shift+Tab stay inside the card.
+      if (opts.modal && e.key === "Tab") {
+        var f = focusables();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && (document.activeElement === first || !box.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && (document.activeElement === last || !box.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+      }
+    }
     document.addEventListener("keydown", onKey, true);
 
     // ── Placement ──
@@ -185,8 +223,10 @@ var CdCoachmark = (function () {
           q(".cd-coachmark__count").textContent = count;
           q(".cd-coachmark__title").textContent = step.title || "";
           q(".cd-coachmark__text").innerHTML = step.text || "";
-          q('[data-cm="back"]').hidden = i === 0;
-          q('[data-cm="next"]').textContent = i === steps.length - 1 ? labels.done : labels.next;
+          if (!opts.actions) {
+            q('[data-cm="back"]').hidden = i === 0;
+            q('[data-cm="next"]').textContent = i === steps.length - 1 ? labels.done : labels.next;
+          }
           setAdvance(step);
           var t = resolve(step.target);
           if (t) {
@@ -197,8 +237,10 @@ var CdCoachmark = (function () {
           place();
           box.style.visibility = "";
           ring.style.visibility = "";
-          box.focus();
-          live.textContent = count + ": " + (step.title || "");
+          // The primary action when there is one (intro), else the card itself.
+          var firstAction = opts.actions && box.querySelector("[data-cm-action]");
+          (opts.actions ? (primaryAction() || firstAction) : box).focus();
+          live.textContent = (opts.showCount === false ? "" : count + ": ") + (step.title || "");
           if (opts.onStep) opts.onStep(i);
         });
     }
@@ -214,6 +256,14 @@ var CdCoachmark = (function () {
       if (current === api) current = null;
       if (lastFocus && lastFocus.focus && lastFocus.isConnected) { try { lastFocus.focus(); } catch (e) { /* gone */ } }
       if (opts.onEnd) opts.onEnd(reason || "skip", index);
+    }
+
+    function primaryAction() {
+      if (!opts.actions) return null;
+      for (var k = 0; k < opts.actions.length; k++) {
+        if (opts.actions[k].primary) return box.querySelector('[data-cm-action="' + k + '"]');
+      }
+      return null;
     }
 
     var api = {
