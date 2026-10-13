@@ -7,7 +7,7 @@ Live: https://un-ocha.github.io/dataviz_web_BDU/
 **This repository only holds the published site.** It is generated — do not edit it here.
 Source and build: the `ocha_dataviz_web/` folder of the DataViz tool repository (`build.js`, `publish.js`).
 
-Version 2026.1.8 beta, built from commit e36b2af.
+Version 2026.1.8 beta, built from commit 9ef609d.
 
 Location maps: unchanged copies of the OCHA location maps published on ReliefWeb (https://reliefweb.int/location-maps).
 Fonts: Roboto and Roboto Condensed, Apache License 2.0.
