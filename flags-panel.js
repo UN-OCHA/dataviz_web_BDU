@@ -159,7 +159,7 @@ var FlagsPanel = (function () {
       if (err) {
         setStatus((err || "").replace(/^ERROR:\s*/i, ""), true);
       } else {
-        setStatus(flag.name + (csInterface ? " placed" : " downloaded"));
+        setStatus(csInterface ? flag.name + " placed" : "");   // web: the download window takes over
         pushRecent(file);
       }
     });
@@ -167,11 +167,20 @@ var FlagsPanel = (function () {
 
   function placeFlag(svgPath, flagName, callback) {
     if (!csInterface) {
-      // Web shell: download the flag instead of placing it.
-      PanelUtils.downloadSvgAsset(svgPath, svgPath.split("/").pop(), null, function (err) {
-        callback(err);
-        if (!err && typeof sendAnalyticsPing === "function") sendAnalyticsPing("tool:flags");
-      });
+      // Web shell: open the download window (SVG or PNG; flags keep their
+      // official colours), the same one the location maps use (web-shell.js).
+      if (!Connector.fs.exists(svgPath)) {
+        callback("This flag isn't available in the web version.");
+        return;
+      }
+      document.dispatchEvent(new CustomEvent("ocha-asset-preview", { detail: {
+        kind: "flag",
+        title: flagName,
+        path: svgPath,
+        fileName: svgPath.split("/").pop(),
+        analyticsEvent: "tool:flags"
+      } }));
+      callback(null);
       return;
     }
     var escapedPath = svgPath.replace(/\\/g, "/").replace(/'/g, "\\'");

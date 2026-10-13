@@ -248,6 +248,10 @@ var IconsPanel = (function () {
   // the swatch ramp so the bar highlights it. Icon previews default to this so
   // they follow the selected theme.
   function styleMainColor() {
+    // Web: the list keeps the icons' own OCHA blue; the colour is picked in
+    // the download window instead (web-shell.js), so the panel's colour bar
+    // is hidden there.
+    if (!csInterface) return "#009EDB";
     var style = (typeof DataStore !== "undefined" && DataStore.style) ? DataStore.style : "ocha";
     if (typeof ChartRegistry !== "undefined" && ChartRegistry.getStyle) {
       var st = ChartRegistry.getStyle(style);
@@ -325,8 +329,8 @@ var IconsPanel = (function () {
    */
   // Replace the default OCHA blue fill (style blocks and attributes) with
   // the active colour. Pure text in, text out — shared by both shells.
-  function recolorSvgText(svg) {
-    return svg.replace(/#009[eE][dD][bB]/g, activeColor);
+  function recolorSvgText(svg, color) {
+    return svg.replace(/#009[eE][dD][bB]/g, color || activeColor);
   }
 
   function recolorSvg(originalPath) {
@@ -520,15 +524,23 @@ var IconsPanel = (function () {
       btn.classList.remove("icons-item-uncached");
 
       if (!csInterface) {
-        // Web shell: download the icon, in the colour picked in the panel.
-        var text;
-        try { text = recolorSvgText(_fs.readText(svgPath)); } catch (e) { text = null; }
-        PanelUtils.downloadSvgAsset(svgPath, key + ".svg", text, function (dlErr) {
-          if (dlErr) { setStatus(dlErr, true); return; }
-          setStatus(icon.name + " downloaded");
-          pushRecent(key);
-          if (typeof sendAnalyticsPing === "function") sendAnalyticsPing("tool:icons");
-        });
+        // Web shell: open the download window (format, size, brand colour),
+        // the same one the location maps use (web-shell.js).
+        var raw;
+        try { raw = _fs.readText(svgPath); } catch (e) {
+          setStatus("This icon isn't available in the web version.", true);
+          return;
+        }
+        document.dispatchEvent(new CustomEvent("ocha-asset-preview", { detail: {
+          kind: "icon",
+          title: icon.name,
+          fileName: key + ".svg",
+          text: raw,
+          recolor: function (hex) { return recolorSvgText(raw, hex); },
+          analyticsEvent: "tool:icons"
+        } }));
+        setStatus("");                  // the download window takes over
+        pushRecent(key);
         return;
       }
 

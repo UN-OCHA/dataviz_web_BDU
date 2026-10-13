@@ -9,7 +9,8 @@
  *     Download PNG at 1×/2×/4× (fonts embedded so the text matches).
  *     (A Copy button was tried and removed, 8 Oct 2026: SVG code pastes as
  *     text in Word / PowerPoint. See README "Ideas for later".)
- *   - Location maps open in a preview window with a Download button.
+ *   - Location maps, icons and flags open in a download window first
+ *     (icons and flags: SVG or PNG; icons in a brand colour).
  *   - Open a chart from a link: #chart=… / #d=… / #json=… (format in the
  *     web README) opens that chart ready to edit.
  *   - The panel can be resized by dragging its edge (width remembered in
@@ -261,32 +262,53 @@
     return { w: w || 500, h: h || 300 };
   }
 
+  // Draw SVG text (shown at w × h) onto a transparent outW × outH canvas
+  // and return it as a PNG. Shared by the chart and the asset downloads.
+  function svgToPng(svgText, w, h, outW, outH) {
+    var url = URL.createObjectURL(new Blob([svgText], { type: "image/svg+xml" }));
+    var img = new Image();
+    img.width = w;
+    img.height = h;
+    return new Promise(function (resolve, reject) {
+      img.onload = function () { resolve(); };
+      img.onerror = function () { reject(new Error("This couldn't be drawn as an image.")); };
+      img.src = url;
+    }).then(function () {
+      return img.decode ? img.decode().catch(function () {}) : null;
+    }).then(function () {
+      var canvas = document.createElement("canvas");
+      canvas.width = Math.round(outW);
+      canvas.height = Math.round(outH);
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);   // transparent background, like the SVG
+      URL.revokeObjectURL(url);
+      return new Promise(function (resolve, reject) {
+        canvas.toBlob(function (b) { if (b) resolve(b); else reject(new Error("PNG export failed.")); }, "image/png");
+      });
+    });
+  }
+
   function renderPng(svg, scale) {
     return fontCss().then(function (css) {
       var withFonts = stripXmlDecl(svg).replace(/(<svg\b[^>]*>)/, "$1<defs><style>" + css + "</style></defs>");
       var size = svgDimensions(svg);
-      var url = URL.createObjectURL(new Blob([withFonts], { type: "image/svg+xml" }));
-      var img = new Image();
-      img.width = size.w;
-      img.height = size.h;
-      return new Promise(function (resolve, reject) {
-        img.onload = function () { resolve(); };
-        img.onerror = function () { reject(new Error("The chart couldn't be drawn as an image.")); };
-        img.src = url;
-      }).then(function () {
-        return img.decode ? img.decode().catch(function () {}) : null;
-      }).then(function () {
-        var canvas = document.createElement("canvas");
-        canvas.width = Math.round(size.w * scale);
-        canvas.height = Math.round(size.h * scale);
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);   // transparent background, like the SVG
-        URL.revokeObjectURL(url);
-        return new Promise(function (resolve, reject) {
-          canvas.toBlob(function (b) { if (b) resolve(b); else reject(new Error("PNG export failed.")); }, "image/png");
-        });
-      });
+      return svgToPng(withFonts, size.w, size.h, size.w * scale, size.h * scale);
     });
+  }
+
+  // An icon, flag or map as a PNG whose longer side is `longSide` pixels.
+  // The SVG is given that pixel size before drawing, so it is drawn sharp
+  // rather than enlarged from its small natural size.
+  function assetPng(svg, longSide) {
+    var text = stripXmlDecl(svg);
+    var size = svgDimensions(text);
+    var k = longSide / Math.max(size.w, size.h);
+    var w = Math.max(1, Math.round(size.w * k)), h = Math.max(1, Math.round(size.h * k));
+    var open = (text.match(/<svg\b[^>]*>/) || [""])[0];
+    var sized = open.replace(/\s(width|height)="[^"]*"/g, "");
+    if (!/\sviewBox=/.test(sized)) sized = sized.replace(/^<svg/, '<svg viewBox="0 0 ' + size.w + " " + size.h + '"');
+    sized = sized.replace(/^<svg/, '<svg width="' + w + '" height="' + h + '"');
+    return svgToPng(text.replace(open, sized), w, h, w, h);
   }
 
   btnPng.addEventListener("click", function () {
@@ -425,7 +447,7 @@
   });
 
   // Exposed for the automated checks (tests/shell/web-check.js).
-  window.WebShell = { renderPng: renderPng, baseName: baseName, openFromHash: openFromHash };
+  window.WebShell = { renderPng: renderPng, assetPng: assetPng, baseName: baseName, openFromHash: openFromHash };
 
   // ── Multi-chart AI import → one ZIP ─────────────────────────
   document.addEventListener("ocha-batch-rendered", function (e) {
@@ -445,77 +467,280 @@
     });
   });
 
-  // ── Preview window for assets (location maps) ───────────────
-  // The maps panel raises "ocha-asset-preview" instead of downloading
-  // straight away, so people can see the map first.
+  // ── Download window for assets (maps, icons, flags) ─────────
+  // The maps, icons and flags panels raise "ocha-asset-preview" instead of
+  // downloading straight away, so people see the asset and pick options:
+  //   maps   SVG only, exactly as ReliefWeb publishes it (no options)
+  //   icons  SVG or PNG, in a brand colour
+  //   flags  SVG or PNG, official colours (never altered)
+  // The last choices are remembered per asset type, and the Download button
+  // has focus, so a second download is click + Enter.
+  var PNG_SIZES = [                 // longer side, in pixels
+    { id: "small", label: "Small", px: 256 },
+    { id: "medium", label: "Medium", px: 512 },
+    { id: "large", label: "Large", px: 1024 }
+  ];
+  var ASSET_KEY = "ocha-dataviz-web:asset-options";
+  var KIND_OPTIONS = { icon: { formats: true, colour: true }, flag: { formats: true } };
+
+  function savedAssetOptions() {
+    try { return JSON.parse(localStorage.getItem(ASSET_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function rememberAssetOptions(kind, o) {
+    var all = savedAssetOptions();
+    all[kind] = o;
+    try { localStorage.setItem(ASSET_KEY, JSON.stringify(all)); } catch (e) { /* storage off */ }
+  }
+
+  // Icon colours: brand colours only, read from the plugin's own swatch
+  // lists and styles (chart-registry.js), never retyped here. OCHA blue
+  // first (the default), then the selected style's main colour (HNRP
+  // orange, Flash Appeal red, GHO gold; none extra for OCHA), white for dark
+  // backgrounds, dark grey, then the active custom theme's icon colours.
+  function brandSwatch(name) {
+    var R = window.ChartRegistry || {};
+    var lists = [R.OCHA_SWATCHES, R.HNRP_SWATCHES, R.FLASH_SWATCHES, R.GHO_SWATCHES];
+    for (var i = 0; i < lists.length; i++) {
+      for (var j = 0; lists[i] && j < lists[i].length; j++) {
+        if (lists[i][j].name === name) return lists[i][j].hex;
+      }
+    }
+    return null;
+  }
+  function iconColours() {
+    var out = [], seen = {};
+    function add(hex, name, slug) {
+      if (!hex || seen[hex.toUpperCase()]) return;
+      seen[hex.toUpperCase()] = 1;
+      out.push({ hex: hex.toUpperCase(), name: name, slug: slug });
+    }
+    add(brandSwatch("UN Blue"), "OCHA blue", "");
+    var R = window.ChartRegistry || {};
+    var styleId = typeof DataStore !== "undefined" ? DataStore.style : null;
+    var style = styleId && R.STYLES && R.STYLES[styleId];
+    if (style && style.colors && style.colors[0]) {
+      var main = style.colors[0].toUpperCase(), named = null;
+      (R.getSwatches(styleId) || []).forEach(function (sw) { if (!named && sw.hex.toUpperCase() === main) named = sw.name; });
+      add(main, style.name + (named ? " " + named.toLowerCase() : ""), styleId);
+    }
+    add(brandSwatch("White"), "White", "white");
+    add(brandSwatch("Dark Grey"), "Dark grey", "dark-grey");
+    var theme = R.CUSTOM_THEMES && typeof DataStore !== "undefined" && R.CUSTOM_THEMES[DataStore.style];
+    if (theme) {
+      (theme.iconPalette || theme.colors || []).forEach(function (hex) {
+        add(hex, theme.name + " " + hex.toUpperCase(), hex.replace("#", "").toUpperCase());
+      });
+    }
+    return out;
+  }
+
   var modal = document.createElement("div");
   modal.id = "web-asset-modal";
   modal.className = "ai-import-modal";           // the panel's own modal look
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-labelledby", "web-asset-title");
   modal.innerHTML =
     '<div class="ai-import-modal-inner web-asset-inner">' +
       '<div class="ai-import-modal-header">' +
         '<span class="ai-import-modal-title" id="web-asset-title"></span>' +
         '<button type="button" class="ai-import-modal-close" id="web-asset-close" title="Close">' + icon("xmark") + "</button>" +
       "</div>" +
-      '<div class="web-asset-body"><img id="web-asset-img" alt=""><div id="web-asset-loading">Loading map…</div></div>' +
+      '<div class="web-asset-body" id="web-asset-body"><img id="web-asset-img" alt=""><div id="web-asset-loading">Loading…</div></div>' +
+      '<div class="web-asset-options" id="web-asset-options">' +
+        '<div class="web-asset-row" id="web-asset-format-row">' +
+          '<span class="web-asset-label" id="web-asset-format-label">Format</span>' +
+          '<div class="ai-import-batch-toggle" role="radiogroup" aria-labelledby="web-asset-format-label">' +
+            '<button type="button" class="ai-import-batch-toggle-btn" role="radio" data-format="svg">SVG</button>' +
+            '<button type="button" class="ai-import-batch-toggle-btn" role="radio" data-format="png">PNG</button>' +
+          "</div>" +
+        "</div>" +
+        '<div class="web-asset-row" id="web-asset-size-row">' +
+          '<span class="web-asset-label" id="web-asset-size-label">Size</span>' +
+          '<div class="ai-import-batch-toggle" role="radiogroup" aria-labelledby="web-asset-size-label">' +
+            PNG_SIZES.map(function (z) {
+              return '<button type="button" class="ai-import-batch-toggle-btn" role="radio" data-size="' + z.id + '">' +
+                z.label + " · " + z.px + " px</button>";
+            }).join("") +
+          "</div>" +
+        "</div>" +
+        '<div class="web-asset-row" id="web-asset-colour-row">' +
+          '<span class="web-asset-label" id="web-asset-colour-label">Colour</span>' +
+          '<div class="web-asset-swatches" id="web-asset-swatches" role="radiogroup" aria-labelledby="web-asset-colour-label"></div>' +
+          '<span class="web-asset-colour-name" id="web-asset-colour-name"></span>' +
+        "</div>" +
+      "</div>" +
       '<div class="ai-import-modal-footer">' +
         '<span class="web-asset-source" id="web-asset-source"></span>' +
         '<button type="button" class="btn btn-secondary btn-sm" id="web-asset-cancel">Close</button>' +
-        '<button type="button" class="btn btn-primary btn-sm" id="web-asset-download">' + icon("download") + "Download SVG</button>" +
+        '<button type="button" class="btn btn-primary btn-sm" id="web-asset-download"></button>' +
       "</div>" +
     "</div>";
   document.body.appendChild(modal);
-  var assetImg = document.getElementById("web-asset-img");
-  var assetLoading = document.getElementById("web-asset-loading");
-  var assetCurrent = null;
+  function $a(id) { return document.getElementById(id); }
+  function attr(t) { return String(t).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+  var assetImg = $a("web-asset-img");
+  var assetLoading = $a("web-asset-loading");
+  var assetBody = $a("web-asset-body");
+  var assetDl = $a("web-asset-download");
+  var assetCurrent = null;      // the event detail
+  var assetOpts = null;         // { format, size, colour } for this asset
+  var assetBlobUrl = null;
   var lastFocus = null;
+
+  function sizeById(id) {
+    for (var i = 0; i < PNG_SIZES.length; i++) if (PNG_SIZES[i].id === id) return PNG_SIZES[i];
+    return PNG_SIZES[1];
+  }
+  function colourByHex(hex) {
+    var all = iconColours();
+    for (var i = 0; i < all.length; i++) if (all[i].hex === String(hex || "").toUpperCase()) return all[i];
+    return all[0];
+  }
+
+  // The SVG text for the current asset in the current colour (icons), or
+  // null when the file is downloaded as published (flags, maps).
+  function assetText() {
+    var d = assetCurrent;
+    if (d.recolor) return d.recolor(colourByHex(assetOpts.colour).hex);
+    return d.text != null ? d.text : null;
+  }
+
+  function showAssetImage() {
+    var d = assetCurrent, text = assetText();
+    if (assetBlobUrl) { URL.revokeObjectURL(assetBlobUrl); assetBlobUrl = null; }
+    assetLoading.hidden = false;
+    assetImg.hidden = true;
+    assetImg.onload = function () { assetLoading.hidden = true; assetImg.hidden = false; };
+    assetImg.onerror = function () { assetLoading.textContent = "This couldn't be shown."; };
+    if (text != null) {
+      assetBlobUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
+      assetImg.src = assetBlobUrl;
+    } else {
+      assetImg.src = encodeURI(d.path);
+    }
+  }
+
+  function syncAssetOptions() {
+    var d = assetCurrent, o = assetOpts, k = KIND_OPTIONS[d.kind] || {};
+    $a("web-asset-options").hidden = !k.formats;
+    $a("web-asset-size-row").hidden = !k.formats || o.format !== "png";
+    $a("web-asset-colour-row").hidden = !k.colour;
+    modal.querySelectorAll("[data-format]").forEach(function (b) {
+      var on = b.getAttribute("data-format") === o.format;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-checked", String(on));
+    });
+    modal.querySelectorAll("[data-size]").forEach(function (b) {
+      var on = b.getAttribute("data-size") === o.size;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-checked", String(on));
+    });
+    if (k.colour) {
+      var cur = colourByHex(o.colour);
+      $a("web-asset-swatches").innerHTML = iconColours().map(function (c) {
+        var on = c.hex === cur.hex;
+        return '<button type="button" class="icons-color-swatch' + (on ? " active" : "") + '" role="radio" aria-checked="' + on +
+          '" data-colour="' + c.hex + '" title="' + attr(c.name) + '" aria-label="' + attr(c.name) + '" style="background:' + c.hex + '"></button>';
+      }).join("");
+      $a("web-asset-colour-name").textContent = cur.name;
+      // A white icon is shown on dark grey, so it can be seen.
+      var white = brandSwatch("White"), grey = brandSwatch("Dark Grey");
+      assetBody.style.background = (white && cur.hex === white.toUpperCase() && grey) ? grey : "";
+    } else {
+      assetBody.style.background = "";
+    }
+    assetDl.innerHTML = icon("download") + "Download " + (k.formats && o.format === "png" ? "PNG" : "SVG");
+  }
+
+  // Option clicks (mouse) hand focus back to Download, so Enter downloads.
+  modal.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-format],[data-size],[data-colour]");
+    if (!b || !assetCurrent) return;
+    if (b.hasAttribute("data-format")) assetOpts.format = b.getAttribute("data-format");
+    if (b.hasAttribute("data-size")) assetOpts.size = b.getAttribute("data-size");
+    var recolour = b.hasAttribute("data-colour");
+    if (recolour) assetOpts.colour = b.getAttribute("data-colour");
+    syncAssetOptions();
+    if (recolour) showAssetImage();
+    if (e.detail > 0) assetDl.focus();
+  });
 
   function closeAsset() {
     modal.style.display = "none";
     assetImg.removeAttribute("src");
+    if (assetBlobUrl) { URL.revokeObjectURL(assetBlobUrl); assetBlobUrl = null; }
     assetCurrent = null;
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   document.addEventListener("ocha-asset-preview", function (e) {
     var d = e.detail || {};
+    d.kind = d.kind || "map";
     assetCurrent = d;
+    var saved = savedAssetOptions()[d.kind] || {};
+    assetOpts = {
+      format: saved.format === "png" ? "png" : "svg",
+      size: sizeById(saved.size).id,
+      colour: colourByHex(saved.colour).hex
+    };
     lastFocus = document.activeElement;
-    document.getElementById("web-asset-title").textContent = d.title || d.fileName;
-    document.getElementById("web-asset-source").textContent = d.source || "";
-    assetLoading.textContent = "Loading map…";
-    assetLoading.hidden = false;
-    assetImg.hidden = true;
-    assetImg.onload = function () { assetLoading.hidden = true; assetImg.hidden = false; };
-    assetImg.onerror = function () { assetLoading.textContent = "This map couldn't be shown."; };
+    $a("web-asset-title").textContent = d.title || d.fileName;
+    $a("web-asset-source").textContent = d.source || "";
+    modal.querySelector(".web-asset-inner").classList.toggle("is-compact", d.kind !== "map");
+    assetLoading.textContent = "Loading…";
     assetImg.alt = d.title || "";
-    assetImg.src = encodeURI(d.path);
+    syncAssetOptions();
+    showAssetImage();
     modal.style.display = "flex";
-    document.getElementById("web-asset-download").focus();
+    assetDl.focus();
   });
-  document.getElementById("web-asset-close").addEventListener("click", closeAsset);
-  document.getElementById("web-asset-cancel").addEventListener("click", closeAsset);
+  $a("web-asset-close").addEventListener("click", closeAsset);
+  $a("web-asset-cancel").addEventListener("click", closeAsset);
   modal.addEventListener("click", function (e) { if (e.target === modal) closeAsset(); });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && modal.style.display === "flex") closeAsset();
   });
-  document.getElementById("web-asset-download").addEventListener("click", function () {
+  assetDl.addEventListener("click", function () {
     var d = assetCurrent;
     if (!d) return;
-    signInThen(function () { downloadAsset(d); });
+    var o = { format: assetOpts.format, size: assetOpts.size, colour: assetOpts.colour };
+    if (KIND_OPTIONS[d.kind]) rememberAssetOptions(d.kind, o);
+    signInThen(function () { downloadAsset(d, o); });
   });
-  function downloadAsset(d) {
-    fetch(encodeURI(d.path)).then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.blob();
+
+  // The file name: the asset's own name, plus the colour (icons other than
+  // OCHA blue) and the pixel size (PNG).
+  function assetFileName(d, o) {
+    var base = String(d.fileName).replace(/\.svg$/i, "");
+    if (d.recolor) {
+      var slug = colourByHex(o.colour).slug;
+      if (slug) base += "-" + slug;
+    }
+    if (o.format === "png" && KIND_OPTIONS[d.kind]) return base + "-" + sizeById(o.size).px + "px.png";
+    return base + ".svg";
+  }
+
+  function downloadAsset(d, o) {
+    var name = assetFileName(d, o);
+    var asPng = o.format === "png" && !!KIND_OPTIONS[d.kind];
+    var text = d.recolor ? d.recolor(colourByHex(o.colour).hex) : d.text;
+    // Flags and maps download as published: the file's own bytes for SVG.
+    var source = text != null
+      ? Promise.resolve(asPng ? text : new Blob([text], { type: "image/svg+xml" }))
+      : fetch(encodeURI(d.path)).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return asPng ? r.text() : r.blob().then(function (b) { return new Blob([b], { type: "image/svg+xml" }); });
+        });
+    if (asPng) say("Preparing PNG…");
+    source.then(function (x) {
+      return asPng ? assetPng(x, sizeById(o.size).px) : x;
     }).then(function (blob) {
-      downloadBlob(new Blob([blob], { type: "image/svg+xml" }), d.fileName);
-      if (d.analyticsEvent && typeof window.sendAnalyticsPing === "function") window.sendAnalyticsPing(d.analyticsEvent);
+      downloadBlob(blob, name);
+      if (d.analyticsEvent) count(d.analyticsEvent);
       closeAsset();
-      say("Downloaded " + d.fileName, "success");
+      say("Downloaded " + name, "success");
     }).catch(function () {
-      say("Couldn't download " + d.fileName, "error");
+      say("Couldn't download " + name, "error");
     });
   }
 

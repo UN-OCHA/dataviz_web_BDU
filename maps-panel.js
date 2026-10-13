@@ -446,6 +446,7 @@ var MapsPanel = (function () {
       // Show the map first: the web page opens a preview window with a
       // Download button (web-shell.js listens for this event).
       document.dispatchEvent(new CustomEvent("ocha-asset-preview", { detail: {
+        kind: "map",
         title: entry.name + " — location map",
         path: webPath,
         fileName: entry.code + "_ocha.svg",

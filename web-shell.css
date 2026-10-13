@@ -13,6 +13,10 @@
    style.display the panel's scripts set on some of them. */
 [data-shell="illustrator"] { display: none !important; }
 
+/* The icons panel's colour bar: on the web the colour is chosen in the
+   download window instead (brand colours only). */
+html[data-shell="web"] #icons-color-bar { display: none; }
+
 html[data-shell="web"] body {
   flex-direction: row;          /* panel | preview, instead of one column */
 }
@@ -42,7 +46,7 @@ html[data-shell="web"] #main-content {
 html.web-resizing #web-resizer { background: var(--accent); outline: none; }
 html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-select: none; }
 
-/* ── Map preview window ───────────────────────── */
+/* ── Download window: maps, icons, flags ──────── */
 .web-asset-inner { max-width: min(960px, 94vw); }
 .web-asset-body {
   display: grid;
@@ -61,6 +65,36 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
   color: var(--text-tertiary);
 }
 #web-asset-download { display: inline-flex; align-items: center; gap: var(--space-75); }
+
+/* Icons and flags: a smaller window, the asset shown at a fixed size */
+.web-asset-inner.is-compact { max-width: min(480px, 94vw); }
+.web-asset-inner.is-compact .web-asset-body { min-height: 0; }
+.web-asset-inner.is-compact #web-asset-img { width: 200px; height: 200px; object-fit: contain; }
+
+/* Options under the preview: one row each, label | control */
+.web-asset-options {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-150) var(--space-300);
+  padding: var(--space-300) var(--space-400);
+  border-top: 1px solid var(--border-default);
+}
+.web-asset-options[hidden] { display: none; }
+.web-asset-row { display: contents; }
+.web-asset-row[hidden] { display: none; }
+.web-asset-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+.web-asset-options .ai-import-batch-toggle { justify-self: start; }
+.web-asset-options .ai-import-batch-toggle-btn { flex: 0 0 auto; font-size: var(--font-size-sm); padding: 5px 14px; }
+#web-asset-colour-row .web-asset-swatches,
+#web-asset-colour-row .web-asset-colour-name { grid-column: 2; }
+.web-asset-swatches { display: flex; flex-wrap: wrap; gap: var(--space-100); }
+.web-asset-swatches .icons-color-swatch { width: 24px; height: 24px; box-shadow: inset 0 0 0 1px var(--border-default); }
+.web-asset-colour-name { font-size: var(--font-size-xs); color: var(--text-tertiary); margin-top: calc(-1 * var(--space-100)); }
 #web-asset-download svg, #web-asset-close svg { width: 15px; height: 15px; }
 
 /* ── Preview side ─────────────────────────────── */

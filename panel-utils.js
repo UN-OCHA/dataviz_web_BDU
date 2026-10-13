@@ -92,29 +92,6 @@ var PanelUtils = (function () {
   }
 
   /**
-   * Web shell: hand an asset SVG (icon, flag, location map) to the user as
-   * a download — the web counterpart of placing it on the artboard.
-   * Reads the file at `path` unless `text` (e.g. a recoloured icon) is given.
-   * callback(err) — err is a message string, like the place functions'.
-   */
-  function downloadSvgAsset(path, fileName, text, callback) {
-    try {
-      if (text == null) text = Connector.fs.readText(path);
-    } catch (e) {
-      callback("This file isn't available in the web version.");
-      return;
-    }
-    Connector.files.saveText({
-      title: "Save SVG", extensions: ["svg"], defaultName: fileName,
-      mime: "image/svg+xml", text: text,
-      signInFirst: true          // web: the sign-up comes before the first download
-    }, function (err, res) {
-      if (err) callback("Couldn't download: " + err.message);
-      else callback(res ? null : "Not downloaded.");
-    });
-  }
-
-  /**
    * Run fn once every file in `dir` can be read without waiting.
    * In Illustrator the files are on disk, so fn runs right away (same as
    * before). On the web each file is a request to the site, and reading a
@@ -135,7 +112,6 @@ var PanelUtils = (function () {
     escapeAttr: escapeAttr,
     resolveExtensionPath: resolveExtensionPath,
     placeFloating: placeFloating,
-    downloadSvgAsset: downloadSvgAsset,
     whenFolderReady: whenFolderReady
   };
 })();
