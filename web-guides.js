@@ -5,8 +5,9 @@
  *     the panel) with: Make your first chart · Quick tour of the screen ·
  *     Save & share: how it works.
  *   - First visit: the page dims and a welcome card sits in the centre,
- *     “New here? Make your first chart in 1 minute”, with Start / No thanks
- *     (Esc or a click on the dimmed page = No thanks). It is the kit
+ *     “Welcome to the Humanitarian DataViz Tool”, offering a walk-through of
+ *     the first chart: Start the guide / I’ll explore on my own (Esc or a click on
+ *     the dimmed page = explore on my own). It is the kit
  *     coachmark's intro variant. Shown once per browser; not shown when the
  *     page was opened from a chart link (that person came to see a specific
  *     chart, which the card would cover — Help is still there).
@@ -27,6 +28,9 @@ var WebGuides = (function () {
   "use strict";
 
   var CARD_KEY = "ocha-dataviz-web:first-visit";
+  // The welcome's icon: an OCHA Humanitarian Icon (content pictogram), shown
+  // as an image. The only icon-library file read at start-up (web check).
+  var WELCOME_ICON = "icons-cache/Assessment.svg";
 
   function $(id) { return document.getElementById(id); }
   function icon(name) {
@@ -198,8 +202,11 @@ var WebGuides = (function () {
     count("guide:welcome:shown");
     CdCoachmark.start({
       variant: "intro", modal: true, closeOnScrim: true, showCount: false,
-      steps: [{ title: "New here?", text: "<p>Make your first chart in 1 minute.</p>" }],
-      actions: [{ label: "Start", value: "start", primary: true }, { label: "No thanks", value: "no" }],
+      steps: [{ icon: '<img src="' + WELCOME_ICON + '" alt="">',
+        title: "Welcome to the Humanitarian DataViz Tool",
+        text: "<p>Need help making your first chart? We’ll walk you through it.</p>" }],
+      // Main action on the right, like every window in the panel (Cancel · Load).
+      actions: [{ label: "I’ll explore on my own", value: "no" }, { label: "Start the guide", value: "start", primary: true }],
       labels: { close: "Close" },
       buttonClass: "btn btn-primary btn-sm",
       secondaryButtonClass: "btn btn-secondary btn-sm",
@@ -231,5 +238,5 @@ var WebGuides = (function () {
     if (!remembered() && !openedFromLink && !document.getElementById("web-phone-gate")) setTimeout(showWelcome, 400);
   });
 
-  return { start: start, guides: GUIDES, welcome: showWelcome };
+  return { start: start, guides: GUIDES, welcome: showWelcome, WELCOME_ICON: WELCOME_ICON };
 })();

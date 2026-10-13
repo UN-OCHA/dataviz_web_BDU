@@ -376,6 +376,12 @@
 }
 .cd-coachmark:focus { outline: none; }
 .cd-coachmark:focus-visible { outline: 2px solid var(--cd-coachmark-accent); outline-offset: 2px; }
+/* Optional icon above the title (a step's `icon`): a content pictogram, so
+   an OCHA Humanitarian Icon, passed by the app as an <img> (keeps the
+   icon's own styles out of the page). Decorative: aria-hidden. */
+.cd-coachmark__icon { display: block; inline-size: 2.5rem; block-size: 2.5rem; }
+.cd-coachmark__icon img, .cd-coachmark__icon svg { display: block; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.cd-coachmark--intro .cd-coachmark__icon { inline-size: 3rem; block-size: 3rem; margin-bottom: var(--sp-4); }
 .cd-coachmark__count {
   margin: 0; font-size: var(--cd-font-size--tiny); font-weight: 600;
   color: var(--cd-coachmark-muted);

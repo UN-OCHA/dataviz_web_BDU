@@ -11,6 +11,7 @@
        steps: [
          { target: "#data-table",            // selector or function → Element
            title: "Your data",               // plain text
+           icon: '<img src="…" alt="">',     // optional, above the title (a Humanitarian Icon)
            text: "<p>Type or paste…</p>",    // app-authored HTML (never user input)
            onEnter: function () { … },       // optional; may return a Promise
            advanceOn: { selector: ".chart-type", event: "click" } },  // optional
@@ -99,6 +100,7 @@ var CdCoachmark = (function () {
         '<button type="button" class="' + btn + '" data-cm="next">' + labels.next + "</button>";
     box.innerHTML =
       '<button type="button" class="cd-coachmark__close" aria-label="' + labels.close + '" title="' + labels.close + '">' + XMARK + "</button>" +
+      '<div class="cd-coachmark__icon" aria-hidden="true" hidden></div>' +
       '<p class="cd-coachmark__count" id="' + id + '-count"' + (opts.showCount === false ? " hidden" : "") + "></p>" +
       '<h2 class="cd-coachmark__title" id="' + id + '-title"></h2>' +
       '<div class="cd-coachmark__text" id="' + id + '-text"></div>' +
@@ -221,6 +223,8 @@ var CdCoachmark = (function () {
           if (ended || my !== seq) return;
           var count = labels.count.replace("{n}", i + 1).replace("{total}", steps.length);
           q(".cd-coachmark__count").textContent = count;
+          q(".cd-coachmark__icon").innerHTML = step.icon || "";
+          q(".cd-coachmark__icon").hidden = !step.icon;
           q(".cd-coachmark__title").textContent = step.title || "";
           q(".cd-coachmark__text").innerHTML = step.text || "";
           if (!opts.actions) {
