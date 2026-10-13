@@ -203,7 +203,7 @@ var WebGuides = (function () {
     CdCoachmark.start({
       variant: "intro", modal: true, closeOnScrim: true, showCount: false,
       steps: [{ icon: '<img src="' + WELCOME_ICON + '" alt="">',
-        title: "Welcome to the Humanitarian DataViz Tool",
+        title: "Welcome to the\nHumanitarian DataViz Tool",
         text: "<p>Need help making your first chart?<br>We’ll walk you through it.</p>" }],
       // Main action on the right, like every window in the panel (Cancel · Load).
       actions: [{ label: "I’ll explore on my own", value: "no" }, { label: "Start the guide", value: "start", primary: true }],

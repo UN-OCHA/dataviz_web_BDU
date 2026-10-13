@@ -10,7 +10,7 @@
      var tour = CdCoachmark.start({
        steps: [
          { target: "#data-table",            // selector or function → Element
-           title: "Your data",               // plain text
+           title: "Your data",               // plain text ("\n" = new line)
            icon: '<img src="…" alt="">',     // optional, above the title (a Humanitarian Icon)
            text: "<p>Type or paste…</p>",    // app-authored HTML (never user input)
            onEnter: function () { … },       // optional; may return a Promise

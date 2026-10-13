@@ -390,6 +390,7 @@
   margin: 0; padding-inline-end: var(--sp-24);   /* room for the close button */
   font-size: var(--cd-font-size--ref); font-weight: 700; line-height: 1.3;
   color: var(--cd-coachmark-ink);
+  white-space: pre-line;          /* a "\n" in the title starts a new line */
 }
 .cd-coachmark__text p { margin: 0 0 var(--sp-8); }
 .cd-coachmark__text p:last-child { margin-bottom: 0; }
