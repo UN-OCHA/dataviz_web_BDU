@@ -3,7 +3,7 @@
    ──────────────────────────────────────────────
    The plugin's panel (#main-content) stays exactly as in Illustrator, on
    the left at panel width. The right side replaces the artboard: a live
-   preview of the chart with Download SVG / PNG and Copy SVG above it.
+   preview of the chart with Download SVG / PNG right below it.
    Colours, spacing and buttons are the panel's own tokens and classes
    (styles.css), so both shells look the same and follow light/dark mode.
    ══════════════════════════════════════════════ */
@@ -194,12 +194,43 @@ html.web-resizing, html.web-resizing * { cursor: col-resize !important; user-sel
   place-items: center;
   padding: var(--space-500);
 }
+/* The chart and, right below it, its downloads */
+#web-output {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-300);
+  max-width: 100%;
+}
+#web-output[hidden] { display: none; }
 #web-artboard {
   background: #FFFFFF;
   box-shadow: var(--md-elevation-2);
   padding: var(--space-400);
   max-width: 100%;
 }
+#web-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-200) var(--space-500);
+}
+.web-dl {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-75);
+  max-width: 260px;
+  text-align: center;
+}
+.web-dl-desc { font-size: var(--font-size-xs); color: var(--text-secondary); line-height: 1.4; }
+#web-downloads .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-75);
+  white-space: nowrap;
+}
+#web-downloads .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+#web-downloads .btn:disabled { opacity: 0.45; cursor: default; transform: none; box-shadow: none; }
 #web-empty {
   max-width: 340px;
   text-align: center;

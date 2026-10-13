@@ -2,9 +2,10 @@
    Save & share help
    ──────────────────────────────────────────────
    The "How it works" link in the Data tab's Save & share group opens a
-   small window explaining, in plain words, what Copy chart, Save… and
-   Load… are for. Markup: #save-share-help-modal in index.html (the Use AI
-   window's look). Same in the plugin and the web version.
+   small window explaining, in plain words, what Share chart, Save and
+   Load / Import are for. Markup: #save-share-help-modal in index.html
+   (the Use AI window's look); web-shell.js gives the web version its own
+   wording where it behaves differently.
    ══════════════════════════════════════════════ */
 (function () {
   "use strict";

@@ -3,6 +3,9 @@
  * file input, a Blob download). The web shell's Connector uses these as its
  * file dialogs; the Illustrator Connector falls back to them only when CEP
  * has no native dialog. Same callback contract as Connector.files.
+ * Also the plain-browser parts of Connector.codec (compression streams)
+ * and Connector.clipboard (copy through a selection), shared by both
+ * connectors.
  */
 
 /* exported BrowserFiles */
@@ -83,5 +86,59 @@ var BrowserFiles = (function () {
     }
   }
 
-  return { openText: openText, saveText: saveText };
+  /**
+   * Compress / decompress bytes with the browser's streams
+   * (CompressionStream; Chrome 80+, Safari 16.4+, Firefox 113+).
+   * format: "deflate-raw" | "gzip". Returns a Promise of a Uint8Array;
+   * rejects when the browser has no such stream.
+   */
+  function streamThrough(bytes, Stream, format) {
+    if (typeof Stream === "undefined") return Promise.reject(new Error("no " + format + " support"));
+    var out = new Blob([bytes]).stream().pipeThrough(new Stream(format));
+    return new Response(out).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+  }
+  function compress(bytes, format) {
+    return streamThrough(bytes, typeof CompressionStream === "undefined" ? undefined : CompressionStream, format);
+  }
+  function decompress(bytes, format) {
+    return streamThrough(bytes, typeof DecompressionStream === "undefined" ? undefined : DecompressionStream, format);
+  }
+  var hasStreams = typeof CompressionStream !== "undefined" && typeof DecompressionStream !== "undefined";
+
+  /**
+   * Copy text to the clipboard through a hidden text box and the "copy"
+   * command, synchronously. Must run inside the click that asked for it.
+   * This is the method that works inside Illustrator's panels, where
+   * navigator.clipboard is refused (a panel isn't a "secure context").
+   * Details that matter in CEP: the box is fixed at (0,0) with a real size
+   * (boxes far off-screen can be skipped), invisible, read-only, and the
+   * previous focus is given back afterwards. Returns true when copied.
+   */
+  function copyBySelection(text) {
+    var prevFocus = document.activeElement;
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;left:0;top:0;width:1px;height:1px;padding:0;border:0;" +
+      "outline:0;opacity:0;pointer-events:none;z-index:-1";
+    document.body.appendChild(ta);
+    var ok = false;
+    try {
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      ok = document.execCommand("copy");
+    } catch (e) {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    if (prevFocus && prevFocus.focus) { try { prevFocus.focus(); } catch (e2) { /* gone */ } }
+    return ok;
+  }
+
+  return {
+    openText: openText, saveText: saveText,
+    compress: compress, decompress: decompress, hasStreams: hasStreams,
+    copyBySelection: copyBySelection
+  };
 })();

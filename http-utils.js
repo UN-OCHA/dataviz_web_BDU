@@ -15,6 +15,9 @@ var HttpUtils = (function () {
   var URLS = {
     RELIEFWEB_MAPS: "https://reliefweb.int/location-maps",
     GITHUB_ICONS_RAW: "https://raw.githubusercontent.com/UN-OCHA/humanitarian-icons-2026-BDU/main",
+    // The web version: chart links (chart-link.js) open charts there.
+    // ocha_dataviz_web/build.js and publish.js use the same address.
+    WEB_VERSION: "https://un-ocha.github.io/dataviz_web_BDU/",
     get ICONS_METADATA() { return this.GITHUB_ICONS_RAW + "/metadata.json"; }
   };
 

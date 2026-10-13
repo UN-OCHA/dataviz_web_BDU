@@ -7,7 +7,8 @@
 
    • Columns      — label/value column pickers (single + multi) and the
                     "sort largest first" option.
-   • Save & share — Copy / Save / Load (the JSON snapshot actions).
+   • Save & share — Share chart (a link), Save (a file or JSON code),
+                    Load / Import.
 
    Same approach as design-groups.js: relocate existing sections, never
    touch their ids or wiring. getElementById in panel.js keeps working.

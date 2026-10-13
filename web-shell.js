@@ -5,8 +5,9 @@
  *
  *   - Layout: the plugin's panel on the left; on the right, where
  *     Illustrator's artboard would be, a live preview of the chart.
- *   - Export: Download SVG (live text, exactly what the plugin places) and
- *     Download PNG at 1×/2×/4× (fonts embedded so the text matches).
+ *   - Export: right below the chart, Download SVG (live text, exactly what
+ *     the plugin places) and Download PNG at 1×/2×/4× (fonts embedded so
+ *     the text matches).
  *     (A Copy button was tried and removed, 8 Oct 2026: SVG code pastes as
  *     text in Word / PowerPoint. See README "Ideas for later".)
  *   - Location maps, icons and flags open in a download window first
@@ -24,7 +25,7 @@
  * DOM events and the shared DataStore.
  */
 
-/* global DataStore, ZipStore, WEB_ICONS, WebGate */
+/* global DataStore, ZipStore, WEB_ICONS, WebGate, ChartLink */
 
 (function () {
   "use strict";
@@ -69,28 +70,40 @@
         icon("arrow-up-right-from-square") + "Open in new tab</a>" +
       '<button type="button" class="btn btn-secondary btn-sm" id="web-fullscreen" hidden title="Use the whole screen">' +
         icon("expand") + '<span class="fs-label">Full screen</span></button>' +
-      '<button type="button" class="btn btn-primary btn-sm" id="web-dl-svg" disabled title="Download the chart as an SVG file with live, editable text">' +
-        icon("file-svg") + "Download SVG</button>" +
-      '<span class="web-png-group">' +
-        '<button type="button" class="btn btn-secondary btn-sm" id="web-dl-png" disabled title="Download the chart as a PNG image">' +
-          icon("file-image") + "Download PNG</button>" +
-        '<select id="web-png-scale" aria-label="PNG size">' +
-          '<option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option>' +
-        "</select>" +
-      "</span>" +
       "</div>" +
     "</div>" +
     '<div id="web-stage">' +
       '<div id="web-empty"><strong>Your chart appears here</strong>' +
         "Add your data in the Data tab — or click <em>Load sample data</em> — " +
         "and pick a chart type. Then download it as SVG or PNG.</div>" +
-      '<div id="web-artboard" hidden></div>' +
+      // The chart, with its downloads right below it (one place only).
+      '<div id="web-output" hidden>' +
+        '<div id="web-artboard"></div>' +
+        '<div id="web-downloads" role="group" aria-label="Download the chart">' +
+          '<div class="web-dl">' +
+            '<button type="button" class="btn btn-primary btn-sm" id="web-dl-svg" disabled aria-describedby="web-dl-svg-desc">' +
+              icon("file-svg") + "Download SVG</button>" +
+            '<span class="web-dl-desc" id="web-dl-svg-desc">Vector: sharp at any size. Editable in Illustrator.</span>' +
+          "</div>" +
+          '<div class="web-dl">' +
+            '<span class="web-png-group">' +
+              '<button type="button" class="btn btn-secondary btn-sm" id="web-dl-png" disabled aria-describedby="web-dl-png-desc">' +
+                icon("file-image") + "Download PNG</button>" +
+              '<select id="web-png-scale" aria-label="PNG size">' +
+                '<option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option>' +
+              "</select>" +
+            "</span>" +
+            '<span class="web-dl-desc" id="web-dl-png-desc">Image</span>' +
+          "</div>" +
+        "</div>" +
+      "</div>" +
     "</div>" +
     '<div id="web-privacy">' + icon("lock") +
       "<span>Your data stays in this browser. Nothing you paste or upload is sent anywhere.</span></div>";
   document.body.appendChild(aside);
 
   var artboard = document.getElementById("web-artboard");
+  var output = document.getElementById("web-output");
   var empty = document.getElementById("web-empty");
   var msgEl = document.getElementById("web-message");
   var btnSvg = document.getElementById("web-dl-svg");
@@ -109,7 +122,7 @@
     var has = !!currentSvg;
     btnSvg.disabled = btnPng.disabled = !has;
     empty.hidden = has;
-    artboard.hidden = !has;
+    output.hidden = !has;
     stage.innerHTML = has
       ? "<style>:host{display:block} svg{display:block;max-width:100%;height:auto}</style>" + stripXmlDecl(currentSvg)
       : "";
@@ -331,52 +344,10 @@
   }
 
   // ── Open a chart from a link ────────────────────────────────
-  // The chart's Save/Open JSON travels in the URL fragment (after #), so it
-  // never reaches a server. Accepted (see ocha_dataviz_web/README.md):
-  //   #chart=<base64url of the JSON, compressed with deflate-raw or gzip>
-  //   #d=<same>          (the dashboard editor's style of link)
-  //   #json=<the JSON, URL-encoded, not compressed>  (hand-made links)
-  function base64urlBytes(s) {
-    s = s.replace(/-/g, "+").replace(/_/g, "/");
-    while (s.length % 4) s += "=";
-    var bin = atob(s), out = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-    return out;
-  }
-  function inflate(bytes, format) {
-    var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream(format));
-    return new Response(stream).arrayBuffer().then(function (b) { return new Uint8Array(b); });
-  }
-  // gzip starts with 1F 8B; otherwise try deflate-raw; if neither, the
-  // bytes are taken as plain text.
-  function unpack(bytes) {
-    if (typeof DecompressionStream === "undefined") return Promise.resolve(bytes);
-    var isGzip = bytes.length > 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
-    return inflate(bytes, isGzip ? "gzip" : "deflate-raw").catch(function () { return bytes; });
-  }
-  // The fragment is "<kind>=<payload>" optionally followed by "&key=value"
-  // options. Splitting on the first "&" is safe: base64url never contains
-  // "&", and encodeURIComponent (for #json=) encodes it.
-  function splitHash(hash) {
-    var h = String(hash || ""), amp = h.indexOf("&");
-    var opts = {};
-    if (amp !== -1) {
-      h.slice(amp + 1).split("&").forEach(function (kv) {
-        var eq = kv.indexOf("=");
-        if (eq > 0) opts[kv.slice(0, eq)] = kv.slice(eq + 1);
-      });
-      h = h.slice(0, amp);
-    }
-    return { main: h, opts: opts };
-  }
-  function chartFromHash(hash) {
-    var m = /^#(chart|d|json)=(.+)$/.exec(splitHash(hash).main);
-    if (!m) return Promise.resolve(null);
-    if (m[1] === "json") {
-      try { return Promise.resolve(decodeURIComponent(m[2])); } catch (e) { return Promise.reject(e); }
-    }
-    return unpack(base64urlBytes(m[2])).then(function (b) { return new TextDecoder("utf-8").decode(b); });
-  }
+  // The chart travels in the URL fragment (after #), so it never reaches a
+  // server. The link format and its decoding are shared with the plugin
+  // (client/chart-link.js: #chart=, #d=, #json=, "&download=…" options);
+  // Share chart (plugin and web) makes these links.
   // Two kinds of JSON can arrive:
   //   - a saved chart (Save / Load format, has "v") → opened like Load chart;
   //   - anything else — the AI import format ({chartType, title, headers,
@@ -416,9 +387,11 @@
     })();
   }
   function openFromHash(hash) {
-    var opts = splitHash(hash).opts;
-    return chartFromHash(hash).then(function (json) {
-      if (!json) return false;
+    var opts = {};
+    return ChartLink.read(hash).then(function (r) {
+      if (!r) return false;
+      var json = r.json;
+      opts = r.opts;
       // Not even shaped like JSON (a damaged or truncated link): say so
       // plainly rather than showing a parser error.
       if (!/^\s*[\[{]/.test(json)) throw new Error("not JSON");
@@ -803,22 +776,36 @@
   document.addEventListener("DOMContentLoaded", function () {
     var donate = document.querySelector(".menu-donate-text");
     if (donate) donate.textContent = "Do you like this free tool?";
-    // Save & share help (index.html carries the plugin's wording): on the
-    // web, Save… is a download, Load… uploads, and the page doesn't keep
-    // the chart, so the chart file is how you come back to it.
-    var HELP = {
-      "save-share-help-save": "Downloads the chart as a small chart file (.json), like any other download. " +
-        "Keep it to come back to the chart later, or send it to a colleague.",
-      "save-share-help-load": "Brings a chart back exactly as it was: paste chart text someone sent you, " +
-        "or upload a chart file.",
-      "save-share-help-note": "This page doesn’t keep your chart when you close or reload it, so save a chart " +
-        "file to come back to it. Chart files open in both the web version and the plugin for Illustrator. " +
-        "A chart file isn’t the SVG or PNG picture: it holds the chart’s data and settings, for editing it again."
+    // Save & share (index.html carries the plugin's wording). On the web
+    // the link opens right here, Save as file is a download, Load / Import
+    // uploads, and the page doesn't keep the chart, so a link or a file is
+    // how you come back to it. Each claim matches what the web code does.
+    var WEB_TEXT = {
+      "share-chart-intro": "Paste this link in Teams or an email: whoever clicks it sees the chart and can edit " +
+        "it in their browser.",
+      "save-chart-file-desc": "Downloads the chart as a small file. Keep it, or send it as an attachment; open " +
+        "it again with <strong>Load / Import</strong>, in the web version or the plugin for Illustrator.",
+      "save-share-help-share": "Makes a link that opens this chart in the web version. Paste it in Teams or an " +
+        "email: whoever clicks it sees the chart and can edit it in their browser. A very big chart doesn’t fit " +
+        "in a link: save a file instead.",
+      "save-share-help-save": "<strong>Save as file (.json)</strong> downloads the chart as a small file: keep it, or send it as " +
+        "an attachment. <strong>Copy JSON code</strong> copies the same chart as text, for an AI assistant or for someone to " +
+        "paste into Load / Import; in Teams or an email it shows as code, not as a chart.",
+      "save-share-help-load": "Brings a chart back exactly as it was: upload a chart file, or paste a chart link " +
+        "or JSON code.",
+      "save-share-help-note": "This page doesn’t keep your chart when you close or reload it: keep a link or a " +
+        "file to come back to it. Links, chart files and JSON code open in both the web version and the plugin " +
+        "for Illustrator. A chart file isn’t the SVG or PNG picture: it holds the chart’s data and settings, for " +
+        "editing it again."
     };
-    Object.keys(HELP).forEach(function (id) {
+    // Fixed strings written here (never user input), so innerHTML is safe
+    // and keeps the bold names the plugin's wording has too.
+    Object.keys(WEB_TEXT).forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) el.textContent = HELP[id];
+      if (el) el.innerHTML = WEB_TEXT[id];
     });
+    var shareWin = document.getElementById("share-chart-modal");
+    if (shareWin) shareWin.setAttribute("data-done", "Link copied. Paste it in Teams or an email: it opens this chart in the web version.");
     var v = document.getElementById("app-version");
     var wv = document.getElementById("web-version");
     var isBeta = document.documentElement.getAttribute("data-channel") === "beta";

@@ -9,12 +9,12 @@
  * of truth for the plugin version is CSXS/manifest.xml.
  */
 
-/* global Connector, DataStore, DataGrid, DataInput, ChartRegistry, SvgInlineUtils, IconsPanel, GridPanelUI, ColorPickersUI, IconFlagUI, SeriesLegendUI, DesignControlsUI, ChartBuilder, PanelCoordinator, MapMakerPanel, StatusUI, ThemeManager, VersionCheck, Analytics */
+/* global Connector, ChartLink, DataStore, DataGrid, DataInput, ChartRegistry, SvgInlineUtils, IconsPanel, GridPanelUI, ColorPickersUI, IconFlagUI, SeriesLegendUI, DesignControlsUI, ChartBuilder, PanelCoordinator, MapMakerPanel, StatusUI, ThemeManager, VersionCheck, Analytics */
 
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.6";
+  var APP_VERSION = "2026.1.7";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -1874,108 +1874,131 @@
     return clean + ".humanitariandataviz.json";
   }
 
-  var btnCopyConfig = document.getElementById("btn-copy-config");
+  var btnShareChart = document.getElementById("btn-share-chart");
   var btnSaveConfig = document.getElementById("btn-save-config");
   var btnLoadConfig = document.getElementById("btn-load-config");
 
-  if (btnCopyConfig) {
-    btnCopyConfig.addEventListener("click", function () {
-      clearStatus();
-      var json = buildConfigJsonString();
+  // ── Save & share windows (Share chart, Save) ─────────────
+  // Same window as Use AI / Load / How it works (.ai-import-modal). Their
+  // wording comes from index.html, so each shell words them for itself.
+  function windowControls(modal, closerIds, onOpen) {
+    var lastFocus = null;
+    function open() {
+      lastFocus = document.activeElement;
+      modal.style.display = "flex";
+      if (onOpen) onOpen();
+    }
+    function close() {
+      modal.style.display = "none";
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) { /* gone */ } }
+    }
+    closerIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener("click", close);
+    });
+    modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.style.display === "flex") close();
+    });
+    return { open: open, close: close };
+  }
+  function $id(id) { return document.getElementById(id); }
 
-      // CEP context note: navigator.clipboard.writeText() typically
-      // returns "permissions denied" inside an extension panel because
-      // the document isn't a "secure context" by Chromium's reckoning.
-      // The textarea + execCommand("copy") pattern works reliably
-      // because it operates on the user's current selection from a
-      // user-initiated event, which CEP allows. So that's primary;
-      // navigator.clipboard is only the fallback for non-CEP runs.
-      var copied = false;
-      try {
-        // Off-screen textarea trick. Important details for CEP:
-        //   - position:fixed at (0,0) — visible to the layout engine
-        //     so .select() works; opacity 0 hides it from the user.
-        //   - width/height > 0 so the browser actually renders it
-        //     (off-screen at -9999px sometimes gets culled in CEP).
-        //   - contentEditable=false + readonly so the focus doesn't
-        //     show a caret cursor flicker.
-        //   - Restore previously focused element afterward.
-        var prevFocus = document.activeElement;
-        var ta = document.createElement("textarea");
-        ta.value = json;
-        ta.setAttribute("readonly", "");
-        ta.style.cssText = [
-          "position:fixed",
-          "left:0",
-          "top:0",
-          "width:1px",
-          "height:1px",
-          "padding:0",
-          "border:0",
-          "outline:0",
-          "opacity:0",
-          "pointer-events:none",
-          "z-index:-1"
-        ].join(";");
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        ta.setSelectionRange(0, json.length);
-        copied = document.execCommand("copy");
-        document.body.removeChild(ta);
-        if (prevFocus && prevFocus.focus) { try { prevFocus.focus(); } catch (e2) {} }
-      } catch (e) {
-        copied = false;
-      }
-
-      if (copied) {
-        showStatus("Chart configuration copied to clipboard (" + json.length + " chars).", "success");
-        setTimeout(clearStatus, 5000);
+  // Save as file (.json): the native save dialog in Illustrator, a browser
+  // download on the web. The file holds the readable (indented) JSON.
+  function saveAsFile() {
+    clearStatus();
+    var json = buildConfigJsonString();
+    var filename = safeChartFilename();
+    Connector.files.saveText({
+      title: "Save chart file",
+      extensions: ["json"],
+      defaultName: filename,
+      mime: "application/json",
+      text: json
+    }, function (err, res) {
+      if (err) {
+        showStatus("Couldn't save: " + err.message, "error");
+        setTimeout(clearStatus, 7000);
         return;
       }
-
-      // Last-resort: try navigator.clipboard.
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(json).then(function () {
-          showStatus("Chart configuration copied to clipboard (" + json.length + " chars).", "success");
-          setTimeout(clearStatus, 5000);
-        }).catch(function () {
-          showStatus("Couldn't copy. Use Save… to write the JSON to a file instead.", "error");
-          setTimeout(clearStatus, 9000);
-        });
-      } else {
-        showStatus("Couldn't copy. Use Save… to write the JSON to a file instead.", "error");
-        setTimeout(clearStatus, 9000);
-      }
+      if (!res) return;   // cancelled
+      showStatus((res.method === "dialog" ? "Saved to " : "Downloaded ") + res.name + ".", "success");
+      setTimeout(clearStatus, 7000);
     });
   }
 
-  if (btnSaveConfig) {
-    btnSaveConfig.addEventListener("click", function () {
-      clearStatus();
-      var json = buildConfigJsonString();
-      var filename = safeChartFilename();
-      // Native save dialog in Illustrator; a browser download on the web.
-      Connector.files.saveText({
-        title: "Save chart configuration",
-        extensions: ["json"],
-        defaultName: filename,
-        mime: "application/json",
-        text: json
-      }, function (err, res) {
-        if (err) {
-          showStatus("Couldn't save: " + err.message, "error");
-          setTimeout(clearStatus, 7000);
-          return;
-        }
-        if (!res) return;   // cancelled
-        showStatus((res.method === "dialog" ? "Saved to " : "Downloaded ") + res.name + ".", "success");
-        setTimeout(clearStatus, 7000);
+  // ── Share chart ──
+  // The link is made as soon as the window opens, so “Copy link” copies
+  // within its own click (browsers only allow copying during the click).
+  // It carries the compact JSON (no indentation) to stay short.
+  var shareModal = $id("share-chart-modal");
+  var shareUrl = null;
+  var shareWin = shareModal && windowControls(shareModal, ["share-chart-close", "share-chart-cancel"], function () {
+    shareUrl = null;
+    $id("share-chart-ready").hidden = true;
+    $id("share-chart-done").textContent = "";
+    $id("share-chart-busy").hidden = false;
+    $id("share-chart-toobig").style.display = "none";
+    $id("share-chart-save").style.display = "none";
+    $id("share-chart-copy").style.display = "";
+    $id("share-chart-copy").disabled = true;
+    ChartLink.build(JSON.stringify(buildExportConfig())).then(function (url) {
+      $id("share-chart-busy").hidden = true;
+      if (url.length > ChartLink.MAX_LENGTH) {
+        // Too big for a link: say so, and offer the file instead.
+        $id("share-chart-toobig").style.display = "block";
+        $id("share-chart-copy").style.display = "none";
+        $id("share-chart-save").style.display = "";
+        $id("share-chart-save").focus();
+        return;
+      }
+      shareUrl = url;
+      $id("share-chart-url").value = url;
+      $id("share-chart-ready").hidden = false;
+      $id("share-chart-copy").disabled = false;
+      $id("share-chart-copy").focus();
+    }, function () {
+      $id("share-chart-busy").textContent = "Couldn't make a link for this chart. Use Save → Save as file (.json) instead.";
+    });
+  });
+  if (shareWin) {
+    $id("share-chart-copy").addEventListener("click", function () {
+      if (!shareUrl) return;
+      var done = shareModal.getAttribute("data-done");
+      $id("share-chart-url").select();
+      Connector.clipboard.writeText(shareUrl).then(function (ok) {
+        $id("share-chart-done").textContent = ok ? done
+          : "Couldn't copy the link. Select it above and copy it (Ctrl/Cmd+C).";
       });
     });
+    $id("share-chart-url").addEventListener("focus", function () { this.select(); });
+    $id("share-chart-save").addEventListener("click", function () { shareWin.close(); saveAsFile(); });
+    if (btnShareChart) btnShareChart.addEventListener("click", function () { clearStatus(); shareWin.open(); });
   }
 
-  // ── Load chart modal (paste JSON OR upload a file) ──────
+  // ── Save: a chart file, or the chart as JSON code ──
+  var saveModal = $id("save-chart-modal");
+  var saveWin = saveModal && windowControls(saveModal, ["save-chart-close", "save-chart-cancel"], function () {
+    $id("save-chart-json-done").textContent = "";
+    $id("save-chart-file").focus();
+  });
+  if (saveWin) {
+    $id("save-chart-file").addEventListener("click", function () { saveWin.close(); saveAsFile(); });
+    $id("save-chart-json").addEventListener("click", function () {
+      // The same text as the chart file, so Load / Import reads either.
+      Connector.clipboard.writeText(buildConfigJsonString()).then(function (ok) {
+        $id("save-chart-json-done").textContent = ok
+          ? "JSON code copied. Paste it into an AI assistant, or into Load / Import."
+          : "Couldn't copy. Use Save as file (.json) instead.";
+      });
+    });
+    if (btnSaveConfig) btnSaveConfig.addEventListener("click", function () { clearStatus(); saveWin.open(); });
+  } else if (btnSaveConfig) {
+    btnSaveConfig.addEventListener("click", saveAsFile);
+  }
+
+  // ── Load / Import modal (paste a link or JSON code, OR upload a file) ──
   var loadModal       = document.getElementById("load-config-modal");
   var loadModalText   = document.getElementById("load-config-textarea");
   var loadModalUpload = document.getElementById("load-config-upload");
@@ -2014,7 +2037,7 @@
       // loadFromConfig answers { ok: true } or { error: "…" } — an object
       // either way, so test .error (a bare truthiness check took every
       // rejected paste for a success and said "Loaded chart").
-      if (!ok || ok.error) throw new Error("That doesn't look like a chart configuration. Paste the JSON from another chart's Copy chart / Save.");
+      if (!ok || ok.error) throw new Error("That doesn’t look like a chart. Paste a chart link or JSON code, or upload a chart file (.json).");
       DataGrid.pushUndo();
       syncUIFromStore();
       updateChartOptions();
@@ -2033,7 +2056,7 @@
   // file picker on the web.
   function uploadConfigFile() {
     try {
-      Connector.files.openText({ title: "Load chart configuration", extensions: ["json"] }, function (err, files) {
+      Connector.files.openText({ title: "Open chart file", extensions: ["json"] }, function (err, files) {
         if (err) { showLoadError("Couldn't open file: " + err.message); return; }
         if (!files || !files.length) return;   // cancelled
         var f = files[0];
@@ -2049,7 +2072,7 @@
   if (btnLoadConfig) btnLoadConfig.addEventListener("click", function () { clearStatus(); openLoadModal(); });
 
   // A shell can hand over a chart to open (the web version does this for
-  // "open a chart from a link"): same path as Load chart. If the JSON is
+  // "open a chart from a link"): same path as Load / Import. If the JSON is
   // rejected, the Load window stays open showing it and the reason.
   document.addEventListener("ocha-load-config", function (e) {
     var d = e.detail || {};
@@ -2062,8 +2085,20 @@
   if (loadModalUpload) loadModalUpload.addEventListener("click", uploadConfigFile);
   if (loadModalSubmit) loadModalSubmit.addEventListener("click", function () {
     var txt = loadModalText ? loadModalText.value.trim() : "";
-    if (!txt) { showLoadError("Paste a chart's JSON, or use Upload."); return; }
+    if (!txt) { showLoadError("Paste a chart link or JSON code, or upload a chart file (.json)."); return; }
     clearLoadError();
+    // A chart link (Share chart): read the chart out of it. Anything else
+    // is taken as JSON code (Save → Copy JSON code, a chart file's
+    // contents, or what the old Copy JSON / Copy chart button copied).
+    if (ChartLink.isLink(txt)) {
+      ChartLink.read(txt).then(function (r) {
+        if (!r) throw new Error("not a link");
+        applyConfigJson(r.json, "the link");
+      }).catch(function () {
+        showLoadError("Couldn’t read this link. It may have been cut short: ask for the link again, or for a chart file.");
+      });
+      return;
+    }
     applyConfigJson(txt, null);
   });
   if (loadModalCancel) loadModalCancel.addEventListener("click", closeLoadModal);

@@ -246,6 +246,28 @@ var Connector = (function () {
     }
   };
 
+  // Chart links (chart-link.js): the browser's compression streams.
+  var codec = {
+    deflateRaw: function (bytes) { return BrowserFiles.compress(bytes, "deflate-raw"); },
+    inflate: function (bytes, format) { return BrowserFiles.decompress(bytes, format); }
+  };
+
+  // Copying: the hidden-text-box method first, because it copies right
+  // inside the click. navigator.clipboard can be refused — inside the
+  // brand portal's embed (an iframe without clipboard permission), or in
+  // Safari once anything asynchronous has happened — and by then a second
+  // attempt is outside the click and may be refused too. It stays as the
+  // fallback for browsers where the old method is gone.
+  var clipboard = {
+    writeText: function (text) {
+      if (BrowserFiles.copyBySelection(text)) return Promise.resolve(true);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return false; });
+      }
+      return Promise.resolve(false);
+    }
+  };
+
   return {
     id: "web",
     paths: paths,
@@ -265,6 +287,8 @@ var Connector = (function () {
       }
     },
     analytics: analytics,
+    codec: codec,
+    clipboard: clipboard,
     openURL: function (url) {
       try { window.open(url, "_blank", "noopener"); } catch (e) { /* popup blocked */ }
     },
