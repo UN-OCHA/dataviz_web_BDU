@@ -19,10 +19,10 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Humanitarian DataViz Tool, in your web browser. OCHA Brand and Design Unit.">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.8-cfc0eec">
-  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.8-cfc0eec">
-  <link rel="stylesheet" href="styles.css?v=2026.1.8-cfc0eec">
-  <link rel="stylesheet" href="web-shell.css?v=2026.1.8-cfc0eec">
+  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.9-619f5e7">
+  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.9-619f5e7">
+  <link rel="stylesheet" href="styles.css?v=2026.1.9-619f5e7">
+  <link rel="stylesheet" href="web-shell.css?v=2026.1.9-619f5e7">
 </head>
 <body>
 
@@ -109,13 +109,13 @@
       <div class="menu-section">
         <div class="menu-section-title" style="display:flex;align-items:center;justify-content:space-between;">
           What's new
-          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.8</span>
+          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.9</span>
         </div>
         <div class="menu-info-text" style="font-size:10px;line-height:1.5;">
           <ul style="margin:0;padding-left:14px;">
-            <li><strong>Share chart.</strong> In the Data tab, Share chart makes a link that opens your chart in the web version. Paste it in Teams or an email. (Fixed in this version: the link now appears instead of staying on “Making the link…”.)</li>
-            <li><strong>Save</strong> offers a chart file or JSON code (the old “Copy chart”), and <strong>Load / Import</strong> also opens chart links.</li>
-            <li><strong>Web version (beta).</strong> Colleagues without Illustrator can make the same charts in their browser. Find it on the Humanitarian DataViz Tool page of the brand portal.</li>
+            <li><strong>Enhanced tables.</strong> The Table chart can now show bars in cells, align and bold columns, group columns under a heading, add separator and vertical lines, and use a cleaner Minimal look. Find it in Design → Table Options.</li>
+            <li><strong>Share-of-total strips.</strong> Stacked bar → Value labels → “Above segments” puts each value and name above its segment.</li>
+            <li><strong>Share chart.</strong> In the Data tab, Share chart makes a link that opens your chart in the web version.</li>
           </ul>
         </div>
       </div>
@@ -932,6 +932,7 @@
               <option value="outside">Show (outside bars)</option>
               <option value="inside">Inside bars</option>
               <option value="total">Totals only</option>
+              <option value="above">Above segments (value + name)</option>
               <option value="none">Hide</option>
             </select>
           </div>
@@ -1344,6 +1345,89 @@
           <div class="section-label">Event Icons</div>
           <div class="icon-legend-rows" id="timeline-icon-rows">
             <!-- Populated dynamically: one row per event -->
+          </div>
+        </div>
+
+        <!-- Data Table options (table only): look, per-column bars /
+             colour / alignment / bold / heading / divider, per-row bold
+             and colour, bar layout. Built by TableUI (table-ui.js). -->
+        <div class="section" id="table-options-section" style="display:none;">
+          <div class="section-label">Table Options</div>
+
+          <div class="sub-label">Look</div>
+          <div class="table-ui-choice" id="table-style-choice">
+            <button type="button" class="table-ui-card" data-value="classic" title="Coloured header band, alternating rows, grid">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <rect x="2" y="2" width="60" height="9" rx="1" class="tc-accent"/>
+                <rect x="2" y="11" width="60" height="9" class="tc-row"/>
+                <rect x="2" y="29" width="60" height="9" class="tc-row"/>
+                <path d="M2 20h60M2 29h60M2 38h60M22 11v27" class="tc-grid"/>
+                <rect x="2" y="2" width="60" height="36" class="tc-frame"/>
+              </svg>
+              <span>Classic</span>
+            </button>
+            <button type="button" class="table-ui-card" data-value="minimal" title="Lines only, no fills, full width: for report pages">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <path d="M2 11h60" class="tc-rule"/>
+                <path d="M2 20h60M2 29h60" class="tc-dots"/>
+                <rect x="4" y="4" width="10" height="3" class="tc-text"/>
+                <rect x="26" y="4" width="10" height="3" class="tc-text"/>
+                <rect x="4" y="14" width="12" height="3" class="tc-text"/>
+                <rect x="4" y="23" width="12" height="3" class="tc-text"/>
+                <rect x="4" y="32" width="12" height="3" class="tc-text"/>
+              </svg>
+              <span>Minimal</span>
+            </button>
+          </div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Columns</div>
+          <div id="table-cols-grid" class="table-cols-grid"></div>
+          <div class="table-ui-hint">
+            Group title: type the same title on neighbouring columns to put one title above them (their bars then share one scale).
+          </div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Rows</div>
+          <div id="table-rows-grid" class="table-cols-grid"></div>
+
+          <div id="table-bar-options" style="display:none;">
+            <div class="sub-label" style="margin-top:var(--space-200);">Bars</div>
+            <div class="table-ui-choice" id="table-bar-label-choice">
+              <button type="button" class="table-ui-card" data-value="above" title="The value sits above its bar">
+                <svg viewBox="0 0 64 40" aria-hidden="true">
+                  <rect x="4" y="8" width="12" height="4" class="tc-text"/>
+                  <rect x="4" y="16" width="56" height="4" class="tc-track"/>
+                  <rect x="4" y="16" width="34" height="4" class="tc-accent"/>
+                  <rect x="4" y="26" width="10" height="4" class="tc-text"/>
+                  <rect x="4" y="34" width="56" height="4" class="tc-track"/>
+                  <rect x="4" y="34" width="20" height="4" class="tc-accent"/>
+                </svg>
+                <span>Value above</span>
+              </button>
+              <button type="button" class="table-ui-card" data-value="beside" title="The value sits to the left of its bar">
+                <svg viewBox="0 0 64 40" aria-hidden="true">
+                  <rect x="4" y="10" width="12" height="4" class="tc-text"/>
+                  <rect x="20" y="10" width="40" height="4" class="tc-track"/>
+                  <rect x="20" y="10" width="26" height="4" class="tc-accent"/>
+                  <rect x="6" y="26" width="10" height="4" class="tc-text"/>
+                  <rect x="20" y="26" width="40" height="4" class="tc-track"/>
+                  <rect x="20" y="26" width="14" height="4" class="tc-accent"/>
+                </svg>
+                <span>Value beside</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Colors</div>
+          <div class="table-ui-colorby">
+            <select id="table-bar-color-by">
+              <option value="single">Single color</option>
+              <option value="column">One color per column</option>
+              <option value="row">One color per row</option>
+            </select>
+            <span id="table-single-color"></span>
+          </div>
+          <div class="table-ui-hint">
+            In the data: a row with only <b>---</b> draws a separator line. A cell with –, — or nothing shows no bar; X.X or $X.XM shows a placeholder bar. Value Format sets how bar numbers read (e.g. suffix % → 42%).
           </div>
         </div>
 
@@ -1915,74 +1999,75 @@
        (tests/shell/check-shared.js enforces this). Page elements marked
        data-shell="illustrator" (Guides, Map Maker, updater, placing) are
        hidden by the web version's stylesheet. -->
-  <script src="lib/papaparse.min.js?v=2026.1.8-cfc0eec"></script>
-  <script src="panel-utils.js?v=2026.1.8-cfc0eec"></script>
-  <script src="browser-files.js?v=2026.1.8-cfc0eec"></script>
-  <script src="connector-web.js?v=2026.1.8-cfc0eec"></script>
-  <script src="data-store.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-registry.js?v=2026.1.8-cfc0eec"></script>
-  <script src="themes-store.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-hbar.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-vbar.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-line.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-cluster-line.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-pie.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-donut.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-cluster-donut.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-stacked-bar.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-stacked-col.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-cluster.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-bubble.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-table.js?v=2026.1.8-cfc0eec"></script>
-  <script src="icon-library.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-icon.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-sankey.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-keyfigures.js?v=2026.1.8-cfc0eec"></script>
-  <script src="keyfigures-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-timeline.js?v=2026.1.8-cfc0eec"></script>
-  <script src="timeline-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="data-grid.js?v=2026.1.8-cfc0eec"></script>
-  <script src="data-input.js?v=2026.1.8-cfc0eec"></script>
-  <script src="http-utils.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-link.js?v=2026.1.8-cfc0eec"></script>
-  <script src="maps-panel.js?v=2026.1.8-cfc0eec"></script>
-  <script src="icons-panel.js?v=2026.1.8-cfc0eec"></script>
-  <script src="flags-data.js?v=2026.1.8-cfc0eec"></script>
-  <script src="flags-panel.js?v=2026.1.8-cfc0eec"></script>
-  <script src="svg-inline-utils.js?v=2026.1.8-cfc0eec"></script>
-  <script src="geo-projection.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-map.js?v=2026.1.8-cfc0eec"></script>
-  <script src="status-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="theme-manager.js?v=2026.1.8-cfc0eec"></script>
-  <script src="analytics.js?v=2026.1.8-cfc0eec"></script>
-  <script src="color-pickers-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="icon-flag-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="series-legend-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="design-controls-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-builder.js?v=2026.1.8-cfc0eec"></script>
-  <script src="panel-coordinator.js?v=2026.1.8-cfc0eec"></script>
-  <script src="chart-picker-filter.js?v=2026.1.8-cfc0eec"></script>
-  <script src="ai-prompt-template.js?v=2026.1.8-cfc0eec"></script>
-  <script src="ai-import.js?v=2026.1.8-cfc0eec"></script>
-  <script src="themes-ui.js?v=2026.1.8-cfc0eec"></script>
+  <script src="lib/papaparse.min.js?v=2026.1.9-619f5e7"></script>
+  <script src="panel-utils.js?v=2026.1.9-619f5e7"></script>
+  <script src="browser-files.js?v=2026.1.9-619f5e7"></script>
+  <script src="connector-web.js?v=2026.1.9-619f5e7"></script>
+  <script src="data-store.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-registry.js?v=2026.1.9-619f5e7"></script>
+  <script src="themes-store.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-hbar.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-vbar.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-line.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-cluster-line.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-pie.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-donut.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-cluster-donut.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-stacked-bar.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-stacked-col.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-cluster.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-bubble.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-table.js?v=2026.1.9-619f5e7"></script>
+  <script src="icon-library.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-icon.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-sankey.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-keyfigures.js?v=2026.1.9-619f5e7"></script>
+  <script src="keyfigures-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-timeline.js?v=2026.1.9-619f5e7"></script>
+  <script src="timeline-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="table-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="data-grid.js?v=2026.1.9-619f5e7"></script>
+  <script src="data-input.js?v=2026.1.9-619f5e7"></script>
+  <script src="http-utils.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-link.js?v=2026.1.9-619f5e7"></script>
+  <script src="maps-panel.js?v=2026.1.9-619f5e7"></script>
+  <script src="icons-panel.js?v=2026.1.9-619f5e7"></script>
+  <script src="flags-data.js?v=2026.1.9-619f5e7"></script>
+  <script src="flags-panel.js?v=2026.1.9-619f5e7"></script>
+  <script src="svg-inline-utils.js?v=2026.1.9-619f5e7"></script>
+  <script src="geo-projection.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-map.js?v=2026.1.9-619f5e7"></script>
+  <script src="status-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="theme-manager.js?v=2026.1.9-619f5e7"></script>
+  <script src="analytics.js?v=2026.1.9-619f5e7"></script>
+  <script src="color-pickers-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="icon-flag-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="series-legend-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="design-controls-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-builder.js?v=2026.1.9-619f5e7"></script>
+  <script src="panel-coordinator.js?v=2026.1.9-619f5e7"></script>
+  <script src="chart-picker-filter.js?v=2026.1.9-619f5e7"></script>
+  <script src="ai-prompt-template.js?v=2026.1.9-619f5e7"></script>
+  <script src="ai-import.js?v=2026.1.9-619f5e7"></script>
+  <script src="themes-ui.js?v=2026.1.9-619f5e7"></script>
 
-  <script src="zip-store.js?v=2026.1.8-cfc0eec"></script>
-  <script src="web-icons.js?v=2026.1.8-cfc0eec"></script>
-  <script src="signup-lists.js?v=2026.1.8-cfc0eec"></script>
-  <script src="web-shell.js?v=2026.1.8-cfc0eec"></script>
-  <script src="web-gate.js?v=2026.1.8-cfc0eec"></script>
-  <script src="vendor/cd-coachmark.js?v=2026.1.8-cfc0eec"></script>
-  <script src="web-guides.js?v=2026.1.8-cfc0eec"></script>
+  <script src="zip-store.js?v=2026.1.9-619f5e7"></script>
+  <script src="web-icons.js?v=2026.1.9-619f5e7"></script>
+  <script src="signup-lists.js?v=2026.1.9-619f5e7"></script>
+  <script src="web-shell.js?v=2026.1.9-619f5e7"></script>
+  <script src="web-gate.js?v=2026.1.9-619f5e7"></script>
+  <script src="vendor/cd-coachmark.js?v=2026.1.9-619f5e7"></script>
+  <script src="web-guides.js?v=2026.1.9-619f5e7"></script>
 
-  <script src="panel.js?v=2026.1.8-cfc0eec"></script>
-  <script src="design-groups.js?v=2026.1.8-cfc0eec"></script>
-  <script src="data-groups.js?v=2026.1.8-cfc0eec"></script>
-  <script src="save-share-help.js?v=2026.1.8-cfc0eec"></script>
-  <script src="text-tab-ui.js?v=2026.1.8-cfc0eec"></script>
-  <script src="auto-pill.js?v=2026.1.8-cfc0eec"></script>
-  <script src="auto-resolved.js?v=2026.1.8-cfc0eec"></script>
-  <script src="text-format.js?v=2026.1.8-cfc0eec"></script>
-  <script src="compact-layout.js?v=2026.1.8-cfc0eec"></script>
+  <script src="panel.js?v=2026.1.9-619f5e7"></script>
+  <script src="design-groups.js?v=2026.1.9-619f5e7"></script>
+  <script src="data-groups.js?v=2026.1.9-619f5e7"></script>
+  <script src="save-share-help.js?v=2026.1.9-619f5e7"></script>
+  <script src="text-tab-ui.js?v=2026.1.9-619f5e7"></script>
+  <script src="auto-pill.js?v=2026.1.9-619f5e7"></script>
+  <script src="auto-resolved.js?v=2026.1.9-619f5e7"></script>
+  <script src="text-format.js?v=2026.1.9-619f5e7"></script>
+  <script src="compact-layout.js?v=2026.1.9-619f5e7"></script>
 
   <!-- Placement overlay — blocks UI during chart/map placement -->
   <div id="placing-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">

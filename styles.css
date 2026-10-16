@@ -1233,6 +1233,197 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 }
 .line-label-table input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
 
+/* Data table options (TableUI). Picture buttons for the look and the
+   bar layout; per-column / per-row grids with compact controls. */
+.table-ui-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-150);
+}
+.table-ui-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-75);
+  padding: var(--space-150) var(--space-100);
+  border: 1px solid var(--border-field);
+  border-radius: var(--radius-lg);
+  background: var(--bg-layer-2);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+.table-ui-card svg { width: 100%; max-width: 96px; height: auto; display: block; }
+.table-ui-card:hover { border-color: var(--accent); color: var(--text-primary); }
+.table-ui-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+  color: var(--text-primary);
+}
+.table-ui-card .tc-accent { fill: var(--accent); }
+.table-ui-card .tc-row    { fill: var(--text-tertiary); opacity: 0.18; }
+.table-ui-card .tc-text   { fill: var(--text-secondary); }
+.table-ui-card .tc-track  { fill: var(--text-tertiary); opacity: 0.35; }
+.table-ui-card .tc-grid   { stroke: var(--text-tertiary); stroke-width: 0.6; fill: none; opacity: 0.6; }
+.table-ui-card .tc-frame  { stroke: var(--text-tertiary); stroke-width: 0.8; fill: none; opacity: 0.6; }
+.table-ui-card .tc-rule   { stroke: var(--text-primary); stroke-width: 1; }
+.table-ui-card .tc-dots   { stroke: var(--text-tertiary); stroke-width: 0.8; stroke-dasharray: 1 1.5; }
+
+.table-cols-grid {
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+}
+.table-cols-grid table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10px;
+}
+.table-cols-grid th,
+.table-cols-grid td {
+  padding: 2px 3px;
+  text-align: center;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-default);
+  vertical-align: middle;
+}
+.table-cols-grid th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-layer-1);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.table-cols-grid .cat {
+  text-align: left;
+  color: var(--text-primary);
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table-cols-grid input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.table-cols-grid input[type="text"],
+[data-design] .table-cols-grid input[type="text"],
+[data-design] .table-cols-grid input[type="text"]:focus {
+  font-size: 10px;
+  height: 20px;
+  width: 52px;
+  padding: 1px 3px;
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input, transparent);
+  box-shadow: none;
+}
+/* Columns grid laid out like the table: table columns across, settings
+   down. The setting names (left) and the column names (top) stay pinned
+   while the grid scrolls. */
+.table-ui-transposed { table-layout: fixed; width: auto; }
+/* No inner scrolling in Table Options: the rows list grows with the
+   rows, and the columns grid wraps into blocks */
+#table-rows-grid { max-height: none; overflow: visible; }
+/* The columns grid wraps into blocks instead of scrolling */
+#table-cols-grid { max-height: none; overflow: visible; border: none; }
+#table-cols-grid .table-ui-transposed {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+#table-cols-grid .table-ui-transposed + .table-ui-transposed { margin-top: var(--space-150); }
+.table-ui-transposed th,
+.table-ui-transposed td {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  border-left: 1px solid var(--border-default);
+}
+.table-ui-transposed tr:first-child th {
+  white-space: normal;
+  line-height: 1.2;
+  vertical-align: bottom;
+  color: var(--text-primary);
+  overflow: hidden;
+  display: table-cell;
+  height: 30px;
+  word-break: break-word;
+}
+.table-ui-transposed .rowhead {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 58px;
+  min-width: 58px;
+  max-width: 58px;
+  text-align: left;
+  background: var(--bg-layer-1);
+  color: var(--text-secondary);
+  font-weight: 500;
+  border-left: none;
+}
+.table-ui-transposed tr:first-child .rowhead { z-index: 3; }
+.table-ui-transposed input[type="text"],
+[data-design] .table-ui-transposed input[type="text"],
+[data-design] .table-ui-transposed input[type="text"]:focus { width: 44px; }
+/* B (bold) button: same look as the B/I buttons on the text fields */
+.table-ui-b {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: var(--font-sans);
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 3px);
+  cursor: pointer;
+}
+.table-ui-b:hover { color: var(--accent); background: var(--accent-bg); }
+/* Serif italic "I", the same convention as the text-field buttons */
+.table-ui-i { font-weight: 400; font-style: italic; font-family: Georgia, "Times New Roman", serif; }
+.table-ui-b.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+/* Text alignment: three small picture buttons */
+.table-ui-align { display: inline-flex; gap: 1px; }
+.table-ui-align button {
+  width: 15px;
+  height: 18px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 3px);
+  cursor: pointer;
+  color: var(--text-tertiary);
+}
+.table-ui-align button svg { width: 12px; height: 12px; display: block; margin: auto; }
+.table-ui-align button:hover { color: var(--accent); background: var(--accent-bg); }
+.table-ui-align button.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+.table-ui-empty {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  padding: 6px;
+}
+.table-ui-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  padding: 0;
+  vertical-align: middle;
+}
+.table-ui-colorby { display: flex; align-items: center; gap: var(--space-150); }
+.table-ui-colorby select { flex: 1; min-width: 0; }
+.table-ui-hint {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: var(--space-100);
+  line-height: 1.4;
+}
+
 /* Bubble orientation toggle */
 .toggle-group {
   display: none;

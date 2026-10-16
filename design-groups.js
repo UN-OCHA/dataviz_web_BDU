@@ -57,7 +57,7 @@
     { key: "options", title: "Chart-type options", ids: [
       "line-options-section", "sankey-options-section",
       "keyfigures-options-section", "timeline-options-section",
-      "stacked-stroke-section", "icon-series-section"
+      "stacked-stroke-section", "icon-series-section", "table-options-section"
     ]}
   ];
 

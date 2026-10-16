@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.8";
+  var APP_VERSION = "2026.1.9";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -224,6 +224,9 @@
 
     // Timeline options (per-row icon picker list)
     if (type === "timeline") { TimelineUI.show(); } else { TimelineUI.hide(); }
+
+    // Data table options (look, bars in cells, dividers)
+    if (type === "table") { TableUI.show(); } else { TableUI.hide(); }
 
     // Reparent label color/scale into legend section for icon charts, restore for others
     SeriesLegendUI.reparentLabelSections(type);
@@ -451,6 +454,15 @@
     schedule: scheduleLiveUpdate,
     openIconPicker: IconFlagUI.openPicker,
     assetIconsDir: assetIconsDir
+  });
+
+  // ── Data Table UI ───────────────────────────────────────
+  TableUI.init({
+    store: DataStore,
+    generate: generateSVG,
+    schedule: scheduleLiveUpdate,
+    getSwatches: function () { return ChartRegistry.getSwatches(DataStore.style || "ocha"); },
+    colorDropdown: ColorPickersUI.buildSeriesDropdown
   });
 
   // Refresh button — full panel reload
@@ -1690,6 +1702,10 @@
     if ((DataStore.chartType || "") === "timeline") {
       TimelineUI.buildIconRows();
     }
+    // Table column grid + row colours follow the data's columns and rows
+    if ((DataStore.chartType || "") === "table") {
+      TableUI.build();
+    }
 
     // Skip the chart re-render during config load — the UI controls
     // haven't been updated yet, so generateSVG would call
@@ -1827,7 +1843,7 @@
     "icon":          ["iconShape", "iconShapes", "iconSize", "iconLegendLabels", "iconColors", "iconShowLegend", "iconLegendLayout"],
     "sankey":        ["sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyColorMode", "sankeySingleColor"],
     "keyfigures":    ["bodyCol", "kfAutoCols", "kfMaxCols", "kfAutoWidth", "kfColWidth", "kfIconPosition", "kfShowSeparators", "kfPadH", "kfPadV", "kfGap", "kfIconColor", "kfTextColor"],
-    "table":         []
+    "table":         ["tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors", "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers", "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"]
   };
 
   // Build a filtered config object containing only the fields that

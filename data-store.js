@@ -72,7 +72,7 @@ var DataStore = (function () {
     pieLabelContent: "label-pct", // "pct" | "value" | "value-pct" | "label-pct" | "label-value" | "label-value-pct"
     pieLeaderLines: true, // show leader lines for outside labels
     pieLabelDistance: 24, // px between ring and label midpoint (outside mode)
-    barLabelMode: "outside", // "outside" | "inside" | "total" | "none"
+    barLabelMode: "outside", // "outside" | "inside" | "total" | "none" | "above" (stacked bar: value + series name over each segment)
     stackedStroke: false, // enable stroke on stacked segments
     stackedStrokeWidth: 2, // stroke width in px
     stackedStrokeColor: "#FFFFFF", // stroke color
@@ -108,6 +108,24 @@ var DataStore = (function () {
     source: null, // "paste" | "csv" | "xlsx" | "grid-edit" | "config"
     iconColType: "none", // "none" | "flags" | "icons"
     iconSelections: [], // parallel array to rows: ["AFG", "YEM", null, ...]
+    // Data table options (chart-table.js). Column indexes are adjusted
+    // by removeColumn / moveColumn, like labelCol and valueCols.
+    tableStyle: "classic", // "classic" (header band, grid) | "minimal" (rules only, report look)
+    tableBarCols: [], // column indexes shown as value + small bar
+    tableBarColors: {}, // { colIndex: hex } bar colour per column; missing = palette order
+    tableBarColorBy: "single", // "single" (one colour, default) | "column" | "row"
+    tableBarColor: null, // the single bar colour; null = style main colour
+    tableRowColors: {}, // { first-column label: hex } bar colour per row (colour-by-row mode)
+    tableBarTrackCols: [], // bar columns with a light grey 100% track (percentages)
+    tableRowHighlight: [], // first-column labels of rows on a light tint
+    tableColItalic: [], // column indexes in italics
+    tableDividers: [], // column indexes AFTER which a vertical divider is drawn
+    tableBarLabel: "above", // "above" (value over its bar, default) | "beside" (value, then bar)
+    tableColAlign: {}, // { colIndex: "left" | "center" | "right" }; missing = auto
+    tableColBold: [], // column indexes in bold
+    tableColWidths: {}, // { colIndex: % of the table width }; missing = automatic
+    tableRowBold: [], // first-column labels of rows in bold (e.g. "Total")
+    tableColGroups: {}, // { colIndex: "Group name" } heading over neighbouring columns with the same name
     rowIconColor: null, // null = auto: follow the chart (user colour override or style primary), so icons recolour when the style changes. Hex = explicit pick. Icons only — flags keep their real colours.
     sortCol: null, // column index currently sorted by, or null
     sortDir: null, // "asc" | "desc" | null
@@ -458,6 +476,8 @@ var DataStore = (function () {
       if (!store.valueCols.length) store.valueCols = null;
     }
 
+    remapTableColumns(function (c) { return c === index ? -1 : (c > index ? c - 1 : c); });
+
     store.source = "grid-edit";
     notify();
   };
@@ -517,6 +537,8 @@ var DataStore = (function () {
     if (store.sortCol != null) {
       store.sortCol = adjustIdx(store.sortCol, fromIndex, toIndex);
     }
+
+    remapTableColumns(function (c) { return adjustIdx(c, fromIndex, toIndex); });
 
     store.source = "grid-edit";
     notify();
@@ -650,6 +672,22 @@ var DataStore = (function () {
     store.iconColType = "none";
     store.iconSelections = [];
     store.rowIconColor = null;
+    store.tableStyle = "classic";
+    store.tableBarCols = [];
+    store.tableBarColors = {};
+    store.tableBarColorBy = "single";
+    store.tableBarColor = null;
+    store.tableRowColors = {};
+    store.tableBarTrackCols = [];
+    store.tableRowHighlight = [];
+    store.tableColItalic = [];
+    store.tableDividers = [];
+    store.tableBarLabel = "above";
+    store.tableColAlign = {};
+    store.tableColBold = [];
+    store.tableColWidths = {};
+    store.tableRowBold = [];
+    store.tableColGroups = {};
     store.sortCol = null;
     store.sortDir = null;
     store.source = null;
@@ -949,6 +987,112 @@ var DataStore = (function () {
     return data;
   };
 
+  // ── Data table option helpers ─────────────────────────
+
+  // Column-index list from a config/AI payload: whole numbers ≥ 0, no
+  // duplicates, ascending.
+  function cleanIndexList(list) {
+    var out = [];
+    if (!Array.isArray(list)) return out;
+    for (var i = 0; i < list.length; i++) {
+      var n = parseInt(list[i], 10);
+      if (isFinite(n) && n >= 0 && out.indexOf(n) === -1) out.push(n);
+    }
+    out.sort(function (a, b) { return a - b; });
+    return out;
+  }
+
+  // { key: "#RRGGBB" } map, keeping only hex colour values.
+  function cleanColorMap(map) {
+    var out = {};
+    if (!map || typeof map !== "object") return out;
+    for (var k in map) {
+      if (map.hasOwnProperty(k) && /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(map[k]))) out[k] = String(map[k]);
+    }
+    return out;
+  }
+  // { colIndex: "left" | "center" | "right" }
+  function cleanAlignMap(map) {
+    var out = {};
+    if (!map || typeof map !== "object") return out;
+    for (var k in map) {
+      if (!map.hasOwnProperty(k)) continue;
+      var n = parseInt(k, 10);
+      if (isFinite(n) && n >= 0 && (map[k] === "left" || map[k] === "center" || map[k] === "right")) out[n] = map[k];
+    }
+    return out;
+  }
+
+  // { colIndex: percent 1–100 }
+  function cleanPercentMap(map) {
+    var out = {};
+    if (!map || typeof map !== "object") return out;
+    for (var k in map) {
+      if (!map.hasOwnProperty(k)) continue;
+      var n = parseInt(k, 10), v = Number(map[k]);
+      if (isFinite(n) && n >= 0 && isFinite(v) && v > 0) out[n] = Math.min(100, Math.round(v * 10) / 10);
+    }
+    return out;
+  }
+
+  // { colIndex: "text" } — empty names dropped
+  function cleanTextMap(map) {
+    var out = {};
+    if (!map || typeof map !== "object") return out;
+    for (var k in map) {
+      if (!map.hasOwnProperty(k)) continue;
+      var n = parseInt(k, 10);
+      var t = map[k] == null ? "" : String(map[k]).trim();
+      if (isFinite(n) && n >= 0 && t) out[n] = t;
+    }
+    return out;
+  }
+
+  // List of row labels (strings), no duplicates
+  function cleanLabelList(list) {
+    var out = [];
+    if (!Array.isArray(list)) return out;
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i] == null ? "" : String(list[i]).trim();
+      if (out.indexOf(t) === -1) out.push(t);
+    }
+    return out;
+  }
+  store.cleanIndexList = cleanIndexList;
+  store.cleanColorMap = cleanColorMap;
+
+  // Keep the table's per-column settings on the same columns when a
+  // column is removed or moved. mapFn(oldIndex) → new index, or -1 when
+  // the column is gone.
+  function remapTableColumns(mapFn) {
+    function mapList(list) {
+      var out = [];
+      for (var i = 0; i < (list || []).length; i++) {
+        var n = mapFn(list[i]);
+        if (n >= 0 && out.indexOf(n) === -1) out.push(n);
+      }
+      return out.sort(function (a, b) { return a - b; });
+    }
+    function mapKeys(obj) {
+      var out = {};
+      for (var k in (obj || {})) {
+        if (!obj.hasOwnProperty(k)) continue;
+        var n2 = mapFn(parseInt(k, 10));
+        if (n2 >= 0) out[n2] = obj[k];
+      }
+      return out;
+    }
+    store.tableBarCols = mapList(store.tableBarCols);
+    store.tableDividers = mapList(store.tableDividers);
+    store.tableColBold = mapList(store.tableColBold);
+    store.tableColItalic = mapList(store.tableColItalic);
+    store.tableBarTrackCols = mapList(store.tableBarTrackCols);
+    store.tableBarColors = mapKeys(store.tableBarColors);
+    store.tableColAlign = mapKeys(store.tableColAlign);
+    store.tableColWidths = mapKeys(store.tableColWidths);
+    store.tableColGroups = mapKeys(store.tableColGroups);
+  }
+
   // ── Config Serialization (for groupItem.note) ─────────
 
   /**
@@ -1047,6 +1191,25 @@ var DataStore = (function () {
       kfTextColor: store.kfTextColor,
       bodyCol: store.bodyCol
     };
+
+    // Data table options — written only when set, so every other chart's
+    // saved config (and chart link) stays as short as before.
+    if (store.tableStyle === "minimal") cfg.tableStyle = "minimal";
+    if (store.tableBarCols && store.tableBarCols.length) cfg.tableBarCols = store.tableBarCols;
+    if (store.tableBarColors && Object.keys(store.tableBarColors).length) cfg.tableBarColors = store.tableBarColors;
+    if (store.tableBarColorBy && store.tableBarColorBy !== "single") cfg.tableBarColorBy = store.tableBarColorBy;
+    if (store.tableBarColor) cfg.tableBarColor = store.tableBarColor;
+    if (store.tableRowColors && Object.keys(store.tableRowColors).length) cfg.tableRowColors = store.tableRowColors;
+    if (store.tableBarTrackCols && store.tableBarTrackCols.length) cfg.tableBarTrackCols = store.tableBarTrackCols;
+    if (store.tableRowHighlight && store.tableRowHighlight.length) cfg.tableRowHighlight = store.tableRowHighlight;
+    if (store.tableColItalic && store.tableColItalic.length) cfg.tableColItalic = store.tableColItalic;
+    if (store.tableDividers && store.tableDividers.length) cfg.tableDividers = store.tableDividers;
+    if (store.tableBarLabel === "beside") cfg.tableBarLabel = "beside";
+    if (store.tableColAlign && Object.keys(store.tableColAlign).length) cfg.tableColAlign = store.tableColAlign;
+    if (store.tableColBold && store.tableColBold.length) cfg.tableColBold = store.tableColBold;
+    if (store.tableColWidths && Object.keys(store.tableColWidths).length) cfg.tableColWidths = store.tableColWidths;
+    if (store.tableRowBold && store.tableRowBold.length) cfg.tableRowBold = store.tableRowBold;
+    if (store.tableColGroups && Object.keys(store.tableColGroups).length) cfg.tableColGroups = store.tableColGroups;
 
     if (store.valueCols) cfg.valueCols = store.valueCols;
     if (store.colors) cfg.colors = store.colors;
@@ -1195,6 +1358,25 @@ var DataStore = (function () {
       store.iconColType = c.iconColType || "none";
       store.iconSelections = c.iconSelections || [];
       store.rowIconColor = c.rowIconColor || null;
+      store.tableStyle = c.tableStyle === "minimal" ? "minimal" : "classic";
+      store.tableBarCols = cleanIndexList(c.tableBarCols);
+      store.tableBarColors = cleanColorMap(c.tableBarColors);
+      // Missing mode with column colours set (AI output, older saves) = per column
+      store.tableBarColorBy = (c.tableBarColorBy === "row" || c.tableBarColorBy === "column" || c.tableBarColorBy === "single")
+        ? c.tableBarColorBy
+        : (c.tableBarColors && typeof c.tableBarColors === "object" && Object.keys(c.tableBarColors).length ? "column" : "single");
+      store.tableBarColor = /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(c.tableBarColor || "")) ? c.tableBarColor : null;
+      store.tableRowColors = cleanColorMap(c.tableRowColors);
+      store.tableBarTrackCols = cleanIndexList(c.tableBarTrackCols);
+      store.tableRowHighlight = cleanLabelList(c.tableRowHighlight);
+      store.tableColItalic = cleanIndexList(c.tableColItalic);
+      store.tableDividers = cleanIndexList(c.tableDividers);
+      store.tableBarLabel = c.tableBarLabel === "beside" ? "beside" : "above";
+      store.tableColAlign = cleanAlignMap(c.tableColAlign);
+      store.tableColBold = cleanIndexList(c.tableColBold);
+      store.tableColWidths = cleanPercentMap(c.tableColWidths);
+      store.tableRowBold = cleanLabelList(c.tableRowBold);
+      store.tableColGroups = cleanTextMap(c.tableColGroups);
       store.sortCol = c.sortCol != null ? c.sortCol : null;
       store.sortDir = c.sortDir || null;
       store.source = "config";

@@ -428,21 +428,23 @@ var ColorPickersUI = (function () {
   function getIconPalette() { return defaultIconPalette; }
 
   /** Reusable: build a swatch dropdown anchored to an element.
-   *  Used by per-series color pickers in buildIconLegendRows. */
-  function buildSeriesDropdown(btn, currentHex, onSelect) {
+   *  Used by per-series color pickers in buildIconLegendRows.
+   *  `swatches` (optional) replaces the active style's swatch list. */
+  function buildSeriesDropdown(btn, currentHex, onSelect, swatches) {
     closeDropdown();
     btn.classList.add("active");
+    var list = swatches || ochaSwatches;
     var dropdown = document.createElement("div");
     dropdown.className = "swatch-dropdown";
-    for (var si = 0; si < ochaSwatches.length; si++) {
+    for (var si = 0; si < list.length; si++) {
       var sw = document.createElement("button");
       sw.className = "swatch-option";
-      if (ochaSwatches[si].hex.toLowerCase() === (currentHex || "").toLowerCase()) {
+      if (list[si].hex.toLowerCase() === (currentHex || "").toLowerCase()) {
         sw.className += " selected";
       }
-      sw.style.background = ochaSwatches[si].hex;
-      sw.title = ochaSwatches[si].name;
-      sw.setAttribute("data-hex", ochaSwatches[si].hex);
+      sw.style.background = list[si].hex;
+      sw.title = list[si].name;
+      sw.setAttribute("data-hex", list[si].hex);
       dropdown.appendChild(sw);
     }
     PanelUtils.placeFloating(btn, dropdown, closeDropdown);

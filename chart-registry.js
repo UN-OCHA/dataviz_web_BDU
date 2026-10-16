@@ -152,6 +152,20 @@ var ChartRegistry = (function () {
     return registry.SEQUENTIAL_RAMPS[styleName] || registry.SEQUENTIAL_RAMPS.ocha;
   };
 
+  // Data table defaults, from a 7-step light→dark ramp: bar shades in the
+  // order they are handed out (main colour, then darker, then lighter —
+  // all readable on white), and the light tint for highlighted rows.
+  // One source for the renderer (chart-table.js) and the Design tab
+  // (table-ui.js), so the swatches always show what gets drawn.
+  registry.tableShades = function (ramp) {
+    ramp = (ramp && ramp.length >= 7) ? ramp : registry.SEQUENTIAL_RAMPS.ocha;
+    return [ramp[3], ramp[4], ramp[5], ramp[2], ramp[6], ramp[1]];
+  };
+  registry.tableHighlight = function (ramp) {
+    ramp = (ramp && ramp.length >= 7) ? ramp : registry.SEQUENTIAL_RAMPS.ocha;
+    return ramp[0];
+  };
+
   // ── Font Families ──────────────────────────────────────
 
   registry.FONTS = {
@@ -557,6 +571,9 @@ var ChartRegistry = (function () {
     // category dot fills so colours stay brand-coherent (a clean
     // ramp in the active style) regardless of `colors` above.
     config.iconPalette = registry.getIconPalette(styleName);
+    // The style's 7-step light→dark ramp (blue for OCHA). The data table
+    // uses it for its default bar shades and its row highlight.
+    config.sequentialRamp = registry.getSequentialRamp(styleName);
 
     // Clone style to avoid mutating the shared original
     var styleCopy = {};

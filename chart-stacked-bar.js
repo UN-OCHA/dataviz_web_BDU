@@ -12,6 +12,15 @@
  * that don't fit are merged into a single callout above the bar with
  * a colour-dot per value, joined by a short bracket leader. The row
  * total prints at the end of the bar.
+ *
+ * Value labels "above" (barLabelMode = "above") — the strip layout used
+ * for e.g. HNRP "Operational partners by type": each segment is labelled
+ * ABOVE its left edge with the value in bold and the series name
+ * ("**45** Group 1"); no inside values, callouts or row total, and the
+ * bar runs to the right edge. A single-row chart also drops the
+ * category-label column, so the bar spans the full chart width. A label
+ * wider than the room up to the next label wraps (up to 3 lines); one
+ * that still doesn't fit is shown in the error red with a warning.
  */
 
 /* global ChartRegistry */
@@ -39,9 +48,14 @@
     R.reportResolved("barThickness", barThickness);
     R.reportResolved("barSpacing", barGap);
 
-    // Flush-left composition: no left margin.
+    var aboveMode = config.barLabelMode === "above";
+    // Single-row strip in "above" mode: no category-label column.
+    var showRowLabels = !(aboveMode && data.length === 1);
+
+    // Flush-left composition: no left margin. "Above" mode also runs to
+    // the right edge (labels sit above the bar, nothing at its end).
     var marginLeft = 0;
-    var marginRight = rs.marginRight;
+    var marginRight = aboveMode ? 0 : rs.marginRight;
 
     // Icon column (flags/icons between label and bar)
     var hasIcons = config.iconColType && config.iconColType !== "none";
@@ -122,8 +136,8 @@
     // a 2-px glyph-bearing safety margin. No minimum floor: short
     // labels collapse the column so the longest one always sits at
     // x ≈ 2 (perceptually flush with the title), regardless of dataset.
-    var labelColW = maxLineW + 2;
-    var labelBlockH = maxLines * LABEL_LINE_H;
+    var labelColW = showRowLabels ? maxLineW + 2 : 0;
+    var labelBlockH = showRowLabels ? maxLines * LABEL_LINE_H : 0;
 
     // If wrapped labels extend beyond barThickness, inflate the row gap.
     // The actual gap used between rows is `betweenBarH` further down,
@@ -132,12 +146,12 @@
     var labelOverhang = Math.max(0, (labelBlockH - barThickness) / 2);
 
     // Bar starts after label column + gap + optional icon slot
-    var labelToBarGap = 12;
+    var labelToBarGap = showRowLabels ? 12 : 0;
     var iconSlotW = iconMaxW > 0 ? (iconMaxW + iconGap) : 0;
     var barStartX = labelColW + labelToBarGap + iconSlotW;
 
-    // Reserve room on the right for row totals
-    var totalReserve = 40;
+    // Reserve room on the right for row totals (none in "above" mode)
+    var totalReserve = aboveMode ? 0 : 40;
     var barsZoneW = plotWidth - barStartX - totalReserve;
     if (barsZoneW < 40) barsZoneW = 40;
 
@@ -162,7 +176,7 @@
     var CALLOUT_BASE_GAP = 5;
 
     var lblModeForLayout = config.barLabelMode || "outside";
-    var labelsOn = lblModeForLayout !== "none" && lblModeForLayout !== "total";
+    var labelsOn = lblModeForLayout !== "none" && lblModeForLayout !== "total" && !aboveMode;
 
     function fitsInside(segW, valText) {
       // Inside-segment values render in fonts.value (Roboto Condensed)
@@ -232,8 +246,54 @@
       barClusters.push(clusters);
     }
 
+    // "Above" mode: one label per segment, at its left edge. Each label
+    // may use the room up to the next label (the last one: up to the
+    // chart's right edge) and wraps into up to 3 lines when it needs to.
+    var ABOVE_FONT = rs.labelSize;
+    var ABOVE_LINE_H = Math.round(ABOVE_FONT * 1.2);
+    var ABOVE_GAP = Math.max(3, Math.round(ABOVE_FONT * 0.4));   // label → bar
+    var ABOVE_SEP = Math.max(4, Math.round(ABOVE_FONT * 0.6));   // label → next label
+    var aboveLabels = [];
+    var aboveMaxLines = 0;
+    if (aboveMode) {
+      var aboveTrunc = 0;
+      for (var aj = 0; aj < data.length; aj++) {
+        var avals = data[aj].values || [];
+        var segs = [];
+        var ax = barStartX;
+        for (var as = 0; as < avals.length; as++) {
+          var av = Math.abs(avals[as]);
+          if (av === 0) continue;
+          segs.push({ x: ax, value: R.formatNumber(av, config.numFmt),
+                      name: (config.seriesNames && config.seriesNames[as]) || "" });
+          ax += xScale(av);
+        }
+        for (var ak = 0; ak < segs.length; ak++) {
+          var room = (ak + 1 < segs.length ? segs[ak + 1].x - ABOVE_SEP : svgW) - segs[ak].x;
+          var full = segs[ak].name ? segs[ak].value + " " + segs[ak].name : segs[ak].value;
+          var aw = R.wrapToFit(full, ABOVE_FONT, Math.max(1, room), 3, R.LABEL_ADVANCE);
+          // A single word wider than the room "fits" in wrapToFit's terms
+          // but would run into the next label — treat it as overflow too.
+          var widest = 0;
+          for (var aw2 = 0; aw2 < aw.lines.length; aw2++) {
+            widest = Math.max(widest, aw.lines[aw2].length * ABOVE_FONT * R.LABEL_ADVANCE);
+          }
+          segs[ak].wrap = aw;
+          segs[ak].overflow = aw.truncated || widest > room + 1;
+          if (segs[ak].overflow) aboveTrunc++;
+          if (aw.lines.length > aboveMaxLines) aboveMaxLines = aw.lines.length;
+        }
+        aboveLabels.push(segs);
+      }
+      if (aboveTrunc > 0) {
+        R.pushWarning("label-truncated", { count: aboveTrunc,
+          suggestion: "Try a wider chart, a smaller Label Size, or shorter series names" });
+      }
+    }
+    var aboveSpace = aboveMode && aboveMaxLines > 0 ? aboveMaxLines * ABOVE_LINE_H + ABOVE_GAP : 0;
+
     // Reserve a compact strip above each bar for callouts when needed.
-    var calloutSpace = anyCallouts ? (CALLOUT_FONT + CALLOUT_BASE_GAP + 2) : 0;
+    var calloutSpace = anyCallouts ? (CALLOUT_FONT + CALLOUT_BASE_GAP + 2) : aboveSpace;
 
     // Bar row vertical layout. The space BETWEEN bars is shared by:
     //   - the upper bar's label overhang (if the wrapped label is
@@ -279,7 +339,7 @@
       // vertically centered against the bar. Truncated labels render
       // in faded grey to flag the overflow.
       var lblWrap = wrappedLabels[j2];
-      var lines = lblWrap.lines;
+      var lines = showRowLabels ? lblWrap.lines : [];
       var lblColor = lblWrap.truncated ? R.FADED_LABEL_COLOR : st.labelColor;
       var actualBlockH = lines.length * LABEL_LINE_H;
       var labelBlockTopY = y + (barThickness - actualBlockH) / 2;
@@ -404,6 +464,33 @@
             '" fill="' + st.valueColor + '" text-anchor="middle">' +
             R.escapeXml(item.text) + '</text>');
         }
+      }
+
+      // "Above" labels: bold value + series name over each segment's
+      // left edge, bottom line sitting ABOVE_GAP above the bar.
+      if (aboveMode) {
+        var segLabels = aboveLabels[j2] || [];
+        for (var sl = 0; sl < segLabels.length; sl++) {
+          var sg = segLabels[sl];
+          var sLines = sg.wrap.lines;
+          var sFill = sg.overflow ? R.FADED_LABEL_COLOR : st.labelColor;
+          var sFirstY = y - ABOVE_GAP - (sLines.length - 1) * ABOVE_LINE_H - ABOVE_FONT * 0.2;
+          for (var sli = 0; sli < sLines.length; sli++) {
+            var lineTxt = sLines[sli];
+            var body;
+            // The value is the first word of the first line → bold run
+            if (sli === 0 && lineTxt.indexOf(sg.value) === 0) {
+              body = '<tspan font-weight="bold">' + R.escapeXml(sg.value) + '</tspan>' +
+                R.escapeXml(lineTxt.substring(sg.value.length));
+            } else {
+              body = R.escapeXml(lineTxt);
+            }
+            svg.push('    <text x="' + sg.x.toFixed(1) + '" y="' + (sFirstY + sli * ABOVE_LINE_H).toFixed(1) +
+              '" font-family="' + fonts.label + '" font-size="' + ABOVE_FONT +
+              '" fill="' + sFill + '">' + body + '</text>');
+          }
+        }
+        continue;
       }
 
       // Row total at end of bar

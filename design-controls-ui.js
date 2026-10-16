@@ -439,12 +439,17 @@ var DesignControlsUI = (function () {
     var isBar = (type === "hbar" || type === "vbar" || type === "stacked-bar" || type === "stacked-col");
     if (barLabelSection) barLabelSection.style.display = isBar ? "block" : "none";
 
-    // "Totals only" option — stacked types only
+    // "Totals only" option — stacked types only. "Above segments" (value
+    // + series name over each segment, the HNRP partners strip) — stacked
+    // bar only.
     var isStacked = (type === "stacked-bar" || type === "stacked-col");
     if (barLabelModeSelect) {
       var totalOpt = barLabelModeSelect.querySelector('option[value="total"]');
       if (totalOpt) totalOpt.style.display = isStacked ? "" : "none";
-      if (!isStacked && barLabelModeSelect.value === "total") {
+      var aboveOpt = barLabelModeSelect.querySelector('option[value="above"]');
+      if (aboveOpt) aboveOpt.style.display = (type === "stacked-bar") ? "" : "none";
+      if ((!isStacked && barLabelModeSelect.value === "total") ||
+          (type !== "stacked-bar" && barLabelModeSelect.value === "above")) {
         barLabelModeSelect.value = "outside";
         _store.barLabelMode = "outside";
       }

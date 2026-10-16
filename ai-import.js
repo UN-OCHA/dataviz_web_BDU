@@ -828,7 +828,11 @@ var AiImport = (function () {
       // rowIconRefs, handled below into iconSelections.
       "iconColType",
       // Sankey: node/link styling + same-label handling
-      "sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyNodeMode"
+      "sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyNodeMode",
+      // Data table: look, bars in cells, colours, dividers, italic labels
+      "tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors",
+      "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers",
+      "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"
     ];
     for (var p = 0; p < passthrough.length; p++) {
       var k = passthrough[p];

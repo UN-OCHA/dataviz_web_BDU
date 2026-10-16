@@ -306,7 +306,24 @@ var ChartBuilder = (function () {
       unitPaddingV: _store.kfPadV || 10,
       unitGap: _store.kfGap || 8,
       iconColor: _store.kfIconColor || "#009EDB",
-      textColor: _store.kfTextColor || "#000000"
+      textColor: _store.kfTextColor || "#000000",
+      // Data table (chart-table.js): look, bars in cells, dividers
+      tableStyle: _store.tableStyle || "classic",
+      tableBarCols: _store.tableBarCols || [],
+      tableBarColors: _store.tableBarColors || {},
+      tableBarColorBy: _store.tableBarColorBy || "single",
+      tableBarColor: _store.tableBarColor || null,
+      tableRowColors: _store.tableRowColors || {},
+      tableBarTrackCols: _store.tableBarTrackCols || [],
+      tableRowHighlight: _store.tableRowHighlight || [],
+      tableColItalic: _store.tableColItalic || [],
+      tableDividers: _store.tableDividers || [],
+      tableBarLabel: _store.tableBarLabel || "above",
+      tableColAlign: _store.tableColAlign || {},
+      tableColBold: _store.tableColBold || [],
+      tableColWidths: _store.tableColWidths || {},
+      tableRowBold: _store.tableRowBold || [],
+      tableColGroups: _store.tableColGroups || {}
     };
   }
 
