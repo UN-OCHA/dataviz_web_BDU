@@ -68,6 +68,8 @@
   var TRACK_COLOR = "#E6E6E6";
   // Minimal look: dotted row rules and the column-group divider.
   var MINIMAL_RULE_COLOR = "#BFBFBF";
+  // Share of the flag size a humanitarian icon gets in a table row (see iconH)
+  var TABLE_ICON_ROOM = 0.85;
   var DIVIDER_COLOR = "#999999";
   // Placeholder cells ("X.X", "$X.XM") draw a bar this share of the bar
   // zone, so a template shows the design before real figures arrive.
@@ -304,8 +306,10 @@
     var headerAdvance = minimal ? R.HEADING_ADVANCE : R.HEADING_BOLD_ADVANCE;
     var boldAdvance = R.HEADING_ADVANCE;
 
-    // Icon size proportional to font
-    var iconH = hasIcons ? Math.round(fontSize * 1.3) : 0;
+    // Icon size proportional to font. Humanitarian icons are 15 % smaller
+    // than flags so each row keeps some air around its icon (Javier,
+    // 22 Oct 2026); getIconDims then balances them by ink.
+    var iconH = !hasIcons ? 0 : isFlags ? Math.round(fontSize * 1.3) : fontSize * 1.3 * TABLE_ICON_ROOM;
     var iconMarginR = minimal ? Math.max(4, Math.round(fontSize * 0.6)) : 8; // margin right of icon before label text
 
     // Pre-compute fixed text offset for first column (max icon width across all rows)
@@ -801,13 +805,15 @@
           '" stroke="' + MINIMAL_RULE_COLOR + '" stroke-width="0.5" stroke-dasharray="1,1"/>');
       }
 
-      // Icon inside first cell (left-aligned with margin)
+      // Icon inside first cell; humanitarian icons are centred in the icon column (as wide as the
+      // widest icon): balanced icons differ in width, and left-aligning them
+      // made the gap before each label uneven.
       if (hasIcons && iconSelections[srcR]) {
         var icoRef = iconSelections[srcR];
         var resolved = iconSvgMap[icoRef];
         if (resolved) {
           var dims = R.getIconDims(resolved, iconH, iconNorm);
-          var icoX = firstPadL;
+          var icoX = firstPadL + (isFlags ? 0 : Math.max(0, (fixedIconOffset - iconMarginR - dims.w) / 2));
           var icoY = ry + (thisRowH - dims.h) / 2;
           var icoColor = !isFlags ? (config.rowIconColor || "#009EDB") : null;
           svg.push('    ' + R.buildIconGroup(resolved, iconH, icoX, icoY, icoColor, iconNorm));

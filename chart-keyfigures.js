@@ -244,7 +244,9 @@
 
       // ── Icon (vertically centered in cell)
       if (hasThisIcon) {
-        var icoY = padV;
+        // Balanced icons (getIconDims) are often smaller than the slot:
+        // centre them on it vertically so they sit level with the figure.
+        var icoY = isFlags ? padV : padV + Math.max(0, (iconH - R.getIconDims(d._iconSvg, iconH, 1.0).h) / 2);
         var icoColor = isFlags ? null : (d._iconColor || iconColor);
         body.push('      ' + R.buildIconGroup(d._iconSvg, iconH, icoX, icoY, icoColor, isFlags ? 1.5 : 1.0));
       }

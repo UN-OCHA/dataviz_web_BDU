@@ -204,23 +204,23 @@ var SvgInlineUtils = (function () {
 
   /**
    * Resolve an OCHA icon SVG by key name.
-   * Returns { innerSvg, vbW, vbH } or null.
+   * Returns { innerSvg, vbW, vbH, iconName } or null. iconName (the file
+   * name) marks it as a humanitarian icon: the chart engine balances those
+   * by ink (registry.getIconDims), never flags.
    */
   function resolveIcon(ref, iconsDir) {
     if (!ref || !iconsDir) return null;
 
     var key = ref.trim();
     // Try exact match first, then with dashes for spaces
-    var filePath = iconsDir + "/" + key + ".svg";
-    var result = readAndProcess(filePath);
-    if (result) return result;
+    var result = readAndProcess(iconsDir + "/" + key + ".svg");
+    if (result) { result.iconName = key; return result; }
 
     // Try replacing spaces with dashes
     var dashedKey = key.replace(/\s+/g, "-");
     if (dashedKey !== key) {
-      filePath = iconsDir + "/" + dashedKey + ".svg";
-      result = readAndProcess(filePath);
-      if (result) return result;
+      result = readAndProcess(iconsDir + "/" + dashedKey + ".svg");
+      if (result) { result.iconName = dashedKey; return result; }
     }
 
     return null;
