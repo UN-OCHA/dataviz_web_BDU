@@ -22,7 +22,7 @@
  *                           columns compare fairly. Non-numeric cells
  *                           ("–", "—", empty, text) show no bar;
  *                           placeholder text made of X's ("X.X", "$X.XM")
- *                           shows a fixed-length placeholder bar.
+ *                           shows a placeholder bar (varied lengths).
  *   • tableBarLabel       — "above" (value over its bar, default) |
  *                           "beside" (value, then bar).
  *   • tableBarColors      — { colIndex: hex } colour per column.
@@ -71,9 +71,15 @@
   // Share of the flag size a humanitarian icon gets in a table row (see iconH)
   var TABLE_ICON_ROOM = 0.85;
   var DIVIDER_COLOR = "#999999";
-  // Placeholder cells ("X.X", "$X.XM") draw a bar this share of the bar
-  // zone, so a template shows the design before real figures arrive.
-  var PLACEHOLDER_BAR_RATIO = 0.5;
+  // Placeholder cells ("X.X", "$X.XM") still draw a bar, so a template
+  // shows the design before real figures arrive. Lengths vary from cell to
+  // cell, between 30 and 95 % of the bar zone, in a fixed pattern (same
+  // chart, same bars), so the template looks like a real chart (Javier,
+  // 22 Oct 2026; every placeholder bar used to be half length).
+  function placeholderRatio(row, col) {
+    var f = ((row + 1) * 0.6180339887 + (col + 1) * 0.4142135624) % 1;
+    return 0.3 + 0.65 * f;
+  }
 
   // ── Cell readers ───────────────────────────────────────
 
@@ -839,7 +845,7 @@
           var n = readNumber(val);
           var ratio = 0;
           if (!isNaN(n) && info.max > 0) ratio = Math.max(0, Math.min(1, n / info.max));
-          else if (isPlaceholder(val)) ratio = PLACEHOLDER_BAR_RATIO;
+          else if (isPlaceholder(val)) ratio = placeholderRatio(srcR, cc);
           var hasValue = !isNaN(n) || isPlaceholder(val);
           var barX, barY, vX, vY, vAnchor;
           if (opt.barAbove) {

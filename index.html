@@ -19,10 +19,10 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Humanitarian DataViz Tool, in your web browser. OCHA Brand and Design Unit.">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.10-42e449f">
-  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.10-42e449f">
-  <link rel="stylesheet" href="styles.css?v=2026.1.10-42e449f">
-  <link rel="stylesheet" href="web-shell.css?v=2026.1.10-42e449f">
+  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.11-111688c">
+  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.11-111688c">
+  <link rel="stylesheet" href="styles.css?v=2026.1.11-111688c">
+  <link rel="stylesheet" href="web-shell.css?v=2026.1.11-111688c">
 </head>
 <body>
 
@@ -109,10 +109,11 @@
       <div class="menu-section">
         <div class="menu-section-title" style="display:flex;align-items:center;justify-content:space-between;">
           What's new
-          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.10</span>
+          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.11</span>
         </div>
         <div class="menu-info-text" style="font-size:10px;line-height:1.5;">
           <ul style="margin:0;padding-left:14px;">
+            <li><strong>Template tables.</strong> Placeholder figures (X.X, XX%, $X.XM) now get bars of varied lengths, so a template looks like a real chart.</li>
             <li><strong>Even icons.</strong> Icons in charts now look the same size side by side: heavy, solid icons are drawn a little smaller and light ones a little bigger, and no icon outgrows the rest. Table icons also get more room in their row.</li>
             <li><strong>Enhanced tables.</strong> The Table chart can now show bars in cells, align and bold columns, group columns under a heading, add separator and vertical lines, and use a cleaner Minimal look. Find it in Design → Table Options.</li>
             <li><strong>Share-of-total strips.</strong> Stacked bar → Value labels → “Above segments” puts each value and name above its segment.</li>
@@ -2000,76 +2001,76 @@
        (tests/shell/check-shared.js enforces this). Page elements marked
        data-shell="illustrator" (Guides, Map Maker, updater, placing) are
        hidden by the web version's stylesheet. -->
-  <script src="lib/papaparse.min.js?v=2026.1.10-42e449f"></script>
-  <script src="panel-utils.js?v=2026.1.10-42e449f"></script>
-  <script src="browser-files.js?v=2026.1.10-42e449f"></script>
-  <script src="connector-web.js?v=2026.1.10-42e449f"></script>
-  <script src="data-store.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-registry.js?v=2026.1.10-42e449f"></script>
-  <script src="themes-store.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-hbar.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-vbar.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-line.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-cluster-line.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-pie.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-donut.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-cluster-donut.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-stacked-bar.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-stacked-col.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-cluster.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-bubble.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-table.js?v=2026.1.10-42e449f"></script>
-  <script src="icon-library.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-icon.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-sankey.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-keyfigures.js?v=2026.1.10-42e449f"></script>
-  <script src="keyfigures-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-timeline.js?v=2026.1.10-42e449f"></script>
-  <script src="timeline-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="table-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="data-grid.js?v=2026.1.10-42e449f"></script>
-  <script src="data-input.js?v=2026.1.10-42e449f"></script>
-  <script src="http-utils.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-link.js?v=2026.1.10-42e449f"></script>
-  <script src="maps-panel.js?v=2026.1.10-42e449f"></script>
-  <script src="icons-panel.js?v=2026.1.10-42e449f"></script>
-  <script src="flags-data.js?v=2026.1.10-42e449f"></script>
-  <script src="flags-panel.js?v=2026.1.10-42e449f"></script>
-  <script src="icon-ink.js?v=2026.1.10-42e449f"></script>
-  <script src="svg-inline-utils.js?v=2026.1.10-42e449f"></script>
-  <script src="geo-projection.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-map.js?v=2026.1.10-42e449f"></script>
-  <script src="status-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="theme-manager.js?v=2026.1.10-42e449f"></script>
-  <script src="analytics.js?v=2026.1.10-42e449f"></script>
-  <script src="color-pickers-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="icon-flag-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="series-legend-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="design-controls-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-builder.js?v=2026.1.10-42e449f"></script>
-  <script src="panel-coordinator.js?v=2026.1.10-42e449f"></script>
-  <script src="chart-picker-filter.js?v=2026.1.10-42e449f"></script>
-  <script src="ai-prompt-template.js?v=2026.1.10-42e449f"></script>
-  <script src="ai-import.js?v=2026.1.10-42e449f"></script>
-  <script src="themes-ui.js?v=2026.1.10-42e449f"></script>
+  <script src="lib/papaparse.min.js?v=2026.1.11-111688c"></script>
+  <script src="panel-utils.js?v=2026.1.11-111688c"></script>
+  <script src="browser-files.js?v=2026.1.11-111688c"></script>
+  <script src="connector-web.js?v=2026.1.11-111688c"></script>
+  <script src="data-store.js?v=2026.1.11-111688c"></script>
+  <script src="chart-registry.js?v=2026.1.11-111688c"></script>
+  <script src="themes-store.js?v=2026.1.11-111688c"></script>
+  <script src="chart-hbar.js?v=2026.1.11-111688c"></script>
+  <script src="chart-vbar.js?v=2026.1.11-111688c"></script>
+  <script src="chart-line.js?v=2026.1.11-111688c"></script>
+  <script src="chart-cluster-line.js?v=2026.1.11-111688c"></script>
+  <script src="chart-pie.js?v=2026.1.11-111688c"></script>
+  <script src="chart-donut.js?v=2026.1.11-111688c"></script>
+  <script src="chart-cluster-donut.js?v=2026.1.11-111688c"></script>
+  <script src="chart-stacked-bar.js?v=2026.1.11-111688c"></script>
+  <script src="chart-stacked-col.js?v=2026.1.11-111688c"></script>
+  <script src="chart-cluster.js?v=2026.1.11-111688c"></script>
+  <script src="chart-bubble.js?v=2026.1.11-111688c"></script>
+  <script src="chart-table.js?v=2026.1.11-111688c"></script>
+  <script src="icon-library.js?v=2026.1.11-111688c"></script>
+  <script src="chart-icon.js?v=2026.1.11-111688c"></script>
+  <script src="chart-sankey.js?v=2026.1.11-111688c"></script>
+  <script src="chart-keyfigures.js?v=2026.1.11-111688c"></script>
+  <script src="keyfigures-ui.js?v=2026.1.11-111688c"></script>
+  <script src="chart-timeline.js?v=2026.1.11-111688c"></script>
+  <script src="timeline-ui.js?v=2026.1.11-111688c"></script>
+  <script src="table-ui.js?v=2026.1.11-111688c"></script>
+  <script src="data-grid.js?v=2026.1.11-111688c"></script>
+  <script src="data-input.js?v=2026.1.11-111688c"></script>
+  <script src="http-utils.js?v=2026.1.11-111688c"></script>
+  <script src="chart-link.js?v=2026.1.11-111688c"></script>
+  <script src="maps-panel.js?v=2026.1.11-111688c"></script>
+  <script src="icons-panel.js?v=2026.1.11-111688c"></script>
+  <script src="flags-data.js?v=2026.1.11-111688c"></script>
+  <script src="flags-panel.js?v=2026.1.11-111688c"></script>
+  <script src="icon-ink.js?v=2026.1.11-111688c"></script>
+  <script src="svg-inline-utils.js?v=2026.1.11-111688c"></script>
+  <script src="geo-projection.js?v=2026.1.11-111688c"></script>
+  <script src="chart-map.js?v=2026.1.11-111688c"></script>
+  <script src="status-ui.js?v=2026.1.11-111688c"></script>
+  <script src="theme-manager.js?v=2026.1.11-111688c"></script>
+  <script src="analytics.js?v=2026.1.11-111688c"></script>
+  <script src="color-pickers-ui.js?v=2026.1.11-111688c"></script>
+  <script src="icon-flag-ui.js?v=2026.1.11-111688c"></script>
+  <script src="series-legend-ui.js?v=2026.1.11-111688c"></script>
+  <script src="design-controls-ui.js?v=2026.1.11-111688c"></script>
+  <script src="chart-builder.js?v=2026.1.11-111688c"></script>
+  <script src="panel-coordinator.js?v=2026.1.11-111688c"></script>
+  <script src="chart-picker-filter.js?v=2026.1.11-111688c"></script>
+  <script src="ai-prompt-template.js?v=2026.1.11-111688c"></script>
+  <script src="ai-import.js?v=2026.1.11-111688c"></script>
+  <script src="themes-ui.js?v=2026.1.11-111688c"></script>
 
-  <script src="zip-store.js?v=2026.1.10-42e449f"></script>
-  <script src="web-icons.js?v=2026.1.10-42e449f"></script>
-  <script src="signup-lists.js?v=2026.1.10-42e449f"></script>
-  <script src="web-shell.js?v=2026.1.10-42e449f"></script>
-  <script src="web-gate.js?v=2026.1.10-42e449f"></script>
-  <script src="vendor/cd-coachmark.js?v=2026.1.10-42e449f"></script>
-  <script src="web-guides.js?v=2026.1.10-42e449f"></script>
+  <script src="zip-store.js?v=2026.1.11-111688c"></script>
+  <script src="web-icons.js?v=2026.1.11-111688c"></script>
+  <script src="signup-lists.js?v=2026.1.11-111688c"></script>
+  <script src="web-shell.js?v=2026.1.11-111688c"></script>
+  <script src="web-gate.js?v=2026.1.11-111688c"></script>
+  <script src="vendor/cd-coachmark.js?v=2026.1.11-111688c"></script>
+  <script src="web-guides.js?v=2026.1.11-111688c"></script>
 
-  <script src="panel.js?v=2026.1.10-42e449f"></script>
-  <script src="design-groups.js?v=2026.1.10-42e449f"></script>
-  <script src="data-groups.js?v=2026.1.10-42e449f"></script>
-  <script src="save-share-help.js?v=2026.1.10-42e449f"></script>
-  <script src="text-tab-ui.js?v=2026.1.10-42e449f"></script>
-  <script src="auto-pill.js?v=2026.1.10-42e449f"></script>
-  <script src="auto-resolved.js?v=2026.1.10-42e449f"></script>
-  <script src="text-format.js?v=2026.1.10-42e449f"></script>
-  <script src="compact-layout.js?v=2026.1.10-42e449f"></script>
+  <script src="panel.js?v=2026.1.11-111688c"></script>
+  <script src="design-groups.js?v=2026.1.11-111688c"></script>
+  <script src="data-groups.js?v=2026.1.11-111688c"></script>
+  <script src="save-share-help.js?v=2026.1.11-111688c"></script>
+  <script src="text-tab-ui.js?v=2026.1.11-111688c"></script>
+  <script src="auto-pill.js?v=2026.1.11-111688c"></script>
+  <script src="auto-resolved.js?v=2026.1.11-111688c"></script>
+  <script src="text-format.js?v=2026.1.11-111688c"></script>
+  <script src="compact-layout.js?v=2026.1.11-111688c"></script>
 
   <!-- Placement overlay — blocks UI during chart/map placement -->
   <div id="placing-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
