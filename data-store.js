@@ -126,6 +126,17 @@ var DataStore = (function () {
     tableColWidths: {}, // { colIndex: % of the table width }; missing = automatic
     tableRowBold: [], // first-column labels of rows in bold (e.g. "Total")
     tableColGroups: {}, // { colIndex: "Group name" } heading over neighbouring columns with the same name
+    // Calendar / Planner options (chart-calendar.js). Row and category
+    // settings are stored by name, so they follow the row when lines move.
+    calendarAxis: null, // Columns setting: { kind: "months" | "quarters" | "years" | "custom", lang, style, start, count, year }; null = Jan … Dec (ChartRegistry.calendar.axisOf)
+    calendarColumns: [], // custom columns: labels in order, as typed (Days 1–3, Week 1 …)
+    calendarColumnGroups: {}, // custom columns: { colIndex: "Group heading" } one heading over neighbouring columns with the same text
+    calendarGrid: "auto", // "auto" | "cells" | "columns" | "bands" | "none"; auto = cells with bars, columns with dots only
+    calendarRowLabels: true, // row names on the left
+    calendarLegend: true, // category legend (only when the data has a Category column)
+    calendarRowColors: {}, // { row name: hex }
+    calendarRowMarks: {}, // { row name: "bar" | "dot" | "line" }; missing = auto (bar with an End, dot without)
+    calendarCategoryColors: {}, // { category: hex }; missing = style palette in order
     rowIconColor: null, // null = auto: follow the chart (user colour override or style primary), so icons recolour when the style changes. Hex = explicit pick. Icons only — flags keep their real colours.
     sortCol: null, // column index currently sorted by, or null
     sortDir: null, // "asc" | "desc" | null
@@ -260,7 +271,7 @@ var DataStore = (function () {
   // Chart types where free text in a value column is legitimate, so a
   // non-numeric cell is NOT a problem (table shows raw text; timeline has its
   // own date/label/text shape; key figures accept text figures).
-  var VALUE_TEXT_OK = { table: 1, timeline: 1, keyfigures: 1 };
+  var VALUE_TEXT_OK = { table: 1, timeline: 1, keyfigures: 1, calendar: 1 };
 
   function valueColsForCheck() {
     return (store.valueCols && store.valueCols.length)
@@ -688,6 +699,7 @@ var DataStore = (function () {
     store.tableColWidths = {};
     store.tableRowBold = [];
     store.tableColGroups = {};
+    resetCalendarOptions();
     store.sortCol = null;
     store.sortDir = null;
     store.source = null;
@@ -987,6 +999,62 @@ var DataStore = (function () {
     return data;
   };
 
+  /**
+   * Calendar / Planner data: one line per mark (Row | Start | End | Label
+   * | Mark | Category | Color, found by column name), grouped into rows.
+   * The reading rules live with the renderer (ChartRegistry.calendar.read)
+   * so the chart, the panel and the AI import read months the same way.
+   * Row icons come from iconSelections (first line of each row that has one).
+   */
+  store.toCalendarData = function () {
+    if (typeof ChartRegistry === "undefined" || !ChartRegistry.calendar) return [];
+    return ChartRegistry.calendar.read(store.headers, store.rows,
+      store.iconColType !== "none" ? store.iconSelections : null);
+  };
+
+  /**
+   * The Columns setting, complete (custom when only calendarColumns is
+   * set: charts saved before the presets).
+   */
+  store.calendarAxisNow = function () {
+    var C = (typeof ChartRegistry !== "undefined") ? ChartRegistry.calendar : null;
+    if (!C) return { kind: "months" };
+    return C.axisOf({ calendarAxis: store.calendarAxis, calendarColumns: store.calendarColumns });
+  };
+
+  function resetCalendarOptions() {
+    store.calendarAxis = null;
+    store.calendarColumns = [];
+    store.calendarColumnGroups = {};
+    store.calendarGrid = "auto";
+    store.calendarRowLabels = true;
+    store.calendarLegend = true;
+    store.calendarRowColors = {};
+    store.calendarRowMarks = {};
+    store.calendarCategoryColors = {};
+  }
+
+  // Column labels: trimmed strings, empties dropped (repeats allowed: Jan … Jan)
+  function cleanColumnLabels(list) {
+    var out = [];
+    if (!Array.isArray(list)) return out;
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i] == null ? "" : String(list[i]).trim();
+      if (t) out.push(t);
+    }
+    return out;
+  }
+
+  // { row name: "bar" | "dot" | "line" }, other values dropped (= auto)
+  function cleanMarkMap(map) {
+    var out = {};
+    if (!map || typeof map !== "object") return out;
+    for (var k in map) {
+      if (map.hasOwnProperty(k) && (map[k] === "bar" || map[k] === "dot" || map[k] === "line")) out[k] = map[k];
+    }
+    return out;
+  }
+
   // ── Data table option helpers ─────────────────────────
 
   // Column-index list from a config/AI payload: whole numbers ≥ 0, no
@@ -1211,6 +1279,24 @@ var DataStore = (function () {
     if (store.tableRowBold && store.tableRowBold.length) cfg.tableRowBold = store.tableRowBold;
     if (store.tableColGroups && Object.keys(store.tableColGroups).length) cfg.tableColGroups = store.tableColGroups;
 
+    // Calendar / Planner options — also written only when set. The typed
+    // columns only travel with a Custom Columns setting.
+    if (typeof ChartRegistry !== "undefined" && ChartRegistry.calendar) {
+      var calAxis = store.calendarAxisNow();
+      var calSaved = ChartRegistry.calendar.compactAxis(calAxis);
+      if (calSaved) cfg.calendarAxis = calSaved;
+      if (calAxis.kind === "custom") {
+        if (store.calendarColumns && store.calendarColumns.length) cfg.calendarColumns = store.calendarColumns;
+        if (store.calendarColumnGroups && Object.keys(store.calendarColumnGroups).length) cfg.calendarColumnGroups = store.calendarColumnGroups;
+      }
+    }
+    if (store.calendarGrid && store.calendarGrid !== "auto") cfg.calendarGrid = store.calendarGrid;
+    if (store.calendarRowLabels === false) cfg.calendarRowLabels = false;
+    if (store.calendarLegend === false) cfg.calendarLegend = false;
+    if (store.calendarRowColors && Object.keys(store.calendarRowColors).length) cfg.calendarRowColors = store.calendarRowColors;
+    if (store.calendarCategoryColors && Object.keys(store.calendarCategoryColors).length) cfg.calendarCategoryColors = store.calendarCategoryColors;
+    if (store.calendarRowMarks && Object.keys(store.calendarRowMarks).length) cfg.calendarRowMarks = store.calendarRowMarks;
+
     if (store.valueCols) cfg.valueCols = store.valueCols;
     if (store.colors) cfg.colors = store.colors;
     if (store.labelColor) cfg.labelColor = store.labelColor;
@@ -1377,6 +1463,18 @@ var DataStore = (function () {
       store.tableColWidths = cleanPercentMap(c.tableColWidths);
       store.tableRowBold = cleanLabelList(c.tableRowBold);
       store.tableColGroups = cleanTextMap(c.tableColGroups);
+      store.calendarColumns = cleanColumnLabels(c.calendarColumns);
+      store.calendarColumnGroups = cleanTextMap(c.calendarColumnGroups);
+      // Kept complete (not compacted): a Months setting saved next to
+      // typed columns must stay Months.
+      store.calendarAxis = (c.calendarAxis && typeof ChartRegistry !== "undefined" && ChartRegistry.calendar)
+        ? ChartRegistry.calendar.axisOf(c) : null;
+      store.calendarGrid = (["cells", "columns", "bands", "none"].indexOf(c.calendarGrid) !== -1) ? c.calendarGrid : "auto";
+      store.calendarRowLabels = c.calendarRowLabels !== false;
+      store.calendarLegend = c.calendarLegend !== false;
+      store.calendarRowColors = cleanColorMap(c.calendarRowColors);
+      store.calendarCategoryColors = cleanColorMap(c.calendarCategoryColors);
+      store.calendarRowMarks = cleanMarkMap(c.calendarRowMarks);
       store.sortCol = c.sortCol != null ? c.sortCol : null;
       store.sortDir = c.sortDir || null;
       store.source = "config";
@@ -1437,6 +1535,53 @@ var DataStore = (function () {
         ["Apr 2024", "850K", "Children vaccinated"]
       ];
       store.labelCol = 1;
+      store.valueCol = 1;
+    } else if (chartType === "calendar") {
+      // One line per mark: a bar with an End, a dot without. "Response
+      // plan" is a Line row (Design tab): Oct–Dec drafting, Dec published.
+      // Columns, marks and colours start clean: left-over typed columns
+      // would turn the chart Custom and match none of these months.
+      resetCalendarOptions();
+      store.headers = ["Concept/Event", "Start", "End", "Label"];
+      store.rows = [
+        ["Rainy season", "May", "Sep", ""],
+        ["Floods", "Jul", "Sep", "Riverine floods"],
+        ["Floods", "Nov", "Dec", "Flash floods"],
+        ["Lean season", "Jun", "Aug", ""],
+        ["Harvest", "Oct", "Dec", ""],
+        ["Response plan", "Oct", "Dec", ""],
+        ["Response plan", "Dec", "", ""],
+        ["Monitoring", "Mar", "", ""],
+        ["Monitoring", "Jun", "", ""],
+        ["Monitoring", "Sep", "", ""]
+      ];
+      store.calendarRowMarks = { "Response plan": "line" };
+      store.labelCol = 0;
+      store.valueCol = 1;
+    } else if (chartType === "calendar-custom") {
+      // Calendar with its own columns (Columns: Custom): the phases of a
+      // sudden-onset emergency, with a heading over each group of them.
+      // "Flash Appeal" is a Line row: launched on days 4–7, then running.
+      resetCalendarOptions();
+      store.headers = ["Concept/Event", "Start", "End", "Label"];
+      store.rows = [
+        ["Search and rescue", "Days 1–3", "Days 4–7", ""],
+        ["Rapid needs assessment", "Days 1–3", "Days 4–7", ""],
+        ["Food, water and shelter", "Days 1–3", "Months 2–3", "Life-saving assistance"],
+        ["CERF allocation", "Days 4–7", "", ""],
+        ["Flash Appeal", "Days 4–7", "", ""],
+        ["Flash Appeal", "Weeks 2–4", "Months 4–6", ""],
+        ["Early recovery", "Months 2–3", "Months 4–6", ""],
+        ["Monitoring", "Weeks 2–4", "", ""],
+        ["Monitoring", "Months 2–3", "", ""],
+        ["Monitoring", "Months 4–6", "", ""]
+      ];
+      store.calendarAxis = { kind: "custom" };
+      store.calendarColumns = ["Days 1–3", "Days 4–7", "Weeks 2–4", "Months 2–3", "Months 4–6"];
+      store.calendarColumnGroups = { 0: "Emergency response", 1: "Emergency response",
+        2: "Emergency response", 3: "Recovery", 4: "Recovery" };
+      store.calendarRowMarks = { "Flash Appeal": "line" };
+      store.labelCol = 0;
       store.valueCol = 1;
     } else if (chartType === "keyfigures") {
       store.headers = ["Key Figure", "Heading", "Body"];

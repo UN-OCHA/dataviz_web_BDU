@@ -19,10 +19,10 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Humanitarian DataViz Tool, in your web browser. OCHA Brand and Design Unit.">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.11-111688c">
-  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.11-111688c">
-  <link rel="stylesheet" href="styles.css?v=2026.1.11-111688c">
-  <link rel="stylesheet" href="web-shell.css?v=2026.1.11-111688c">
+  <link rel="stylesheet" href="vendor/ocha-app-kit.css?v=2026.1.12-0ec66d4">
+  <link rel="stylesheet" href="fonts/fonts.css?v=2026.1.12-0ec66d4">
+  <link rel="stylesheet" href="styles.css?v=2026.1.12-0ec66d4">
+  <link rel="stylesheet" href="web-shell.css?v=2026.1.12-0ec66d4">
 </head>
 <body>
 
@@ -109,15 +109,15 @@
       <div class="menu-section">
         <div class="menu-section-title" style="display:flex;align-items:center;justify-content:space-between;">
           What's new
-          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.11</span>
+          <span style="font-size:9px;font-weight:normal;color:var(--text-tertiary);">v2026.1.12</span>
         </div>
         <div class="menu-info-text" style="font-size:10px;line-height:1.5;">
           <ul style="margin:0;padding-left:14px;">
+            <li><strong>New: Calendar/Planner.</strong> Seasonal calendars and planning timelines: bars, dots and lines across months (English, French or Spanish), quarters, years or your own columns. Two samples in the Data tab.</li>
             <li><strong>Template tables.</strong> Placeholder figures (X.X, XX%, $X.XM) now get bars of varied lengths, so a template looks like a real chart.</li>
             <li><strong>Even icons.</strong> Icons in charts now look the same size side by side: heavy, solid icons are drawn a little smaller and light ones a little bigger, and no icon outgrows the rest. Table icons also get more room in their row.</li>
             <li><strong>Enhanced tables.</strong> The Table chart can now show bars in cells, align and bold columns, group columns under a heading, add separator and vertical lines, and use a cleaner Minimal look. Find it in Design → Table Options.</li>
             <li><strong>Share-of-total strips.</strong> Stacked bar → Value labels → “Above segments” puts each value and name above its segment.</li>
-            <li><strong>Share chart.</strong> In the Data tab, Share chart makes a link that opens your chart in the web version.</li>
           </ul>
         </div>
       </div>
@@ -563,11 +563,7 @@
               Use AI
             </button>
             <button class="btn-link" id="btn-sample-data">Load sample data</button>
-            <span id="sankey-sample-links" style="display:none;">
-              <button class="btn-link" id="btn-sankey-2">2-level sample</button>
-              <span style="color:var(--text-tertiary);font-size:11px;">·</span>
-              <button class="btn-link" id="btn-sankey-3">3-level sample</button>
-            </span>
+            <span id="sample-variant-links" class="sample-variant-links" style="display:none;"></span>
           </div>
         </div>
 
@@ -842,6 +838,20 @@
                     <rect x="22" y="23" width="6" height="2" rx="0.5" fill="currentColor" opacity="0.5"/>
                   </svg>
                   <span class="sidebar-btn-label">Timeline</span>
+                </button>
+                <button class="sidebar-btn" data-chart="calendar" data-purpose="time">
+                  <!-- Month grid: a header rule, bars spanning months on two
+                       rows, a dot on the third — the calendar's three marks. -->
+                  <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="7" x2="29" y2="7" stroke="currentColor" stroke-width="1.6"/>
+                    <line x1="11.5" y1="9" x2="11.5" y2="28" stroke="currentColor" stroke-width="0.6" opacity="0.35"/>
+                    <line x1="20.5" y1="9" x2="20.5" y2="28" stroke="currentColor" stroke-width="0.6" opacity="0.35"/>
+                    <rect class="fill-el" x="6" y="10.5" width="14" height="4.5" rx="1"/>
+                    <rect class="fill-el" x="15" y="17" width="12" height="4.5" rx="1" opacity="0.5"/>
+                    <circle cx="8" cy="25.5" r="2" class="fill-el"/>
+                    <circle cx="24" cy="25.5" r="2" class="fill-el"/>
+                  </svg>
+                  <span class="sidebar-btn-label">Calendar/Planner</span>
                 </button>
               </div>
             </div>
@@ -1433,6 +1443,111 @@
           </div>
         </div>
 
+        <div class="section" id="calendar-options-section" style="display:none;">
+          <div class="section-label">Calendar Options</div>
+
+          <div class="sub-label">Columns</div>
+          <div class="calendar-ui-kind" id="calendar-kind" role="group" aria-label="Columns">
+            <button type="button" class="toggle-btn" data-kind="months">Months</button>
+            <button type="button" class="toggle-btn" data-kind="quarters">Quarters</button>
+            <button type="button" class="toggle-btn" data-kind="years">Years</button>
+            <button type="button" class="toggle-btn" data-kind="custom">Custom</button>
+          </div>
+          <div class="calendar-ui-fields" id="calendar-axis-fields">
+            <label class="field-label" for="calendar-lang" data-for="months quarters">Language</label>
+            <select id="calendar-lang" data-for="months quarters">
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+            </select>
+            <label class="field-label" for="calendar-style" data-for="months">Style</label>
+            <select id="calendar-style" data-for="months"></select>
+            <label class="field-label" for="calendar-start" data-for="months quarters" id="calendar-start-label">First month</label>
+            <select id="calendar-start" data-for="months quarters"></select>
+            <label class="field-label" for="calendar-year" id="calendar-year-label" data-for="months quarters years">Initial year</label>
+            <input type="number" id="calendar-year" data-for="months quarters years" min="1900" max="2200" step="1" placeholder="None">
+            <label class="field-label" for="calendar-count" id="calendar-count-label" data-for="months quarters years">Months</label>
+            <input type="number" id="calendar-count" data-for="months quarters years" min="1" max="60" step="1">
+          </div>
+          <div class="calendar-strip-wrap">
+            <div class="calendar-strip" id="calendar-strip" aria-label="Columns as they print"></div>
+          </div>
+          <div class="table-ui-hint" id="calendar-strip-hint"></div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Background</div>
+          <div class="table-ui-choice calendar-ui-choice-3" id="calendar-grid-choice">
+            <button type="button" class="table-ui-card" data-value="auto" title="Month lines when there are bars, month columns with dots only">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <path d="M2 8h60" class="tc-rule"/>
+                <path d="M12 10v28M22 10v28" class="tc-grid"/>
+                <rect x="42" y="10" width="10" height="28" class="tc-row"/>
+                <rect x="4" y="14" width="26" height="6" class="tc-accent"/>
+                <circle cx="37" cy="29" r="2.4" class="tc-accent"/>
+                <circle cx="57" cy="29" r="2.4" class="tc-accent"/>
+              </svg>
+              <span>Auto</span>
+            </button>
+            <button type="button" class="table-ui-card" data-value="cells" title="White cells with thin month lines">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <path d="M2 8h60" class="tc-rule"/>
+                <path d="M12 10v28M22 10v28M32 10v28M42 10v28M52 10v28" class="tc-grid"/>
+                <path d="M2 24h60" class="tc-dots"/>
+                <rect x="13" y="13" width="28" height="7" class="tc-accent"/>
+                <rect x="33" y="28" width="18" height="7" class="tc-accent"/>
+              </svg>
+              <span>Month lines</span>
+            </button>
+            <button type="button" class="table-ui-card" data-value="columns" title="Every other month in light grey, dotted row lines">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <rect x="2" y="2" width="10" height="36" class="tc-row"/>
+                <rect x="22" y="2" width="10" height="36" class="tc-row"/>
+                <rect x="42" y="2" width="10" height="36" class="tc-row"/>
+                <path d="M2 10h60" class="tc-rule"/>
+                <path d="M2 24h60" class="tc-dots"/>
+                <circle cx="7" cy="17" r="2.4" class="tc-accent"/>
+                <circle cx="37" cy="17" r="2.4" class="tc-accent"/>
+                <circle cx="27" cy="31" r="2.4" class="tc-accent"/>
+                <circle cx="57" cy="31" r="2.4" class="tc-accent"/>
+              </svg>
+              <span>Month columns</span>
+            </button>
+            <button type="button" class="table-ui-card" data-value="bands" title="A light grey band behind each row">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <rect x="2" y="12" width="60" height="11" class="tc-row"/>
+                <rect x="2" y="26" width="60" height="11" class="tc-row"/>
+                <path d="M2 8h60" class="tc-rule"/>
+                <rect x="14" y="12" width="24" height="11" class="tc-accent"/>
+                <rect x="34" y="26" width="20" height="11" class="tc-accent"/>
+              </svg>
+              <span>Row bands</span>
+            </button>
+            <button type="button" class="table-ui-card" data-value="none" title="No lines or shading behind the marks">
+              <svg viewBox="0 0 64 40" aria-hidden="true">
+                <path d="M2 8h60" class="tc-rule"/>
+                <rect x="13" y="13" width="28" height="7" class="tc-accent"/>
+                <rect x="33" y="28" width="18" height="7" class="tc-accent"/>
+              </svg>
+              <span>None</span>
+            </button>
+          </div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Show</div>
+          <div class="calendar-ui-checks">
+            <label class="toggle-label"><input type="checkbox" id="calendar-row-names" checked> Row names</label>
+            <label class="toggle-label" id="calendar-legend-row"><input type="checkbox" id="calendar-legend" checked> Category legend</label>
+          </div>
+
+          <div class="sub-label" style="margin-top:var(--space-200);">Rows</div>
+          <div id="calendar-rows-grid" class="table-cols-grid calendar-ui-grid"></div>
+          <div id="calendar-cats-block">
+            <div class="sub-label" style="margin-top:var(--space-200);">Category colors</div>
+            <div id="calendar-cats-grid" class="table-cols-grid calendar-ui-grid"></div>
+          </div>
+          <div class="table-ui-hint">
+            In the data, one line per mark: Concept/Event · Start · End · Label. Start and End are column labels (with month columns, any month spelling works: mars, March, 3). Lines with the same Concept/Event share one row. Mark Auto = a bar when the line has an End, a dot when not; Dot = a dot in every column of a span; Line = a span as a thin line, a single column as a dot. Optional Category and Color columns. A Color cell beats the row colour, which beats the category colour.
+          </div>
+        </div>
+
         <!-- Label Size (Design tab — controls chart label scaling) -->
         <div class="section" id="label-scale-section">
           <div class="section-label">Label Size</div>
@@ -2001,76 +2116,78 @@
        (tests/shell/check-shared.js enforces this). Page elements marked
        data-shell="illustrator" (Guides, Map Maker, updater, placing) are
        hidden by the web version's stylesheet. -->
-  <script src="lib/papaparse.min.js?v=2026.1.11-111688c"></script>
-  <script src="panel-utils.js?v=2026.1.11-111688c"></script>
-  <script src="browser-files.js?v=2026.1.11-111688c"></script>
-  <script src="connector-web.js?v=2026.1.11-111688c"></script>
-  <script src="data-store.js?v=2026.1.11-111688c"></script>
-  <script src="chart-registry.js?v=2026.1.11-111688c"></script>
-  <script src="themes-store.js?v=2026.1.11-111688c"></script>
-  <script src="chart-hbar.js?v=2026.1.11-111688c"></script>
-  <script src="chart-vbar.js?v=2026.1.11-111688c"></script>
-  <script src="chart-line.js?v=2026.1.11-111688c"></script>
-  <script src="chart-cluster-line.js?v=2026.1.11-111688c"></script>
-  <script src="chart-pie.js?v=2026.1.11-111688c"></script>
-  <script src="chart-donut.js?v=2026.1.11-111688c"></script>
-  <script src="chart-cluster-donut.js?v=2026.1.11-111688c"></script>
-  <script src="chart-stacked-bar.js?v=2026.1.11-111688c"></script>
-  <script src="chart-stacked-col.js?v=2026.1.11-111688c"></script>
-  <script src="chart-cluster.js?v=2026.1.11-111688c"></script>
-  <script src="chart-bubble.js?v=2026.1.11-111688c"></script>
-  <script src="chart-table.js?v=2026.1.11-111688c"></script>
-  <script src="icon-library.js?v=2026.1.11-111688c"></script>
-  <script src="chart-icon.js?v=2026.1.11-111688c"></script>
-  <script src="chart-sankey.js?v=2026.1.11-111688c"></script>
-  <script src="chart-keyfigures.js?v=2026.1.11-111688c"></script>
-  <script src="keyfigures-ui.js?v=2026.1.11-111688c"></script>
-  <script src="chart-timeline.js?v=2026.1.11-111688c"></script>
-  <script src="timeline-ui.js?v=2026.1.11-111688c"></script>
-  <script src="table-ui.js?v=2026.1.11-111688c"></script>
-  <script src="data-grid.js?v=2026.1.11-111688c"></script>
-  <script src="data-input.js?v=2026.1.11-111688c"></script>
-  <script src="http-utils.js?v=2026.1.11-111688c"></script>
-  <script src="chart-link.js?v=2026.1.11-111688c"></script>
-  <script src="maps-panel.js?v=2026.1.11-111688c"></script>
-  <script src="icons-panel.js?v=2026.1.11-111688c"></script>
-  <script src="flags-data.js?v=2026.1.11-111688c"></script>
-  <script src="flags-panel.js?v=2026.1.11-111688c"></script>
-  <script src="icon-ink.js?v=2026.1.11-111688c"></script>
-  <script src="svg-inline-utils.js?v=2026.1.11-111688c"></script>
-  <script src="geo-projection.js?v=2026.1.11-111688c"></script>
-  <script src="chart-map.js?v=2026.1.11-111688c"></script>
-  <script src="status-ui.js?v=2026.1.11-111688c"></script>
-  <script src="theme-manager.js?v=2026.1.11-111688c"></script>
-  <script src="analytics.js?v=2026.1.11-111688c"></script>
-  <script src="color-pickers-ui.js?v=2026.1.11-111688c"></script>
-  <script src="icon-flag-ui.js?v=2026.1.11-111688c"></script>
-  <script src="series-legend-ui.js?v=2026.1.11-111688c"></script>
-  <script src="design-controls-ui.js?v=2026.1.11-111688c"></script>
-  <script src="chart-builder.js?v=2026.1.11-111688c"></script>
-  <script src="panel-coordinator.js?v=2026.1.11-111688c"></script>
-  <script src="chart-picker-filter.js?v=2026.1.11-111688c"></script>
-  <script src="ai-prompt-template.js?v=2026.1.11-111688c"></script>
-  <script src="ai-import.js?v=2026.1.11-111688c"></script>
-  <script src="themes-ui.js?v=2026.1.11-111688c"></script>
+  <script src="lib/papaparse.min.js?v=2026.1.12-0ec66d4"></script>
+  <script src="panel-utils.js?v=2026.1.12-0ec66d4"></script>
+  <script src="browser-files.js?v=2026.1.12-0ec66d4"></script>
+  <script src="connector-web.js?v=2026.1.12-0ec66d4"></script>
+  <script src="data-store.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-registry.js?v=2026.1.12-0ec66d4"></script>
+  <script src="themes-store.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-hbar.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-vbar.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-line.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-cluster-line.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-pie.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-donut.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-cluster-donut.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-stacked-bar.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-stacked-col.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-cluster.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-bubble.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-table.js?v=2026.1.12-0ec66d4"></script>
+  <script src="icon-library.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-icon.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-sankey.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-keyfigures.js?v=2026.1.12-0ec66d4"></script>
+  <script src="keyfigures-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-timeline.js?v=2026.1.12-0ec66d4"></script>
+  <script src="timeline-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="table-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-calendar.js?v=2026.1.12-0ec66d4"></script>
+  <script src="calendar-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="data-grid.js?v=2026.1.12-0ec66d4"></script>
+  <script src="data-input.js?v=2026.1.12-0ec66d4"></script>
+  <script src="http-utils.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-link.js?v=2026.1.12-0ec66d4"></script>
+  <script src="maps-panel.js?v=2026.1.12-0ec66d4"></script>
+  <script src="icons-panel.js?v=2026.1.12-0ec66d4"></script>
+  <script src="flags-data.js?v=2026.1.12-0ec66d4"></script>
+  <script src="flags-panel.js?v=2026.1.12-0ec66d4"></script>
+  <script src="icon-ink.js?v=2026.1.12-0ec66d4"></script>
+  <script src="svg-inline-utils.js?v=2026.1.12-0ec66d4"></script>
+  <script src="geo-projection.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-map.js?v=2026.1.12-0ec66d4"></script>
+  <script src="status-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="theme-manager.js?v=2026.1.12-0ec66d4"></script>
+  <script src="analytics.js?v=2026.1.12-0ec66d4"></script>
+  <script src="color-pickers-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="icon-flag-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="series-legend-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="design-controls-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-builder.js?v=2026.1.12-0ec66d4"></script>
+  <script src="panel-coordinator.js?v=2026.1.12-0ec66d4"></script>
+  <script src="chart-picker-filter.js?v=2026.1.12-0ec66d4"></script>
+  <script src="ai-prompt-template.js?v=2026.1.12-0ec66d4"></script>
+  <script src="ai-import.js?v=2026.1.12-0ec66d4"></script>
+  <script src="themes-ui.js?v=2026.1.12-0ec66d4"></script>
 
-  <script src="zip-store.js?v=2026.1.11-111688c"></script>
-  <script src="web-icons.js?v=2026.1.11-111688c"></script>
-  <script src="signup-lists.js?v=2026.1.11-111688c"></script>
-  <script src="web-shell.js?v=2026.1.11-111688c"></script>
-  <script src="web-gate.js?v=2026.1.11-111688c"></script>
-  <script src="vendor/cd-coachmark.js?v=2026.1.11-111688c"></script>
-  <script src="web-guides.js?v=2026.1.11-111688c"></script>
+  <script src="zip-store.js?v=2026.1.12-0ec66d4"></script>
+  <script src="web-icons.js?v=2026.1.12-0ec66d4"></script>
+  <script src="signup-lists.js?v=2026.1.12-0ec66d4"></script>
+  <script src="web-shell.js?v=2026.1.12-0ec66d4"></script>
+  <script src="web-gate.js?v=2026.1.12-0ec66d4"></script>
+  <script src="vendor/cd-coachmark.js?v=2026.1.12-0ec66d4"></script>
+  <script src="web-guides.js?v=2026.1.12-0ec66d4"></script>
 
-  <script src="panel.js?v=2026.1.11-111688c"></script>
-  <script src="design-groups.js?v=2026.1.11-111688c"></script>
-  <script src="data-groups.js?v=2026.1.11-111688c"></script>
-  <script src="save-share-help.js?v=2026.1.11-111688c"></script>
-  <script src="text-tab-ui.js?v=2026.1.11-111688c"></script>
-  <script src="auto-pill.js?v=2026.1.11-111688c"></script>
-  <script src="auto-resolved.js?v=2026.1.11-111688c"></script>
-  <script src="text-format.js?v=2026.1.11-111688c"></script>
-  <script src="compact-layout.js?v=2026.1.11-111688c"></script>
+  <script src="panel.js?v=2026.1.12-0ec66d4"></script>
+  <script src="design-groups.js?v=2026.1.12-0ec66d4"></script>
+  <script src="data-groups.js?v=2026.1.12-0ec66d4"></script>
+  <script src="save-share-help.js?v=2026.1.12-0ec66d4"></script>
+  <script src="text-tab-ui.js?v=2026.1.12-0ec66d4"></script>
+  <script src="auto-pill.js?v=2026.1.12-0ec66d4"></script>
+  <script src="auto-resolved.js?v=2026.1.12-0ec66d4"></script>
+  <script src="text-format.js?v=2026.1.12-0ec66d4"></script>
+  <script src="compact-layout.js?v=2026.1.12-0ec66d4"></script>
 
   <!-- Placement overlay — blocks UI during chart/map placement -->
   <div id="placing-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">

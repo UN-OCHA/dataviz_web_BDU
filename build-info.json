@@ -1,9 +1,9 @@
 {
   "product": "Humanitarian DataViz Tool — web",
-  "version": "2026.1.11",
+  "version": "2026.1.12",
   "channel": "beta",
-  "commit": "111688c",
-  "source": "commit 111688c (v2026.1.11)",
-  "builtAt": "2026-10-22T14:10:57.441Z",
+  "commit": "0ec66d4",
+  "source": "commit 0ec66d4 (v2026.1.12)",
+  "builtAt": "2026-10-28T16:52:20.900Z",
   "maps": 216
 }

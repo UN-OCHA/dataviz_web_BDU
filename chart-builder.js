@@ -29,6 +29,7 @@ var ChartBuilder = (function () {
   var _onSankeyLoad;
   var _onKfLoad;
   var _onTimelineLoad;
+  var _onCalendarLoad;
   var _getIconPalette;
   var _getSwatches;
   var _assetFlagsDir;
@@ -50,7 +51,8 @@ var ChartBuilder = (function () {
     "stacked-bar": true,
     "stacked-col": true,
     "table": true,
-    "keyfigures": true
+    "keyfigures": true,
+    "calendar": true
   };
 
   // ── Data validation & selection ──────────────────────
@@ -156,6 +158,29 @@ var ChartBuilder = (function () {
         return null;
       }
       return tlData;
+    }
+
+    if (chartType === "calendar") {
+      // One line per mark, found by column name (Concept/Event, Start,
+      // End, Label, Category, Color). Start is the only required column.
+      var calData = _store.toCalendarData();
+      if (!calData.length) {
+        var calMsg = (calData.columns && calData.columns.start === -1)
+          ? 'Calendar/Planner needs a Start column (plus Concept/Event, End and Label if you like). '
+          : 'Each line needs a Start (a column such as Jan). ';
+        _showStatus(
+          calMsg +
+          '<a href="#" id="load-calendar-sample" style="color:inherit;text-decoration:underline;">Load sample data</a>',
+          "error", true, true
+        );
+        var calLink = document.getElementById("load-calendar-sample");
+        if (calLink) calLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (typeof _onCalendarLoad === "function") _onCalendarLoad();
+        });
+        return null;
+      }
+      return calData;
     }
 
     if (chartType === "table") {
@@ -323,7 +348,17 @@ var ChartBuilder = (function () {
       tableColBold: _store.tableColBold || [],
       tableColWidths: _store.tableColWidths || {},
       tableRowBold: _store.tableRowBold || [],
-      tableColGroups: _store.tableColGroups || {}
+      tableColGroups: _store.tableColGroups || {},
+      // Calendar / Planner (chart-calendar.js)
+      calendarAxis: _store.calendarAxis || null,
+      calendarColumns: _store.calendarColumns || [],
+      calendarColumnGroups: _store.calendarColumnGroups || {},
+      calendarGrid: _store.calendarGrid || "auto",
+      calendarRowLabels: _store.calendarRowLabels !== false,
+      calendarLegend: _store.calendarLegend !== false,
+      calendarRowColors: _store.calendarRowColors || {},
+      calendarRowMarks: _store.calendarRowMarks || {},
+      calendarCategoryColors: _store.calendarCategoryColors || {}
     };
   }
 
@@ -356,6 +391,20 @@ var ChartBuilder = (function () {
     }
 
     if (_store.iconColType === "none" || !ICON_COL_TYPES[chartType]) return;
+
+    // Calendar: one icon per calendar row (toCalendarData already picked the
+    // first line of each row that has one), not one per grid line.
+    if (chartType === "calendar") {
+      var hasCalIcon = false;
+      for (var ci = 0; ci < data.length; ci++) {
+        if (data[ci].iconRef) { hasCalIcon = true; break; }
+      }
+      if (!hasCalIcon) return;
+      SvgInlineUtils.resolveDataIcons(data, _store.iconColType, _assetFlagsDir, _assetIconsDir);
+      config.iconColType = _store.iconColType;
+      config.rowIconColor = resolvedRowIconColor();
+      return;
+    }
 
     var hasAny = false;
     for (var i = 0; i < _store.iconSelections.length; i++) {
@@ -429,7 +478,7 @@ var ChartBuilder = (function () {
 
     // Clear previous status
     // Non-force clear preserves persistent messages (those with clickable links)
-    if (chartType === "pie" || chartType === "donut" || chartType === "sankey" || chartType === "keyfigures" || chartType === "timeline") {
+    if (chartType === "pie" || chartType === "donut" || chartType === "sankey" || chartType === "keyfigures" || chartType === "timeline" || chartType === "calendar") {
       _clearStatus();
     } else {
       _clearStatus(true);
@@ -443,7 +492,8 @@ var ChartBuilder = (function () {
       if (_store.rows && _store.rows.length > 0 &&
           chartType !== "sankey" &&
           chartType !== "keyfigures" &&
-          chartType !== "timeline") {
+          chartType !== "timeline" &&
+          chartType !== "calendar") {
         _showStatus("Data doesn't have valid numeric values for this chart type. Check your data or load sample data.", "error");
       }
       return null;
@@ -512,6 +562,7 @@ var ChartBuilder = (function () {
     _onSankeyLoad   = deps.onSankeyLoad;
     _onKfLoad       = deps.onKfLoad;
     _onTimelineLoad = deps.onTimelineLoad;
+    _onCalendarLoad = deps.onCalendarLoad;
     _getIconPalette = deps.getIconPalette;
     _getSwatches    = deps.getSwatches;
     _assetFlagsDir  = deps.assetFlagsDir;

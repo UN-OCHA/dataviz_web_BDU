@@ -10,10 +10,9 @@
      Legend · Chart-type options). It never changes a section's id,
      markup, or controls — so every getElementById(...) and every data
      round-trip in panel.js keeps working untouched.
-   • A group whose sections are all hidden hides its own header too, so
-     you never see an empty "Legend" heading. A MutationObserver watches
-     the sections' style/class so this stays correct as the user switches
-     chart types.
+   • A group with nothing left to show hides its own header too, so you
+     never see an empty "Legend" heading — see PanelUtils.keepGroupsTidy
+     (panel-utils.js), shared with the Data tab's groups.
 
    Because it only relocates nodes and toggles wrapper visibility, it is
    safe to add/remove without affecting chart output. If a section id is
@@ -57,7 +56,8 @@
     { key: "options", title: "Chart-type options", ids: [
       "line-options-section", "sankey-options-section",
       "keyfigures-options-section", "timeline-options-section",
-      "stacked-stroke-section", "icon-series-section", "table-options-section"
+      "stacked-stroke-section", "icon-series-section", "table-options-section",
+      "calendar-options-section"
     ]}
   ];
 
@@ -66,32 +66,7 @@
            '" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg>';
   }
 
-  var groupEls = [];        // { wrapper, sections:[el,...] }
-  var refreshQueued = false;
-
-  function isShown(el) {
-    // panel.js hides sections via inline style.display:none.
-    return el && el.style.display !== "none";
-  }
-
-  function refresh() {
-    refreshQueued = false;
-    for (var i = 0; i < groupEls.length; i++) {
-      var g = groupEls[i];
-      var anyShown = false;
-      for (var s = 0; s < g.sections.length; s++) {
-        if (isShown(g.sections[s])) { anyShown = true; break; }
-      }
-      g.wrapper.style.display = anyShown ? "" : "none";
-    }
-  }
-
-  function queueRefresh() {
-    if (refreshQueued) return;
-    refreshQueued = true;
-    // Coalesce bursts of style changes from a chart-type switch.
-    (window.requestAnimationFrame || window.setTimeout)(refresh, 0);
-  }
+  var groupEls = [];        // { wrapper, body, sections:[el,...] }
 
   function init() {
     var panel = document.querySelector('.tab-panel[data-tab="design"]');
@@ -108,8 +83,6 @@
     } else {
       panel.appendChild(container);
     }
-
-    var observer = new MutationObserver(queueRefresh);
 
     for (var i = 0; i < GROUPS.length; i++) {
       var def = GROUPS[i];
@@ -140,17 +113,16 @@
         if (!el) continue;            // unknown / removed id — skip safely
         body.appendChild(el);         // MOVE into this group's body
         sections.push(el);
-        observer.observe(el, { attributes: true, attributeFilter: ["style", "class"] });
       }
 
       wrapper.appendChild(head);
       wrapper.appendChild(body);
       container.appendChild(wrapper);
-      groupEls.push({ wrapper: wrapper, sections: sections });
+      groupEls.push({ wrapper: wrapper, body: body, sections: sections });
     }
 
     panel.setAttribute("data-grouped", "1");
-    refresh();
+    PanelUtils.keepGroupsTidy(groupEls);
   }
 
   if (document.readyState === "loading") {

@@ -5,9 +5,10 @@
  *   - render the single chart (Phase A flow); OR
  *   - preview the batch + offer "Place all N charts" (Phase B flow).
  *
- * Phase B scope: 14 chart types (hbar, vbar, stacked-bar, stacked-col,
- * cluster, line, donut, pie, bubble, timeline, keyfigures, icon,
- * sankey, table). Map remains deferred — geo-matching against admin
+ * Scope: every chart type in SUPPORTED_TYPES below (hbar, vbar,
+ * stacked-bar, stacked-col, cluster, line, cluster-line, donut, pie,
+ * cluster-donut, bubble, timeline, calendar, keyfigures, icon, sankey,
+ * table). Map remains deferred — geo-matching against admin
  * boundaries is not something the AI can do from prose.
  *
  * Public API:
@@ -19,7 +20,7 @@
  *   AiImport.closeModal()       — hides the paste modal
  */
 
-/* global DataStore, AI_PROMPT_TEMPLATE, Connector */
+/* global DataStore, AI_PROMPT_TEMPLATE, Connector, ChartRegistry */
 
 var AiImport = (function () {
   "use strict";
@@ -76,7 +77,7 @@ var AiImport = (function () {
     "stacked-bar", "stacked-col",
     "cluster", "line", "cluster-line",
     "donut", "pie", "cluster-donut",
-    "bubble", "timeline", "keyfigures",
+    "bubble", "timeline", "calendar", "keyfigures",
     "icon", "sankey", "table"
   ];
   var SUPPORTED_STYLES = ["ocha", "hnrp", "flash", "gho"];
@@ -109,8 +110,16 @@ var AiImport = (function () {
   //                 cols 0+1 are strings, col 2 is numeric
   //   - table:      arbitrary mixed text/numeric columns; values pass
   //                 through verbatim (no coercion)
+  //   - calendar:   one line per mark, columns found by name: "Start"
+  //                 (required) + optional "Concept/Event", "End", "Label",
+  //                 "Category", "Color". Start / End must match one of the
+  //                 chart's columns (calendarAxis: months / quarters /
+  //                 years presets, or custom calendarColumns; default
+  //                 Jan … Dec).
+  //                 The mark (bar / dot / line) is per row: calendarRowMarks
   var SPECIAL_SCHEMA_TYPES = {
     "timeline": true,
+    "calendar": true,
     "keyfigures": true,
     "sankey": true,
     "table": true
@@ -219,6 +228,28 @@ var AiImport = (function () {
       "pie-chart": "pie",
       "bubble-chart": "bubble",
       "scatter": "bubble",
+      "calendar-planner": "calendar",
+      "planner": "calendar",
+      "year-planner": "calendar",
+      "month-planner": "calendar",
+      "seasonal-calendar": "calendar",
+      "seasonality": "calendar",
+      "seasonality-calendar": "calendar",
+      "seasonal": "calendar",
+      "crop-calendar": "calendar",
+      "agricultural-calendar": "calendar",
+      "gantt": "calendar",
+      "gantt-chart": "calendar",
+      "hpc-timeline": "calendar",
+      "hpc-cycle": "calendar",
+      "programme-cycle": "calendar",
+      "program-cycle": "calendar",
+      "programme-cycle-timeline": "calendar",
+      "work-plan": "calendar",
+      "workplan": "calendar",
+      "roadmap": "calendar",
+      "month-grid": "calendar",
+      "monthly-calendar": "calendar",
       "event": "timeline",
       "events": "timeline",
       "time-line": "timeline",
@@ -553,6 +584,44 @@ var AiImport = (function () {
       return null;
     }
 
+    if (obj.chartType === "calendar") {
+      // Same reading rules as the chart (ChartRegistry.calendar), so a
+      // month the validator accepts is a month the chart can place.
+      var CAL = (typeof ChartRegistry !== "undefined") && ChartRegistry.calendar;
+      if (!CAL) return null;
+      var calCols = CAL.columnsOf(obj.headers);
+      var chartCols = CAL.chartColumns(obj);
+      if (calCols.start === -1) {
+        return err(
+          prefix + 'Calendar/Planner needs a "Start" column in headers.',
+          'For a calendar, use one row per mark with headers like ' +
+          '["Concept/Event", "Start", "End", "Label"]. "Start" is required; ' +
+          'leave "End" empty for a dot. Return ONLY the corrected JSON.',
+          origText
+        );
+      }
+      for (var cr = 0; cr < obj.rows.length; cr++) {
+        var sv = obj.rows[cr][calCols.start];
+        var ev = calCols.end >= 0 ? obj.rows[cr][calCols.end] : "";
+        var emptyRow = obj.rows[cr].every(function (v) { return v == null || String(v).trim() === ""; });
+        if (emptyRow) continue;
+        var badCell = !CAL.matchCols(sv, chartCols).length ? sv
+          : ((ev != null && String(ev).trim() !== "" && !CAL.matchCols(ev, chartCols).length) ? ev : null);
+        if (badCell !== null) {
+          return err(
+            prefix + "Row " + (cr + 1) + ": " + JSON.stringify(badCell) + " matches none of the calendar's columns (" +
+              chartCols.labels.join(", ") + ").",
+            'In a calendar, "Start" and "End" must be one of the columns: by default the months ' +
+            '"Jan" … "Dec" (any month spelling works), the quarters or years set in "calendarAxis", ' +
+            'or the labels given in "calendarColumns" (with "calendarAxis": {"kind": "custom"}). Fix row ' + (cr + 1) +
+            ". Return ONLY the corrected JSON.",
+            origText
+          );
+        }
+      }
+      return null;
+    }
+
     if (obj.chartType === "keyfigures") {
       if (obj.headers.length < 2) {
         return err(
@@ -832,7 +901,13 @@ var AiImport = (function () {
       // Data table: look, bars in cells, colours, dividers, italic labels
       "tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors",
       "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers",
-      "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"
+      "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups",
+      // Calendar / Planner: months shown, month names, background, rows,
+      // colours. barThickness is the calendar's row height (bar charts
+      // read it as their bar thickness, as from the Design tab).
+      "calendarAxis", "calendarColumns", "calendarColumnGroups", "calendarGrid",
+      "calendarRowLabels", "calendarLegend", "calendarRowColors", "calendarRowMarks", "calendarCategoryColors",
+      "barThickness"
     ];
     for (var p = 0; p < passthrough.length; p++) {
       var k = passthrough[p];
@@ -1124,7 +1199,8 @@ var AiImport = (function () {
     "table":        "Data Table",
     "sankey":       "Sankey / Alluvial",
     "keyfigures":   "Key Figures",
-    "timeline":     "Timeline"
+    "timeline":     "Timeline",
+    "calendar":     "Calendar/Planner"
   };
 
   // Currently-selected layout mode for the batch flow.

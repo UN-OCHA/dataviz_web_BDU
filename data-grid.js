@@ -36,22 +36,40 @@ var DataGrid = (function () {
   var editingCell = null;  // DOM element being edited, null = selection mode
 
   // ── Undo/Redo stack ────────────────────────────────
-  var undoStack = [];  // snapshots of {headers, rows}
+  var undoStack = [];  // snapshots of {headers, rows, …}
   var redoStack = [];
   var MAX_UNDO = 50;
 
-  function snapshot() {
-    return {
+  function copy(v) { return v == null ? v : JSON.parse(JSON.stringify(v)); }
+
+  // withSettings: also the settings that only make sense with this data
+  // (the calendar's columns and row marks), for actions that replace both
+  // at once, such as loading a sample. Plain data edits leave them out, so
+  // undoing a cell edit never undoes a Design-tab change made since.
+  function snapshot(withSettings) {
+    var snap = {
       headers: DataStore.headers.slice(),
       rows: DataStore.rows.map(function (r) { return r.slice(); }),
       labelCol: DataStore.labelCol,
       valueCol: DataStore.valueCol
     };
+    if (withSettings) {
+      snap.calendar = {
+        axis: copy(DataStore.calendarAxis),
+        columns: copy(DataStore.calendarColumns || []),
+        groups: copy(DataStore.calendarColumnGroups || {}),
+        rowMarks: copy(DataStore.calendarRowMarks || {})
+      };
+    }
+    return snap;
   }
 
-  /** Call before any data-changing action to save current state */
-  grid.pushUndo = function () {
-    undoStack.push(snapshot());
+  /**
+   * Call before any data-changing action to save current state.
+   * opts.settings: the action also replaces data-bound settings (samples).
+   */
+  grid.pushUndo = function (opts) {
+    undoStack.push(snapshot(!!(opts && opts.settings)));
     if (undoStack.length > MAX_UNDO) undoStack.shift();
     redoStack = []; // new action clears redo
   };
@@ -61,19 +79,27 @@ var DataGrid = (function () {
     DataStore.rows = snap.rows;
     DataStore.labelCol = snap.labelCol;
     DataStore.valueCol = snap.valueCol;
+    if (snap.calendar) {
+      DataStore.calendarAxis = snap.calendar.axis;
+      DataStore.calendarColumns = snap.calendar.columns;
+      DataStore.calendarColumnGroups = snap.calendar.groups;
+      DataStore.calendarRowMarks = snap.calendar.rowMarks;
+    }
     if (typeof DataStore.onChange === "function") DataStore.onChange();
   }
 
   function undo() {
     if (undoStack.length === 0) return;
-    redoStack.push(snapshot());
-    restoreSnapshot(undoStack.pop());
+    var snap = undoStack.pop();
+    redoStack.push(snapshot(!!snap.calendar));
+    restoreSnapshot(snap);
   }
 
   function redo() {
     if (redoStack.length === 0) return;
-    undoStack.push(snapshot());
-    restoreSnapshot(redoStack.pop());
+    var snap = redoStack.pop();
+    undoStack.push(snapshot(!!snap.calendar));
+    restoreSnapshot(snap);
   }
 
   // ── Render ─────────────────────────────────────────

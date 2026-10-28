@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.11";
+  var APP_VERSION = "2026.1.12";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -165,6 +165,21 @@
 
   // Sample data button
   var btnSampleData = document.getElementById("btn-sample-data");
+  var sampleVariantLinks = document.getElementById("sample-variant-links");
+
+  // Chart types with more than one sample. `id` is the
+  // DataStore.loadSampleData key. Declared up here: the first chart-type
+  // sync (showSampleLinks) runs before the Sample Data section below.
+  var SAMPLE_VARIANTS = {
+    "sankey": [
+      { id: "sankey-2", text: "2-level sample", done: "Sample data for Sankey 2-level flow loaded." },
+      { id: "sankey-3", text: "3-level sample", done: "Sample data for Sankey 3-level flow loaded." }
+    ],
+    "calendar": [
+      { id: "calendar", text: "Months sample", done: "Sample calendar (months) loaded." },
+      { id: "calendar-custom", text: "Own-columns sample", done: "Sample calendar (own columns) loaded." }
+    ]
+  };
 
   // ── Chart types that need multi-value columns ──────
   var MULTI_VALUE_TYPES = {
@@ -187,7 +202,8 @@
     "stacked-bar": true,
     "stacked-col": true,
     "table": true,
-    "keyfigures": true
+    "keyfigures": true,
+    "calendar": true
   };
 
   // Status → StatusUI
@@ -210,14 +226,9 @@
     // bar labels, value format, bar thickness)
     DesignControlsUI.updateVisibility(type);
 
-    // Sankey: hide generic sample button, show sankey-specific sample buttons
-    if (type === "sankey") {
-      if (btnSampleData) btnSampleData.style.display = "none";
-      if (sankeySampleLinks) sankeySampleLinks.style.display = "inline";
-    } else {
-      if (btnSampleData) btnSampleData.style.display = "";
-      if (sankeySampleLinks) sankeySampleLinks.style.display = "none";
-    }
+    // Chart types with several samples: one link per sample instead of
+    // the generic button
+    showSampleLinks(type);
 
     // Key Figures options
     if (type === "keyfigures") { KeyFiguresUI.show(); } else { KeyFiguresUI.hide(); }
@@ -227,6 +238,9 @@
 
     // Data table options (look, bars in cells, dividers)
     if (type === "table") { TableUI.show(); } else { TableUI.hide(); }
+
+    // Calendar / Planner options (months shown, background, row colours)
+    if (type === "calendar") { CalendarUI.show(); } else { CalendarUI.hide(); }
 
     // Reparent label color/scale into legend section for icon charts, restore for others
     SeriesLegendUI.reparentLabelSections(type);
@@ -301,6 +315,7 @@
     // and any per-row UI from the loaded DataStore state.
     if (typeof KeyFiguresUI !== "undefined" && KeyFiguresUI.syncToUI) KeyFiguresUI.syncToUI();
     if (typeof TimelineUI !== "undefined" && TimelineUI.syncToUI) TimelineUI.syncToUI();
+    if (typeof CalendarUI !== "undefined" && CalendarUI.syncToUI && DataStore.chartType === "calendar") CalendarUI.syncToUI();
 
     // Label color swatch
     ColorPickersUI.syncLabelColorToUI();
@@ -326,23 +341,44 @@
 
   // ── Sample Data ───────────────────────────────────────
 
-  var sankeySampleLinks = document.getElementById("sankey-sample-links");
-
-  function loadSankeyAndShow(type) {
-    DataGrid.pushUndo();
-    DataStore.loadSampleData(type);
+  function loadSampleVariant(v) {
+    DataGrid.pushUndo({ settings: true });
+    DataStore.loadSampleData(v.id);
+    syncUIFromStore();
     DataGrid.render(gridContainer);
     updateColumnSelectors();
     generateSVG();
     scheduleLiveUpdate();
-    var levels = type === "sankey-3" ? "3" : "2";
-    showStatus("Sample data for Sankey " + levels + "-level flow loaded.", "success");
+    showStatus(v.done, "success");
     setTimeout(clearStatus, 8000);
+  }
+
+  function showSampleLinks(type) {
+    var variants = SAMPLE_VARIANTS[type];
+    if (btnSampleData) btnSampleData.style.display = variants ? "none" : "";
+    if (!sampleVariantLinks) return;
+    sampleVariantLinks.innerHTML = "";
+    sampleVariantLinks.style.display = variants ? "inline-flex" : "none";
+    if (!variants) return;
+    variants.forEach(function (v, i) {
+      if (i) {
+        var dot = document.createElement("span");
+        dot.className = "sample-variant-sep";
+        dot.textContent = "·";
+        sampleVariantLinks.appendChild(dot);
+      }
+      var b = document.createElement("button");
+      b.className = "btn-link";
+      b.id = "btn-sample-" + v.id;
+      b.textContent = v.text;
+      b.addEventListener("click", function (e) { e.preventDefault(); loadSampleVariant(v); });
+      sampleVariantLinks.appendChild(b);
+    });
   }
 
   if (btnSampleData) {
     btnSampleData.addEventListener("click", function () {
-      DataGrid.pushUndo();
+      DataGrid.pushUndo({ settings: true });
       var result = DataStore.loadSampleData(DataStore.chartType);
       if (result.ok) {
         syncUIFromStore();
@@ -354,10 +390,6 @@
     });
   }
 
-  var btnSankey2 = document.getElementById("btn-sankey-2");
-  var btnSankey3 = document.getElementById("btn-sankey-3");
-  if (btnSankey2) btnSankey2.addEventListener("click", function (e) { e.preventDefault(); loadSankeyAndShow("sankey-2"); });
-  if (btnSankey3) btnSankey3.addEventListener("click", function (e) { e.preventDefault(); loadSankeyAndShow("sankey-3"); });
 
   // ── Hamburger Menu ─────────────────────────────────────
 
@@ -458,6 +490,15 @@
 
   // ── Data Table UI ───────────────────────────────────────
   TableUI.init({
+    store: DataStore,
+    generate: generateSVG,
+    schedule: scheduleLiveUpdate,
+    getSwatches: function () { return ChartRegistry.getSwatches(DataStore.style || "ocha"); },
+    colorDropdown: ColorPickersUI.buildSeriesDropdown
+  });
+
+  // ── Calendar / Planner UI ───────────────────────────────
+  CalendarUI.init({
     store: DataStore,
     generate: generateSVG,
     schedule: scheduleLiveUpdate,
@@ -595,6 +636,10 @@
       scheduleLiveUpdate();
       showStatus("Sample timeline data loaded.", "success");
       setTimeout(clearStatus, 6000);
+    },
+    onCalendarLoad: function () {
+      PanelCoordinator.setActiveTab("data");
+      loadSampleVariant(SAMPLE_VARIANTS.calendar[0]);
     },
     getIconPalette: ColorPickersUI.getIconPalette,
     getSwatches:    ColorPickersUI.getSwatches,
@@ -826,6 +871,7 @@
   var WIDE_CHART_TYPES = {
     "table": true,
     "timeline": true,
+    "calendar": true,
     "sankey": true
   };
 
@@ -1587,8 +1633,8 @@
   function updateColumnSelectors() {
     var type = DataStore.chartType || "hbar";
 
-    // Table, Sankey, Key Figures, Timeline: hide column selectors (fixed columns)
-    if (type === "table" || type === "sankey" || type === "keyfigures" || type === "timeline") {
+    // Table, Sankey, Key Figures, Timeline, Calendar: hide column selectors (fixed columns)
+    if (type === "table" || type === "sankey" || type === "keyfigures" || type === "timeline" || type === "calendar") {
       colSelectorSection.style.display = "none";
       return;
     }
@@ -1705,6 +1751,10 @@
     // Table column grid + row colours follow the data's columns and rows
     if ((DataStore.chartType || "") === "table") {
       TableUI.build();
+    }
+    // Calendar row / category colour lists follow the data's rows
+    if ((DataStore.chartType || "") === "calendar") {
+      CalendarUI.build();
     }
 
     // Skip the chart re-render during config load — the UI controls
@@ -1843,6 +1893,7 @@
     "icon":          ["iconShape", "iconShapes", "iconSize", "iconLegendLabels", "iconColors", "iconShowLegend", "iconLegendLayout"],
     "sankey":        ["sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyColorMode", "sankeySingleColor"],
     "keyfigures":    ["bodyCol", "kfAutoCols", "kfMaxCols", "kfAutoWidth", "kfColWidth", "kfIconPosition", "kfShowSeparators", "kfPadH", "kfPadV", "kfGap", "kfIconColor", "kfTextColor"],
+    "calendar":      ["barThickness", "calendarAxis", "calendarColumns", "calendarColumnGroups", "calendarGrid", "calendarRowLabels", "calendarLegend", "calendarRowColors", "calendarRowMarks", "calendarCategoryColors"],
     "table":         ["tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors", "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers", "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"]
   };
 
@@ -2306,6 +2357,14 @@
       var dropped = warnings.filter(function (w) { return w.code === "line-series-cap"; })[0];
       var n = (dropped && dropped.info && dropped.info.count) || 0;
       parts.push(n + " extra line" + (n === 1 ? "" : "s") + " hidden (6 max)");
+    }
+    if (counts["calendar-no-column"]) {
+      var cnc = warnings.filter(function (w) { return w.code === "calendar-no-column"; })[0];
+      var nc = (cnc && cnc.info && cnc.info.count) || 1;
+      parts.push(nc + " line" + (nc === 1 ? "" : "s") + " whose Start or End matches no column (not drawn)");
+    }
+    if (counts["calendar-columns-capped"]) {
+      parts.push("only the first 60 columns are shown");
     }
     if (counts["panels-capped"]) {
       var dropP = warnings.filter(function (w) { return w.code === "panels-capped"; })[0];

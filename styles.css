@@ -818,6 +818,9 @@ body {
 .dgroup-body > .section[style*="display:none"],
 .dgroup-body > .toggle-group[style*="display: none"],
 .dgroup-body > .toggle-group[style*="display:none"] { border-top: none; }
+/* A shown section with nothing usable in it yet (set by
+   PanelUtils.keepGroupsTidy in panel-utils.js). */
+.dgroup-body > .panel-empty { display: none !important; }
 
 /* ── Text-tab live preview (built by text-tab-ui.js) ──────── */
 .text-preview {
@@ -1416,6 +1419,146 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   vertical-align: middle;
 }
 .table-ui-colorby { display: flex; align-items: center; gap: var(--space-150); }
+
+/* Calendar / Planner options (CalendarUI). Reuses the table's picture
+   buttons and grids; three cards per row. */
+.calendar-ui-choice-3 { grid-template-columns: repeat(3, 1fr); }
+.calendar-ui-checks { display: flex; flex-direction: column; gap: var(--space-75); }
+.calendar-ui-checks .toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.calendar-ui-checks input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.calendar-ui-grid { max-height: none; overflow: visible; }
+.calendar-ui-grid .cat { max-width: 160px; }
+/* Columns: Months · Quarters · Years · Custom (segmented, full width) */
+.calendar-ui-kind { display: flex; margin-bottom: var(--space-150); }
+.calendar-ui-kind .toggle-btn { flex: 1 1 0; padding-left: var(--space-75); padding-right: var(--space-75); }
+/* Preset fields: label left, field right */
+.calendar-ui-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-100) var(--space-150);
+  align-items: center;
+  margin-bottom: var(--space-150);
+}
+.calendar-ui-fields .field-label { margin: 0; }
+/* The strip: the top of the chart as it prints (headings over labels),
+   scrolling sideways when there are many columns. In Custom it is the
+   editor: one box per label and heading, × on a column, + at the end. */
+.calendar-strip-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-layer-1);
+  padding: var(--space-100);
+}
+.calendar-strip {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 100%;
+  column-gap: 2px;
+}
+.calendar-strip-cell {
+  position: relative;
+  min-width: 0;
+  padding: 3px 2px;
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.calendar-strip-cell.is-heading { text-align: left; font-weight: var(--font-weight-semibold); }
+.calendar-strip-cell.is-heading.has-text { border-bottom: 1px solid var(--text-tertiary); }
+.calendar-strip-cell.is-label {
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  border-bottom: 1px solid var(--text-primary);
+}
+.calendar-strip-cell.is-corner { border-bottom: 1px solid var(--text-primary); align-self: end; }
+.calendar-strip.is-editable .calendar-strip-cell { overflow: visible; padding: 2px 1px; }
+.calendar-strip input[type="text"],
+[data-design] .calendar-strip input[type="text"],
+[data-design] .calendar-strip input[type="text"]:focus {
+  width: 100%;
+  min-width: 0;
+  height: 20px;
+  padding: 1px 3px;
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input, transparent);
+  box-shadow: none;
+}
+.calendar-strip input.calendar-strip-label { text-align: center; }
+.calendar-strip input.calendar-strip-heading { text-align: left; }
+.calendar-strip .is-heading:not(.has-text) input.calendar-strip-heading { border-style: dashed; }
+.calendar-strip input[type="text"]:focus { border-color: var(--accent); }
+.calendar-strip-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  background: var(--bg-layer-2);
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.calendar-strip-cell:hover .calendar-strip-remove,
+.calendar-strip-cell:focus-within .calendar-strip-remove { display: inline-flex; }
+.calendar-strip-cell .calendar-strip-remove:disabled { display: none; }   /* the last column stays */
+.calendar-strip-remove:hover { color: var(--accent); border-color: var(--accent); }
+.calendar-strip-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  align-self: stretch;
+  margin-left: 2px;
+  border: 1px dashed var(--border-field);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.calendar-strip-add:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.calendar-strip-add:disabled { opacity: 0.4; cursor: default; }
+/* Several samples for one chart type (Sankey, Calendar): links in a row */
+.sample-variant-links { align-items: center; gap: var(--space-75); }
+.sample-variant-sep { color: var(--text-tertiary); font-size: 11px; }
+.calendar-ui-grid select.calendar-ui-mark,
+[data-design] .calendar-ui-grid select.calendar-ui-mark {
+  width: auto;
+  font-size: 10px;
+  height: 20px;
+  padding: 0 2px;
+}
+.calendar-ui-reset {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.calendar-ui-reset:hover { color: var(--accent); }
 .table-ui-colorby select { flex: 1; min-width: 0; }
 .table-ui-hint {
   font-size: 10px;

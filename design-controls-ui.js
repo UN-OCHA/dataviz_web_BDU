@@ -160,7 +160,9 @@ var DesignControlsUI = (function () {
     if (!barThicknessSection) return;
     var type = _store.chartType || "hbar";
     var BAR_TYPES = { "hbar": true, "vbar": true, "stacked-bar": true, "stacked-col": true, "cluster": true };
-    barThicknessSection.style.display = BAR_TYPES[type] ? "block" : "none";
+    // Calendar: Bar Thickness sets the row height (no spacing control —
+    // the background style sets the gap between rows).
+    barThicknessSection.style.display = (BAR_TYPES[type] || type === "calendar") ? "block" : "none";
     if (barSpacingSection) {
       barSpacingSection.style.display = BAR_TYPES[type] ? "block" : "none";
     }
@@ -457,7 +459,7 @@ var DesignControlsUI = (function () {
 
     // Value format — hide for icon charts (no numeric values)
     var valueFormatSection = document.getElementById("value-format-section");
-    if (valueFormatSection) valueFormatSection.style.display = (type === "icon") ? "none" : "block";
+    if (valueFormatSection) valueFormatSection.style.display = (type === "icon" || type === "calendar") ? "none" : "block";
 
     // Bar thickness
     updateBarThicknessVisibility();
@@ -472,7 +474,7 @@ var DesignControlsUI = (function () {
     // not meaningful for those types. Line and timeline have an ordered
     // X axis (sequence/time); sorting by magnitude would scramble it.
     var hideSort = (type === "sankey" || type === "keyfigures" ||
-                    type === "timeline" || type === "line");
+                    type === "timeline" || type === "line" || type === "calendar");
     if (autoSortOption) autoSortOption.style.display = hideSort ? "none" : "";
     if (autoSortCheck) autoSortCheck.checked = _store.autoSort !== false;
   }

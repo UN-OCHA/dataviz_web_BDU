@@ -12,6 +12,10 @@
 
    Same approach as design-groups.js: relocate existing sections, never
    touch their ids or wiring. getElementById in panel.js keeps working.
+   A group whose sections are all hidden (panel.js hides the column pickers
+   for table, sankey, key figures, timeline and calendar) hides its header
+   too, through PanelUtils.keepGroupsTidy — the same helper the Design tab
+   uses.
    ══════════════════════════════════════════════ */
 (function () {
   "use strict";
@@ -26,6 +30,8 @@
     return '<svg viewBox="0 0 640 640" width="' + size + '" height="' + size +
            '" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg>';
   }
+
+  var groupEls = [];        // { wrapper, body, sections:[el,...] }
 
   function buildGroup(container, title, iconPath, ids) {
     var found = [];
@@ -46,10 +52,16 @@
     var body = document.createElement("div");
     body.className = "dgroup-body";
     head.addEventListener("click", function () { wrapper.classList.toggle("collapsed"); });
-    for (var j = 0; j < found.length; j++) body.appendChild(document.getElementById(found[j]));
+    var sections = [];
+    for (var j = 0; j < found.length; j++) {
+      var el = document.getElementById(found[j]);
+      body.appendChild(el);
+      sections.push(el);
+    }
     wrapper.appendChild(head);
     wrapper.appendChild(body);
     container.appendChild(wrapper);
+    groupEls.push({ wrapper: wrapper, body: body, sections: sections });
   }
 
   function init() {
@@ -66,6 +78,7 @@
       ["chart-config-section"]);
 
     panel.setAttribute("data-grouped", "1");
+    PanelUtils.keepGroupsTidy(groupEls);
   }
 
   if (document.readyState === "loading") {

@@ -182,8 +182,28 @@ var IconFlagUI = (function () {
     var labelCol = _store.labelCol || 0;
     var html = [];
 
-    for (var r = 0; r < _store.rows.length; r++) {
-      var label = String(_store.rows[r][labelCol] || "Row " + (r + 1));
+    // One entry per grid row — except the calendar, where several lines
+    // share one calendar row: one entry per calendar row, editing the line
+    // that holds its icon (else its first line). `lines` = all its lines.
+    var entries = [];
+    if ((_store.chartType || "") === "calendar" && _store.toCalendarData) {
+      var calRows = _store.toCalendarData();
+      for (var cr = 0; cr < calRows.length; cr++) {
+        var holder = calRows[cr].srcRows[0];
+        for (var ch = 0; ch < calRows[cr].srcRows.length; ch++) {
+          if (_store.iconSelections[calRows[cr].srcRows[ch]]) { holder = calRows[cr].srcRows[ch]; break; }
+        }
+        entries.push({ row: holder, label: calRows[cr].name || "Row " + (cr + 1), lines: calRows[cr].srcRows });
+      }
+    } else {
+      for (var er = 0; er < _store.rows.length; er++) {
+        entries.push({ row: er, label: String(_store.rows[er][labelCol] || "Row " + (er + 1)), lines: [er] });
+      }
+    }
+
+    for (var e = 0; e < entries.length; e++) {
+      var r = entries[e].row;
+      var label = entries[e].label;
       var iconRef = _store.iconSelections[r] || null;
       var preview = "";
       if (iconRef) {
@@ -201,7 +221,7 @@ var IconFlagUI = (function () {
       }
       html.push('</button>');
       if (iconRef) {
-        html.push('<button class="icon-row-clear" data-row="' + r + '" title="Remove">&times;</button>');
+        html.push('<button class="icon-row-clear" data-row="' + r + '" data-lines="' + entries[e].lines.join(",") + '" title="Remove">&times;</button>');
       }
       html.push('</div>');
     }
@@ -221,7 +241,12 @@ var IconFlagUI = (function () {
       clearBtns[c].addEventListener("click", function () {
         var rowIdx = parseInt(this.getAttribute("data-row"), 10);
         if (!isNaN(rowIdx)) {
-          _store.setIconSelection(rowIdx, null);
+          // Clear every line of the row (calendar), so another line's icon can't take over
+          var lines = String(this.getAttribute("data-lines") || rowIdx).split(",");
+          for (var cl = 0; cl < lines.length; cl++) {
+            var li = parseInt(lines[cl], 10);
+            if (!isNaN(li)) _store.setIconSelection(li, null);
+          }
           _clearIconCache();
           renderRowList();
           liveUpdate();
