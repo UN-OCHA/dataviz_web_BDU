@@ -1167,6 +1167,13 @@ var DataStore = (function () {
    * Serialize full chart config to JSON string.
    * Stored in Illustrator groupItem.note for re-editing.
    */
+  // The title on one line, for anything that names the chart (files, artboards,
+  // progress messages). chartTitle can hold typed line breaks, and a raw line
+  // break inside an evalScript string stops Illustrator running the script.
+  store.chartName = function () {
+    return String(store.chartTitle || "").replace(/\s+/g, " ").trim();
+  };
+
   store.toConfig = function () {
     var cfg = {
       v: 1,

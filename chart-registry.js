@@ -792,6 +792,94 @@ var ChartRegistry = (function () {
     return lines;
   };
 
+  // ── No orphans in the Text tab's text ───────────────────
+  //
+  // Title, subtitle, comments and source only (chart labels keep plain
+  // wrapText). The line count never changes, so chart heights stay the same.
+
+  /** A last line shorter than this share of the longest line is an orphan. */
+  var ORPHAN_MIN_SHARE = 1 / 3;
+  /** How many more words may move down so a line can break after punctuation. */
+  var ORPHAN_PUNCTUATION_REACH = 2;
+
+  /**
+   * Moves words from the second-to-last line down until the last line is no
+   * longer an orphan. Never makes the last line longer than the one above.
+   * Words are objects with .text and an optional .glue (attached to the word
+   * before, no space between: they move together).
+   * @param {Array[]} lines  arrays of words; changed in place
+   * @param {function} wordW  width of one word
+   * @param {number} spaceW  width of a space
+   */
+  function lengthenLastLine(lines, wordW, spaceW) {
+    if (lines.length < 2) return;
+    var prev = lines[lines.length - 2];
+    var last = lines[lines.length - 1];
+
+    function lineW(line) {
+      var w = 0;
+      for (var i = 0; i < line.length; i++) {
+        w += wordW(line[i]) + (i > 0 && !line[i].glue ? spaceW : 0);
+      }
+      return w;
+    }
+    // Where the last whole word of prev starts, or 0 when it is all prev has.
+    function lastWordStart(line) {
+      var i = line.length - 1;
+      while (i > 0 && line[i].glue) i--;
+      return i;
+    }
+    function moveLastWord() {
+      var from = lastWordStart(prev);
+      if (from === 0) return false;
+      var moved = prev.slice(from);
+      if (lineW(moved.concat(last)) > lineW(prev.slice(0, from))) return false;
+      prev.length = from;
+      Array.prototype.unshift.apply(last, moved);
+      return true;
+    }
+
+    var longest = 0;
+    for (var l = 0; l < lines.length; l++) longest = Math.max(longest, lineW(lines[l]));
+    var target = longest * ORPHAN_MIN_SHARE;
+    if (lineW(last) >= target) return;
+    while (lineW(last) < target) {
+      if (!moveLastWord()) return;
+    }
+
+    // Close enough to a comma? Break there rather than after "and" or "of".
+    function endsClause(line) { return /[,;:.]$/.test(line[line.length - 1].text); }
+    var reach = prev.slice();
+    for (var r = 0; r < ORPHAN_PUNCTUATION_REACH && !endsClause(reach); r++) {
+      var from = lastWordStart(reach);
+      if (from === 0) return;
+      reach.length = from;
+    }
+    if (!endsClause(reach)) return;
+    while (prev.length > reach.length) {
+      if (!moveLastWord()) return;
+    }
+  }
+
+  /**
+   * wrapText for the Text tab's text: a line break the user typed always
+   * breaks the line (blank lines are dropped), and each typed line is wrapped
+   * on its own without an orphan.
+   */
+  registry.wrapTextNoOrphan = function (text, fontSize, maxWidth, charFactor) {
+    var out = [];
+    String(text == null ? "" : text).split(/\r?\n/).forEach(function (typed) {
+      var lines = registry.wrapText(typed.trim(), fontSize, maxWidth, charFactor).map(function (line) {
+        return line.split(" ").map(function (w) { return { text: w }; });
+      });
+      lengthenLastLine(lines, function (w) { return w.text.length; }, 1);
+      lines.forEach(function (line) {
+        out.push(line.map(function (w) { return w.text; }).join(" "));
+      });
+    });
+    return out;
+  };
+
   // ── Inline emphasis (a tiny markdown subset) ────────────
   //
   // Subtitle / comments / footer accept **bold** and *italic*. Parsed into
@@ -818,11 +906,11 @@ var ChartRegistry = (function () {
     }
     function tightOpen(at, len) {
       var after = s.charAt(at + len);
-      return after !== "" && after !== " " && after !== "\t";
+      return after !== "" && after !== " " && after !== "\t" && after !== "\n";
     }
     function tightClose(at) {
       var before = s.charAt(at - 1);
-      return before !== "" && before !== " " && before !== "\t";
+      return before !== "" && before !== " " && before !== "\t" && before !== "\n";
     }
     var i = 0;
     while (i < n) {
@@ -853,6 +941,9 @@ var ChartRegistry = (function () {
   registry.wrapStyled = function (runs, fontSize, maxWidth, baseAdvance) {
     var BOLD_MULT = 1.07;
     var spaceW = fontSize * baseAdvance;
+    function wordW(word) {
+      return word.text.length * (word.bold ? baseAdvance * BOLD_MULT : baseAdvance) * fontSize;
+    }
     // Flatten to styled words, carrying a `glue` flag for words that sit
     // immediately after the previous one with NO whitespace between them
     // (an emphasis boundary mid-text, e.g. *OCHA FTS*, → "FTS" then a glued
@@ -877,8 +968,7 @@ var ChartRegistry = (function () {
     var cur = [];
     var curW = 0;
     for (var w = 0; w < words.length; w++) {
-      var adv = (words[w].bold ? baseAdvance * BOLD_MULT : baseAdvance) * fontSize;
-      var ww = words[w].text.length * adv;
+      var ww = wordW(words[w]);
       var gap = (cur.length && !words[w].glue) ? spaceW : 0;
       if (cur.length && !words[w].glue && curW + gap + ww > maxWidth) {
         lines.push(cur);
@@ -891,6 +981,7 @@ var ChartRegistry = (function () {
     }
     if (cur.length) lines.push(cur);
     if (!lines.length) lines.push([]);
+    lengthenLastLine(lines, wordW, spaceW);
     return lines;
   };
 
@@ -908,6 +999,21 @@ var ChartRegistry = (function () {
     }
     return parts.join("");
   };
+
+  /** Styled runs → one list of runs per typed line, blank lines dropped.
+   *  Parsed first, so emphasis can run across a typed line break. */
+  function splitRunsAtTypedBreaks(runs) {
+    var typedLines = [[]];
+    runs.forEach(function (run) {
+      String(run.text).split(/\r?\n/).forEach(function (piece, i) {
+        if (i > 0) typedLines.push([]);
+        if (piece) typedLines[typedLines.length - 1].push({ text: piece, bold: run.bold, italic: run.italic });
+      });
+    });
+    return typedLines.filter(function (line) {
+      return line.some(function (run) { return run.text.trim(); });
+    });
+  }
 
   /**
    * emitTextLines — shared "wrap + emit" for any header/footer text block
@@ -927,7 +1033,7 @@ var ChartRegistry = (function () {
     var y = opts.yStart;
     var lines;
     if (!styled) {
-      lines = registry.wrapText(opts.text, opts.fontSize, opts.maxWidth, opts.advance);
+      lines = registry.wrapTextNoOrphan(opts.text, opts.fontSize, opts.maxWidth, opts.advance);
       for (var i = 0; i < lines.length; i++) {
         y += opts.lineH;
         out.push('  <text x="' + opts.x + '" y="' + y +
@@ -936,7 +1042,10 @@ var ChartRegistry = (function () {
           registry.escapeXml(lines[i]) + '</text>');
       }
     } else {
-      lines = registry.wrapStyled(runs, opts.fontSize, opts.maxWidth, opts.advance);
+      lines = [];
+      splitRunsAtTypedBreaks(runs).forEach(function (typedLine) {
+        lines = lines.concat(registry.wrapStyled(typedLine, opts.fontSize, opts.maxWidth, opts.advance));
+      });
       for (var j = 0; j < lines.length; j++) {
         y += opts.lineH;
         out.push('  <text x="' + opts.x + '" y="' + y +
@@ -1009,7 +1118,7 @@ var ChartRegistry = (function () {
       // rs.titleSize as the shared base (key figures scale from it).
       var titleSize = (rs.chartTitleSize != null) ? rs.chartTitleSize : rs.titleSize;
       var face = st.titleFace || { family: st.fontHeading, advance: registry.HEADING_BOLD_ADVANCE, weight: "bold" };
-      var titleLines = registry.wrapText(opts.title, titleSize, maxW, face.advance);
+      var titleLines = registry.wrapTextNoOrphan(opts.title, titleSize, maxW, face.advance);
       for (var ti = 0; ti < titleLines.length; ti++) {
         y += Math.round(titleSize * 1.2);
         inner.push('  <text x="' + x + '" y="' + y +

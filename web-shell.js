@@ -143,7 +143,7 @@
   // Same cleaning as the plugin's "Save" file names: the chart title,
   // without characters that file systems reject, at most 60 characters.
   function baseName(title) {
-    var clean = String(title || "").trim().replace(/[\/\\:*?"<>|]+/g, "-").trim();
+    var clean = String(title || "").replace(/\s+/g, " ").trim().replace(/[\/\\:*?"<>|]+/g, "-").trim();
     if (!clean) clean = "chart";
     if (clean.length > 60) clean = clean.substring(0, 60).trim();
     return clean;

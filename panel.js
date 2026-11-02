@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.13";
+  var APP_VERSION = "2026.1.14";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -905,7 +905,7 @@
       try {
         var loadResult = DataStore.loadFromConfig(configsArray[i]);
         if (loadResult && loadResult.error) throw new Error(loadResult.error);
-        label = (DataStore.chartTitle && DataStore.chartTitle.trim()) || label;
+        label = DataStore.chartName() || label;
         updateBatchProgress(i, total, "Rendering: " + label);
         // ChartBuilder directly, not generateSVG(): that would first sync
         // the store from the still-unrefreshed panel inputs.
@@ -1215,7 +1215,7 @@
           return pauseOrAbort("Chart " + (slotIdx + 1) + " rejected: " + loadResult.error, slotIdx, configJson);
         }
 
-        var chartLabel = (DataStore.chartTitle && DataStore.chartTitle.trim()) || ("Chart " + (slotIdx + 1));
+        var chartLabel = DataStore.chartName() || ("Chart " + (slotIdx + 1));
         // Show progress for the chart we're about to render. We update
         // BEFORE the work so if anything throws, the user can see
         // exactly which chart caused it.
@@ -1260,7 +1260,7 @@
         var perChartConfig = DataStore.toConfig();
         var safePath = tmpFile.replace(/\\/g, "/");
         var safeConfig = perChartConfig.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        var safeName = (DataStore.chartTitle || ("Chart " + (slotIdx + 1)))
+        var safeName = (DataStore.chartName() || ("Chart " + (slotIdx + 1)))
           .replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
         var script =
@@ -1390,7 +1390,7 @@
           return pauseOrAbort("Chart " + (slotIdx + 1) + " rejected: " + loadOk.error, slotIdx, configJson);
         }
 
-        var chartLabel = (DataStore.chartTitle && DataStore.chartTitle.trim()) || ("Chart " + (slotIdx + 1));
+        var chartLabel = DataStore.chartName() || ("Chart " + (slotIdx + 1));
         updateBatchProgress(slotIdx, batchSize, "Rendering: " + chartLabel +
           (span > 1 ? " (wide)" : ""));
 
@@ -1936,7 +1936,7 @@
     // keeps it grouped in a downloads folder; the chart title makes
     // each export distinguishable. Falls back to a generic name when
     // the chart has no title yet.
-    var rawTitle = (DataStore.chartTitle || "").toString().trim();
+    var rawTitle = DataStore.chartName();
     // Strip path-unfriendly chars; cap length so it stays sensible.
     var clean = rawTitle.replace(/[\/\\:*?"<>|]+/g, "-").trim();
     if (!clean) clean = "chart";

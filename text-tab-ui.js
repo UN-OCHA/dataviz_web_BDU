@@ -65,7 +65,7 @@
       '<div class="tp-subtitle"></div>' +
       '<div class="tp-comments"></div>' +
       '<div class="tp-footer"></div>' +
-      '<div class="tp-empty">Type your title, subtitle and source in the boxes below.</div>';
+      '<div class="tp-empty">Type your title, subtitle and source in the boxes below. Press Enter to start a new line.</div>';
 
     var els = {
       title:    document.getElementById("chart-title"),
