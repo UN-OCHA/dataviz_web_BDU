@@ -333,7 +333,7 @@
     }
 
     // Calculate max label extent
-    var maxLabelY = cy + radius + 20;
+    var maxLabelY = cy + radius + rs.pieBottomSpace;
     for (var li = 0; li < outsideItems.length; li++) {
       var nL = outsideItems[li].lines ? outsideItems[li].lines.length : 1;
       var bot = outsideItems[li].y + (nL - 1) * lineGap + labelSize;

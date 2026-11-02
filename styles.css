@@ -1,3 +1,12 @@
+/* The installed bold face under its own name, so the panel preview draws the
+   HNRP chart title in bold. Chart titles name it this way because Illustrator
+   turns 'Roboto Condensed' + bold into plain Roboto Bold (see chart-registry.js). */
+@font-face {
+  font-family: 'Roboto Condensed Bold';
+  /* The url only exists in the web version, which ships the font. */
+  src: local('RobotoCondensed-Bold'), local('Roboto Condensed Bold'), url('fonts/RobotoCondensed-Bold.woff') format('woff');
+}
+
 /* ══════════════════════════════════════════════
    DESIGN TOKENS
    ══════════════════════════════════════════════ */
@@ -825,10 +834,16 @@ body {
 /* ── Text-tab live preview (built by text-tab-ui.js) ──────── */
 .text-preview {
   background: var(--bg-layer-2);
-  border: 1px dashed var(--border-default);
   border-radius: var(--radius-lg);
   padding: var(--space-300);
   margin-bottom: var(--space-200);
+  cursor: default;
+}
+.text-preview .tp-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-75);
 }
 .text-preview .tp-title {
   font-size: var(--font-size-lg);

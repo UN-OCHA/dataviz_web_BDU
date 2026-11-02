@@ -7,7 +7,8 @@
    1. A live PREVIEW of the text block at the top of the tab — title,
       subtitle, comments and footer rendered at the weight they carry in
       the chart, updating as you type. It mirrors the output so the form
-      reads as a hierarchy, not four identical boxes.
+      reads as a hierarchy, not four identical boxes. It is labelled and
+      carries an instruction while empty, so nobody tries to type in it.
    2. The existing sections are MOVED into two collapsible groups reusing
       the Design tab's .dgroup styling — "Title & labels" and
       "Text styling" — for one consistent panel language.
@@ -59,11 +60,12 @@
     var preview = document.createElement("div");
     preview.className = "text-preview";
     preview.innerHTML =
+      '<div class="tp-label">Preview</div>' +
       '<div class="tp-title"></div>' +
       '<div class="tp-subtitle"></div>' +
       '<div class="tp-comments"></div>' +
       '<div class="tp-footer"></div>' +
-      '<div class="tp-empty">Your title, subtitle and footer preview here as you type.</div>';
+      '<div class="tp-empty">Type your title, subtitle and source in the boxes below.</div>';
 
     var els = {
       title:    document.getElementById("chart-title"),
@@ -93,6 +95,9 @@
     for (var k in els) {
       if (els[k]) els[k].addEventListener("input", update);
     }
+    // The panel fills the fields without an "input" event when a chart is
+    // selected, deselected or loaded (syncUIFromStore in panel.js).
+    document.addEventListener("ocha-text-fields-synced", update);
 
     // Insert preview at the very top of the tab.
     panel.insertBefore(preview, panel.firstChild);

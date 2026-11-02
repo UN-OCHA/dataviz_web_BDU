@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.12";
+  var APP_VERSION = "2026.1.13";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -293,6 +293,9 @@
     subtitleInput.value = DataStore.chartSubtitle || "";
     commentsInput.value = DataStore.chartComments || "";
     footerInput.value = DataStore.chartFooter || "";
+    // Setting .value fires no "input" event. Without this, the Text tab's
+    // preview (text-tab-ui.js) keeps showing the previous chart's text.
+    document.dispatchEvent(new CustomEvent("ocha-text-fields-synced"));
 
     // Chart type sidebar
     PanelCoordinator.setActiveSidebarButton(DataStore.chartType || "hbar");

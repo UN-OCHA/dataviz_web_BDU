@@ -342,9 +342,28 @@ var ChartRegistry = (function () {
     baselineColor: "#333333"
   };
 
-  function makeStyle(name, colors) {
+  // `extra` lets a style override STYLE_BASE fields (e.g. titleColor) and
+  // declare the optional theme-level layout fields below. Styles without
+  // them render exactly as before.
+  //
+  //   titleFace     { family, advance } — chart-title font stack and its
+  //                 width ratio (default fontHeading / HEADING_BOLD_ADVANCE).
+  //                 `family` must name the bold face itself: the title then
+  //                 gets NO font-weight attribute (see renderHeader).
+  //   textSizes     { title, subtitle, comment, footer } — fixed sizes in pt
+  //                 that replace the shared base sizes. textScale still
+  //                 applies on top (100 % = these sizes).
+  //   gaps          { afterHeader, footer, pieBottom } — fixed gaps in pt
+  //                 between the header block and the legend/plot, between the
+  //                 plot bottom and the source, and the space pie and donut
+  //                 charts keep below the ring (default 20). Not scaled by
+  //                 vertical padding.
+  //
+  // applyThemeLayout() (in the Responsive System section) consumes them.
+  function makeStyle(name, colors, extra) {
     var s = { name: name, colors: colors };
     for (var k in STYLE_BASE) { if (STYLE_BASE.hasOwnProperty(k)) s[k] = STYLE_BASE[k]; }
+    for (var e in extra) { if (extra.hasOwnProperty(e)) s[e] = extra[e]; }
     return s;
   }
 
@@ -353,10 +372,30 @@ var ChartRegistry = (function () {
       "#009EDB", "#F2645A", "#1EBFB3", "#FFB92A", "#7B68EE",
       "#E86E5A", "#78B7D0", "#AAC85C", "#C77CFF", "#FF8C69"
     ]),
+    // HNRP text and gaps are fixed to the HNRP 2027 InDesign template, so a
+    // chart's own title, subtitle and source drop onto the report page at
+    // the right size: title 10 / subtitle 8 / comments and source 7 pt.
+    // Title colour = the template's "Infographic title" swatch, CMYK
+    // 0/0/0/85. #4D4D4F is what that swatch displays as in Illustrator
+    // (measured with app.convertSampleColor, 2 November 2026), so the title
+    // looks the same as the template's. A naive K85 (#262626) shows far
+    // darker. SVG colour is RGB, so in a CMYK document it is a four-colour
+    // mix (about 66/59/55/36), not pure black ink.
     hnrp: makeStyle("HNRP", [
       "#F58220", "#009EDB", "#C15025", "#0074B7",
       "#90371C", "#64BDEA", "#F9A870", "#E6E6E6"
-    ]),
+    ], {
+      titleColor: "#4D4D4F",
+      // The stack names the bold face, not family + bold: on SVG import
+      // Illustrator turns 'Roboto Condensed' + font-weight bold into plain
+      // Roboto Bold (tested in Illustrator 2026). Browsers need this name
+      // declared: see @font-face in client/styles.css and web fonts.css.
+      // Advance: Roboto Condensed Bold measures ~0.41; 0.48 keeps the same
+      // safety margin LABEL_ADVANCE has over Condensed Regular.
+      titleFace: { family: "'Roboto Condensed Bold', 'Roboto Condensed', Arial, Helvetica, sans-serif", advance: 0.48 },
+      textSizes: { title: 10, subtitle: 8, comment: 7, footer: 7 },
+      gaps: { afterHeader: 6, footer: 6, pieBottom: 0 }
+    }),
     flash: makeStyle("Flash Appeal", [
       "#ED1847", "#A71F36", "#780B20", "#F3859B",
       "#F9C0C5", "#520000", "#F7DFDF", "#E6E6E6"
@@ -507,8 +546,8 @@ var ChartRegistry = (function () {
   // │                                                                    │
   // │ Without those four updates, Copilot/ChatGPT will refuse to         │
   // │ generate the new chart type — see commit history for the donut    │
-  // │ rollout for the canonical example. Tests live at                   │
-  // │ `/tmp/test_ai_import_phase_b.js` (regenerable from this repo).    │
+  // │ rollout for the canonical example. `tests/ai-import/check.js`      │
+  // │ fails until all four are done (and needs a fixture for the type).  │
   // └────────────────────────────────────────────────────────────────────┘
   //
   // ┌─ MAINTAINER NOTE — adding a new chart SETTING / config field ──────┐
@@ -966,12 +1005,16 @@ var ChartRegistry = (function () {
     // another header section follows — otherwise it's wasted space
     // before the plot starts.
     if (opts.title) {
-      var titleLines = registry.wrapText(opts.title, rs.titleSize, maxW, registry.HEADING_BOLD_ADVANCE);
+      // A theme with fixed textSizes sets rs.chartTitleSize, leaving
+      // rs.titleSize as the shared base (key figures scale from it).
+      var titleSize = (rs.chartTitleSize != null) ? rs.chartTitleSize : rs.titleSize;
+      var face = st.titleFace || { family: st.fontHeading, advance: registry.HEADING_BOLD_ADVANCE, weight: "bold" };
+      var titleLines = registry.wrapText(opts.title, titleSize, maxW, face.advance);
       for (var ti = 0; ti < titleLines.length; ti++) {
-        y += Math.round(rs.titleSize * 1.2);
+        y += Math.round(titleSize * 1.2);
         inner.push('  <text x="' + x + '" y="' + y +
-          '" font-family="' + st.fontHeading + '" font-size="' + rs.titleSize +
-          '" font-weight="bold" fill="' + st.titleColor + '">' +
+          '" font-family="' + face.family + '" font-size="' + titleSize +
+          (face.weight ? '" font-weight="' + face.weight : '') + '" fill="' + st.titleColor + '">' +
           registry.escapeXml(titleLines[ti]) + '</text>');
       }
       if (opts.subtitle || opts.comments) y += lineGap;
@@ -980,7 +1023,9 @@ var ChartRegistry = (function () {
     // Subtitle (regular-weight Roboto). Trailing lineGap only when
     // a comments section follows.
     if (opts.subtitle) {
-      var subSize = Math.max(8, rs.titleSize - 2);
+      // A theme with fixed textSizes sets rs.subtitleSize; otherwise the
+      // subtitle follows the title.
+      var subSize = (rs.subtitleSize != null) ? rs.subtitleSize : Math.max(8, rs.titleSize - 2);
       // Subtitle supports **bold** / *italic* via emitTextLines (plain text
       // falls through to the original single-<text> path unchanged).
       var subOut = registry.emitTextLines({
@@ -1560,6 +1605,16 @@ var ChartRegistry = (function () {
 
   // ── Responsive System ────────────────────────────────
 
+  // Shallow copy of a responsive-settings object, so each adjustment
+  // stage (vertical padding, theme layout, scales) returns a new one.
+  function copyRs(rs) {
+    var out = {};
+    for (var key in rs) {
+      if (rs.hasOwnProperty(key)) out[key] = rs[key];
+    }
+    return out;
+  }
+
   var BREAKPOINT_PRESETS = {
     xs: {
       titleSize: 10, labelSize: 8, valueSize: 7, legendSize: 8, commentSize: 7, footerSize: 7,
@@ -1647,6 +1702,7 @@ var ChartRegistry = (function () {
     rs.strokeWidth = 2;
     rs.gridStrokeWidth = 1;
     rs.dotRadius = 4;
+    rs.pieBottomSpace = 20;  // below a pie/donut ring, before the source or canvas edge
 
     rs.breakpoint = bp;
     rs.width = width;
@@ -1665,10 +1721,7 @@ var ChartRegistry = (function () {
     // lower would start clipping axis labels, values, and data points.
     var vPad = 1 + (verticalPadding / 200);
     if (vPad < 0.5) vPad = 0.5;
-    var padded = {};
-    for (var key in rs) {
-      if (rs.hasOwnProperty(key)) padded[key] = rs[key];
-    }
+    var padded = copyRs(rs);
     // Spacings scale; font sizes stay unchanged so text remains
     // consistently readable at any height. Use textScale / labelScale
     // if independent font adjustment is needed.
@@ -1692,13 +1745,12 @@ var ChartRegistry = (function () {
     var ts = textScale || 100;
     var ls = labelScale || 100;
     if (ts === 100 && ls === 100) return rs;
-    var scaled = {};
-    for (var key in rs) {
-      if (rs.hasOwnProperty(key)) scaled[key] = rs[key];
-    }
+    var scaled = copyRs(rs);
     if (ts !== 100) {
       var tF = ts / 100;
       scaled.titleSize   = Math.max(6, Math.round(rs.titleSize * tF));
+      if (rs.chartTitleSize != null) scaled.chartTitleSize = Math.max(6, Math.round(rs.chartTitleSize * tF));
+      if (rs.subtitleSize != null) scaled.subtitleSize = Math.max(5, Math.round(rs.subtitleSize * tF));
       scaled.commentSize = Math.max(5, Math.round(rs.commentSize * tF));
       scaled.footerSize  = Math.max(5, Math.round(rs.footerSize * tF));
     }
@@ -1711,6 +1763,31 @@ var ChartRegistry = (function () {
     return scaled;
   };
 
+  /**
+   * Apply a style's theme-level text sizes and gaps (see makeStyle).
+   * Runs after applyVerticalPadding, so fixed gaps are not scaled by the
+   * vertical-padding slider, and before applyScales, so textScale still
+   * works on top of the theme's sizes. Styles without these fields get
+   * rs back unchanged.
+   */
+  // Theme field → rs field. The title goes to chartTitleSize (not
+  // titleSize) so key figures keep scaling from the shared base size.
+  var THEME_TEXT_SIZES = { title: "chartTitleSize", subtitle: "subtitleSize",
+                           comment: "commentSize", footer: "footerSize" };
+  var THEME_GAPS = { afterHeader: "afterHeaderGap", footer: "footerGap", pieBottom: "pieBottomSpace" };
+
+  registry.applyThemeLayout = function (rs, st) {
+    if (!st.textSizes && !st.gaps) return rs;
+    var out = copyRs(rs);
+    [[st.textSizes, THEME_TEXT_SIZES], [st.gaps, THEME_GAPS]].forEach(function (pair) {
+      var src = pair[0], map = pair[1];
+      for (var k in src) {
+        if (src.hasOwnProperty(k) && map[k]) out[map[k]] = src[k];
+      }
+    });
+    return out;
+  };
+
   // ── Chart Init Helper ──────────────────────────────────
   // Eliminates the 7-line boilerplate repeated in every chart renderer.
 
@@ -1718,9 +1795,10 @@ var ChartRegistry = (function () {
     var svgW = config.width || 500;
     var rs = registry.responsive(svgW);
     var vPad = 1 + ((config.verticalPadding || 0) / 200);
-    rs = registry.applyVerticalPadding(rs, config.verticalPadding);
-    rs = registry.applyScales(rs, config.textScale, config.labelScale);
     var st = config.style || registry.getStyle("ocha");
+    rs = registry.applyVerticalPadding(rs, config.verticalPadding);
+    rs = registry.applyThemeLayout(rs, st);
+    rs = registry.applyScales(rs, config.textScale, config.labelScale);
     var fonts = config.fonts || registry.FONTS;
     return { svgW: svgW, rs: rs, vPad: vPad, st: st, fonts: fonts };
   };

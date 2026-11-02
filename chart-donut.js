@@ -342,7 +342,7 @@
       }
     }
 
-    var maxLabelY = cy + outerR + 20;
+    var maxLabelY = cy + outerR + rs.pieBottomSpace;
     for (var li = 0; li < outsideItems.length; li++) {
       var nL = outsideItems[li].lines ? outsideItems[li].lines.length : 1;
       var bot = outsideItems[li].y + (nL - 1) * lineGap + labelSize;
