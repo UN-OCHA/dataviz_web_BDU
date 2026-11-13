@@ -32,6 +32,11 @@ var SvgInlineUtils = (function () {
       var f = FlagsData[i];
       if (f.code) flagByCode[f.code.toUpperCase()] = f;
       if (f.name) flagByName[f.name.toLowerCase()] = f;
+      // Names the flag had in older versions (tools/sync-flags.js keeps
+      // them): saved charts, links and the Recent row still carry them.
+      for (var k = 0; f.formerly && k < f.formerly.length; k++) {
+        if (!flagByName[f.formerly[k].toLowerCase()]) flagByName[f.formerly[k].toLowerCase()] = f;
+      }
     }
   }
 
@@ -39,7 +44,8 @@ var SvgInlineUtils = (function () {
 
   /**
    * Read an SVG file, strip outer wrapper, scope IDs, extract viewBox.
-   * Returns { innerSvg, vbW, vbH } or null.
+   * Returns { innerSvg, vbW, vbH, fileW?, fileH? } or null. innerSvg always
+   * draws inside "0 0 vbW vbH" (see the viewBox-origin note below).
    */
   function readAndProcess(filePath) {
     if (!fs) return null;
@@ -56,7 +62,7 @@ var SvgInlineUtils = (function () {
       // Extract viewBox
       var vbMatch = content.match(/viewBox="([^"]+)"/);
       if (!vbMatch) return null;
-      var parts = vbMatch[1].trim().split(/\s+/);
+      var parts = vbMatch[1].trim().split(/[\s,]+/);
       var vbW = parseFloat(parts[2]);
       var vbH = parseFloat(parts[3]);
       if (!vbW || !vbH || vbW <= 0 || vbH <= 0) return null;
@@ -153,7 +159,24 @@ var SvgInlineUtils = (function () {
 
       var innerSvg = content.substring(svgOpenEnd, svgCloseIdx).trim();
 
+      // A flag cropped to its edge has a viewBox that doesn't start at 0,0
+      // (Catalonia: "39.8925 26.8988 730.215 486.304"). Everything that
+      // draws innerSvg uses "0 0 vbW vbH", so move the artwork back to the
+      // origin here. Without this the flag is drawn shifted and cut off.
+      // A plain translate, not a shifted viewBox on the nested <svg>:
+      // Illustrator's SVG import is only trusted with the former.
+      var vbX = parseFloat(parts[0]) || 0, vbY = parseFloat(parts[1]) || 0;
+      if (vbX || vbY) {
+        innerSvg = '<g transform="translate(' + (-vbX) + ' ' + (-vbY) + ')">' + innerSvg + '</g>';
+      }
+
       var result = { innerSvg: innerSvg, vbW: vbW, vbH: vbH };
+      // The size written in the file. For flags it is the master set's
+      // balanced size (a 3:2 flag is 60 x 40): charts keep those
+      // proportions between flags, see registry.getIconDims.
+      var fileW = parseFloat((svgOpenMatch[0].match(/\swidth="([\d.]+)"/) || [])[1]);
+      var fileH = parseFloat((svgOpenMatch[0].match(/\sheight="([\d.]+)"/) || [])[1]);
+      if (fileW > 0 && fileH > 0) { result.fileW = fileW; result.fileH = fileH; }
       cache[filePath] = result;
       return result;
     } catch (e) {
@@ -186,20 +209,39 @@ var SvgInlineUtils = (function () {
   };
 
   /**
-   * Resolve a flag SVG by ISO3 code, country name, or common short form.
+   * The one flag lookup: ISO3 code, country name, common short form, or a
+   * name the flag had in an older version ("formerly" in flags-data.js). Returns the FlagsData entry
+   * ({ name, code, file }) or null.
+   */
+  function findFlag(ref) {
+    if (!ref) return null;
+    ensureFlagIndex();
+    // NFC: a name pasted from a Mac file list can carry its accents in
+    // another Unicode form (Côte d'Ivoire, Curaçao, Türkiye).
+    var key = String(ref).trim().normalize("NFC");
+    var alias = FLAG_NAME_ALIASES[key.toLowerCase()];
+    return (alias && flagByCode[alias]) ||
+      flagByCode[key.toUpperCase()] || flagByName[key.toLowerCase()] || null;
+  }
+
+  /**
+   * Resolve a flag SVG by anything findFlag accepts.
    * Returns { innerSvg, vbW, vbH } or null.
    */
   function resolveFlag(ref, flagsDir) {
-    if (!ref || !flagsDir) return null;
-    ensureFlagIndex();
+    var flag = flagsDir ? findFlag(ref) : null;
+    return flag ? readAndProcess(flagsDir + "/" + flag.file) : null;
+  }
 
-    var key = ref.trim();
-    var alias = FLAG_NAME_ALIASES[key.toLowerCase()];
-    var flag = (alias && flagByCode[alias]) ||
-      flagByCode[key.toUpperCase()] || flagByName[key.toLowerCase()];
-    if (!flag) return null;
-
-    return readAndProcess(flagsDir + "/" + flag.file);
+  /**
+   * The flag entry for a file name saved by an older version (the Recent
+   * row keeps file names). A renamed flag keeps its ISO3 code, so
+   * "Monserrat (MSR).svg" finds today's "Montserrat (MSR).svg".
+   * Returns the FlagsData entry or null.
+   */
+  function flagForFile(file) {
+    var m = String(file || "").match(/^(.*?)\s*(?:\(([A-Z]{3})\))?\.svg$/);
+    return m ? findFlag(m[2] || m[1]) : null;
   }
 
   /**
@@ -328,7 +370,9 @@ var SvgInlineUtils = (function () {
   }
 
   return {
+    findFlag: findFlag,
     resolveFlag: resolveFlag,
+    flagForFile: flagForFile,
     resolveIcon: resolveIcon,
     resolveDataIcons: resolveDataIcons,
     buildIconGroup: buildIconGroup,

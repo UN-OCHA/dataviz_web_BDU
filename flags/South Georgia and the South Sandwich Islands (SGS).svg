@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="69.282" height="34.641" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 750 375">
-  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="750" height="375"/></clipPath></defs>
-  <g clip-path="url(#flag-bounds-clip)">
-  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+<svg width="72.000" height="36.000" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 750 375">
   <defs>
     <linearGradient id="linear-gradient" x1="89.003" y1="-300.22" x2="90.603" y2="-255.2" gradientTransform="translate(478.842 -12.017) scale(.938 -.405)" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#474747"/>
@@ -417,6 +414,5 @@
       <path d="M518.556,240.164c-.047,0-.095-.009-.141-.027-.2-.077-.299-.303-.221-.502,5.862-15.036,6.712-22.842,6.72-22.919.022-.213.219-.375.425-.347.214.021.369.212.347.425-.008.078-.861,7.972-6.769,23.122-.06.153-.206.248-.361.248Z" fill="#2b2b2b"/>
       <path d="M517.564,231.48l-.398-.475c4.831-4.058,6.636-9.527,6.653-9.583l.592.19c-.019.057-1.873,5.691-6.847,9.867Z" fill="#2b2b2b"/>
     </g>
-  </g>
   </g>
 </svg>

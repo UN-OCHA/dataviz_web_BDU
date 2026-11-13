@@ -1,4 +1,6 @@
-/* Flag library — auto-generated from SVG filenames */
+/* Flag library: written by tools/sync-flags.js from the master flag set
+   (Resources/Flags/export/2027_svgs). Do not edit by hand.
+   formerly = names the flag had before; saved charts still use them. */
 /* global FlagsData */
 // eslint-disable-next-line no-unused-vars
 var FlagsData = [
@@ -58,10 +60,10 @@ var FlagsData = [
   { name: "Congo", code: "COG", file: "Congo (COG).svg" },
   { name: "Cook Islands", code: "COK", file: "Cook Islands (COK).svg" },
   { name: "Costa Rica", code: "CRI", file: "Costa Rica (CRI).svg" },
-  { name: "Côte d'Ivoire", code: "CIV", file: "Côte d'Ivoire (CIV).svg" },
+  { name: "Côte d'Ivoire", code: "CIV", file: "Côte d'Ivoire (CIV).svg" },
   { name: "Croatia", code: "HRV", file: "Croatia (HRV).svg" },
   { name: "Cuba", code: "CUB", file: "Cuba (CUB).svg" },
-  { name: "Curaçao", code: "CUW", file: "Curaçao (CUW).svg" },
+  { name: "Curaçao", code: "CUW", file: "Curaçao (CUW).svg" },
   { name: "Cyprus", code: "CYP", file: "Cyprus (CYP).svg" },
   { name: "Czechia", code: "CZE", file: "Czechia (CZE).svg" },
   { name: "Democratic People's Republic of Korea", code: "PRK", file: "Democratic People's Republic of Korea (PRK).svg" },
@@ -150,8 +152,8 @@ var FlagsData = [
   { name: "Moldova", code: "MDA", file: "Moldova (MDA).svg" },
   { name: "Monaco", code: "MCO", file: "Monaco (MCO).svg" },
   { name: "Mongolia", code: "MNG", file: "Mongolia (MNG).svg" },
-  { name: "Monserrat", code: "MSR", file: "Monserrat (MSR).svg" },
   { name: "Montenegro", code: "MNE", file: "Montenegro (MNE).svg" },
+  { name: "Montserrat", code: "MSR", file: "Montserrat (MSR).svg", formerly: ["Monserrat"] },
   { name: "Morocco", code: "MAR", file: "Morocco (MAR).svg" },
   { name: "Mozambique", code: "MOZ", file: "Mozambique (MOZ).svg" },
   { name: "Myanmar", code: "MMR", file: "Myanmar (MMR).svg" },
@@ -227,10 +229,10 @@ var FlagsData = [
   { name: "Tonga", code: "TON", file: "Tonga (TON).svg" },
   { name: "Trinidad and Tobago", code: "TTO", file: "Trinidad and Tobago (TTO).svg" },
   { name: "Tunisia", code: "TUN", file: "Tunisia (TUN).svg" },
+  { name: "Türkiye", code: "TUR", file: "Türkiye (TUR).svg" },
   { name: "Turkmenistan", code: "TKM", file: "Turkmenistan (TKM).svg" },
-  { name: "Turks and Caico Islands", code: "TCA", file: "Turks and Caico Islands (TCA).svg" },
+  { name: "Turks and Caicos Islands", code: "TCA", file: "Turks and Caicos Islands (TCA).svg", formerly: ["Turks and Caico Islands"] },
   { name: "Tuvalu", code: "TUV", file: "Tuvalu (TUV).svg" },
-  { name: "Türkiye", code: "TUR", file: "Türkiye (TUR).svg" },
   { name: "Uganda", code: "UGA", file: "Uganda (UGA).svg" },
   { name: "Ukraine", code: "UKR", file: "Ukraine (UKR).svg" },
   { name: "United Arab Emirates", code: "ARE", file: "United Arab Emirates (ARE).svg" },
@@ -241,6 +243,7 @@ var FlagsData = [
   { name: "Uruguay", code: "URY", file: "Uruguay (URY).svg" },
   { name: "Uzbekistan", code: "UZB", file: "Uzbekistan (UZB).svg" },
   { name: "Vanuatu", code: "VUT", file: "Vanuatu (VUT).svg" },
+  { name: "Venezuela", code: "VEN", file: "Venezuela (VEN).svg" },
   { name: "Viet Nam", code: "VNM", file: "Viet Nam (VNM).svg" },
   { name: "Virgin Islands", code: "VIR", file: "Virgin Islands (VIR).svg" },
   { name: "Yemen", code: "YEM", file: "Yemen (YEM).svg" },

@@ -20,7 +20,7 @@
  *   buildKfIconRows — KeyFiguresUI.buildIconRows
  */
 
-/* global IconsPanel, FlagsData, PanelUtils, Connector */
+/* global IconsPanel, FlagsData, PanelUtils, Connector, SvgInlineUtils */
 
 var IconFlagUI = (function () {
   "use strict";
@@ -134,20 +134,9 @@ var IconFlagUI = (function () {
 
       if (resolved) {
         if (type === "flags") {
-          // Find matching flag code from FlagsData
-          var key = cellVal.trim();
-          var flagEntry = null;
-          if (typeof FlagsData !== "undefined") {
-            for (var fi = 0; fi < FlagsData.length; fi++) {
-              if (FlagsData[fi].code && FlagsData[fi].code.toUpperCase() === key.toUpperCase()) {
-                flagEntry = FlagsData[fi]; break;
-              }
-              if (FlagsData[fi].name && FlagsData[fi].name.toLowerCase() === key.toLowerCase()) {
-                flagEntry = FlagsData[fi]; break;
-              }
-            }
-          }
-          _store.setIconSelection(r, flagEntry ? flagEntry.code : key);
+          // Keep the flag's code when it has one (same lookup as the drawing).
+          var flagEntry = SvgInlineUtils.findFlag(cellVal);
+          _store.setIconSelection(r, (flagEntry && flagEntry.code) || cellVal.trim());
         } else {
           _store.setIconSelection(r, cellVal);
         }

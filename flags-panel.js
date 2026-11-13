@@ -4,7 +4,7 @@
  * Simple panel: search + grid, click to place in Illustrator.
  */
 
-/* global Connector, FlagsData, PanelUtils */
+/* global Connector, FlagsData, PanelUtils, SvgInlineUtils */
 
 var FlagsPanel = (function () {
   "use strict";
@@ -53,26 +53,29 @@ var FlagsPanel = (function () {
   // ── Recent flags (localStorage) ─────────────────────────
   var RECENT_KEY = "ocha_dataviz_recent_flags";
   var RECENT_MAX = 8;
+  // Recents are saved as file names. A flag whose file was renamed since
+  // (Monserrat -> Montserrat) comes back as today's flag; one that no
+  // longer exists is dropped. Returns FlagsData entries.
   function getRecent() {
-    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (e) { return []; }
+    try {
+      var out = [];
+      (JSON.parse(localStorage.getItem(RECENT_KEY)) || []).forEach(function (file) {
+        var flag = SvgInlineUtils.flagForFile(file);
+        if (flag && out.indexOf(flag) === -1) out.push(flag);
+      });
+      return out;
+    } catch (e) { return []; }
   }
   function pushRecent(file) {
     try {
-      var arr = getRecent().filter(function (k) { return k !== file; });
+      var arr = getRecent().map(function (f) { return f.file; }).filter(function (k) { return k !== file; });
       arr.unshift(file);
       if (arr.length > RECENT_MAX) arr = arr.slice(0, RECENT_MAX);
       localStorage.setItem(RECENT_KEY, JSON.stringify(arr));
     } catch (e) {}
   }
   function recentHtml() {
-    var recents = getRecent();
-    if (!recents.length) return "";
-    var items = [];
-    for (var r = 0; r < recents.length; r++) {
-      for (var ri = 0; ri < FlagsData.length; ri++) {
-        if (FlagsData[ri].file === recents[r]) { items.push(FlagsData[ri]); break; }
-      }
-    }
+    var items = getRecent();
     if (!items.length) return "";
     var h = '<div class="flags-recent"><div class="flags-recent-label">Recent</div><div class="flags-grid">';
     for (var i = 0; i < items.length; i++) {

@@ -2046,16 +2046,23 @@ var ChartRegistry = (function () {
    *   Simple height-based scaling: all icons get the same height.
    *
    * When normalize=true (for flags):
-   *   Area-normalized scaling: all flags get roughly the same visual area,
-   *   regardless of aspect ratio. A square flag (Switzerland 1:1) becomes
-   *   slightly taller/wider while a wide flag (Sudan ~2:1) becomes slightly
-   *   shorter. The reference area is that of a standard 3:2 flag at targetH.
+   *   Flags keep the balanced sizes of OCHA's master flag set, which are
+   *   written in each flag file (resolved.fileW/fileH): every flag starts
+   *   with the same area, then the height is kept within limits and the
+   *   width capped, so a square flag (Switzerland) doesn't tower over the
+   *   others and a very wide one (Qatar) doesn't stretch. A 3:2 flag is
+   *   exactly targetH high. The rule lives in the master set, not here.
+   *   Anything without a file size (and any non-flag) gets plain equal
+   *   area against the reference shape.
    *
    * Humanitarian icons (resolved.iconName, set by SvgInlineUtils.resolveIcon;
    * never flags) are then optically balanced, see balanceIconScale below.
    *
    * Returns { w, h, scale }.
    */
+  // Height of a 3:2 flag in the master set's files (60 x 40). Changing the
+  // master's size rule doesn't need a change here unless this reference moves.
+  var FLAG_FILE_REF_H = 40;
   registry.getIconDims = function (resolved, targetH, normalize) {
     if (!resolved || !resolved.vbH || !resolved.vbW) return { w: 0, h: 0, scale: 0 };
 
@@ -2065,9 +2072,15 @@ var ChartRegistry = (function () {
       //   true  → 1.5 (3:2 flag reference, backward compat)
       //   number → custom aspect ratio (e.g. 1.0 for square icons)
       var refRatio = (typeof normalize === "number") ? normalize : 1.5;
-      var refArea = targetH * (targetH * refRatio);
-      var srcArea = resolved.vbW * resolved.vbH;
-      scale = Math.sqrt(refArea / srcArea);
+      if (resolved.fileW && resolved.fileH && !resolved.iconName) {
+        // File size -> chart size: FLAG_FILE_REF_H in the file is targetH
+        // here (for the 3:2 reference; other references scale by area).
+        scale = (resolved.fileH / resolved.vbH) * (targetH / FLAG_FILE_REF_H) * Math.sqrt(refRatio / 1.5);
+      } else {
+        var refArea = targetH * (targetH * refRatio);
+        var srcArea = resolved.vbW * resolved.vbH;
+        scale = Math.sqrt(refArea / srcArea);
+      }
     } else {
       scale = targetH / resolved.vbH;
     }

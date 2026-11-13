@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="66.058" height="36.332" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 600 330">
-  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="600" height="330"/></clipPath></defs>
-  <g clip-path="url(#flag-bounds-clip)">
-  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
   <path d="M0,0h600v330H0V0Z" fill="#0038a8"/>
   <path d="M0,0h600v220H0V0Z" fill="#fff"/>
   <path d="M0,0h600v110H0V0Z" fill="#d52b1e"/>
@@ -589,6 +586,5 @@
   <g>
     <path d="M305.21,171.52l-5.211-3.602-5.212,3.602,1.955-5.762-4.56-3.602h5.862l1.955-5.762,1.954,5.762h5.862l-4.56,3.602,1.955,5.762h0Z" fill="#fedf00"/>
     <path d="M305.497,171.899l-5.498-3.8-5.499,3.8,2.066-6.09-4.815-3.803h6.186l2.062-6.078,2.062,6.078h6.186l-4.815,3.803,2.066,6.09ZM292.613,162.306l4.305,3.4-1.844,5.434,4.925-3.403,4.924,3.403-1.844-5.434,4.306-3.4h-5.539l-1.847-5.446-1.848,5.446h-5.538Z"/>
-  </g>
   </g>
 </svg>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="60" height="40" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 750 500">
-  <defs><clipPath id="flag-bounds-clip"><rect x="0" y="0" width="750" height="500"/></clipPath></defs>
-  <g clip-path="url(#flag-bounds-clip)">
-  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+<svg width="60.000" height="40.000" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 750 500">
   <defs>
     <radialGradient id="radial-gradient" cx="-122.083" cy="746.229" fx="-122.083" fy="746.229" r=".5" gradientTransform="translate(10988.823 43702.65) scale(87.529 -58.304)" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffef5d"/>
@@ -316,6 +313,5 @@
       </g>
     </g>
     <path d="M374.44,341.189l-.172-.062c-44.195-15.944-48.966-55.815-48.966-72.217v-55.758h98.177v55.758c0,16.401-4.762,56.271-48.866,72.217l-.173.062ZM326.318,214.168v54.742c0,16.165,4.696,55.43,48.122,71.197,43.335-15.769,48.021-55.032,48.021-71.197v-54.742h-96.143Z"/>
-  </g>
   </g>
 </svg>
