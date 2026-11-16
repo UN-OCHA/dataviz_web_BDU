@@ -213,8 +213,6 @@ var FlagsPanel = (function () {
         // Strip XML declarations and doctype
         content = content.replace(/<\?xml[^?]*\?>/gi, "");
         content = content.replace(/<!DOCTYPE[^>]*>/gi, "");
-        // Force overflow hidden so elements beyond viewBox are clipped
-        content = content.replace(/<svg\b/, '<svg overflow="hidden"');
         // Scope all IDs to avoid conflicts when multiple flags are inlined
         var scope = "f" + (idCounter++);
         content = content.replace(/\bid="([^"]+)"/g, 'id="' + scope + '_$1"');

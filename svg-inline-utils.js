@@ -115,29 +115,10 @@ var SvgInlineUtils = (function () {
 
       // Strip <style> blocks (they reference class names that may collide)
       content = content.replace(/<style[\s\S]*?<\/style>/gi, "");
-      // Strip only the outer viewBox-bounds clipPath (simple rect matching
-      // the viewBox dimensions) which causes Illustrator "Clipping will be
-      // lost on roundtrip" warnings. Keep internal design clipPaths (circles,
-      // paths) that are part of the flag artwork (e.g. Brasil globe).
-      if (vbW && vbH) {
-        var boundsClipIds = [];
-        content.replace(/<clipPath[^>]*id="([^"]*)"[^>]*>([\s\S]*?)<\/clipPath>/gi, function (match, clipId, inner) {
-          var rectMatch = inner.match(/<rect[^>]*\/?\s*>/i);
-          if (!rectMatch) return;
-          var rStr = rectMatch[0];
-          var rW = (rStr.match(/width="([^"]+)"/) || [])[1];
-          var rH = (rStr.match(/height="([^"]+)"/) || [])[1];
-          if (parseFloat(rW) === vbW && parseFloat(rH) === vbH) {
-            boundsClipIds.push(clipId);
-          }
-        });
-        for (var bci = 0; bci < boundsClipIds.length; bci++) {
-          var cid = boundsClipIds[bci];
-          content = content.replace(new RegExp('<clipPath[^>]*id="' + cid + '"[^>]*>[\\s\\S]*?</clipPath>', 'gi'), '');
-          content = content.replace(new RegExp('\\s*clip-path="url\\(#' + cid + '\\)"', 'g'), '');
-        }
-      }
-      // Strip empty <defs> blocks left after style/clipPath removal
+      // No clipping masks are stripped or added here: the flags (master flag
+      // set) and the icons carry none and paint nothing outside their
+      // viewBox. tests/shell/check-shared.js fails if a flag gains a mask.
+      // Strip empty <defs> blocks left after style removal
       content = content.replace(/<defs>\s*<\/defs>/gi, "");
       // Remove class attributes (fills already inlined; prevents CSS collisions
       // with raw SVGs loaded elsewhere on the page, e.g. icons panel)
@@ -311,7 +292,7 @@ var SvgInlineUtils = (function () {
     return '<svg x="' + x.toFixed(1) + '" y="' + y.toFixed(1) +
       '" width="' + w.toFixed(2) + '" height="' + targetH.toFixed(2) +
       '" viewBox="0 0 ' + resolved.vbW + ' ' + resolved.vbH +
-      '" overflow="hidden">' + resolved.innerSvg + '</svg>';
+      '">' + resolved.innerSvg + '</svg>';
   }
 
   /**
@@ -358,7 +339,7 @@ var SvgInlineUtils = (function () {
     }
     if (!resolved || !resolved.innerSvg) return "";
     return '<svg viewBox="0 0 ' + resolved.vbW + ' ' + resolved.vbH +
-      '" overflow="hidden" xmlns="http://www.w3.org/2000/svg">' + resolved.innerSvg + '</svg>';
+      '" xmlns="http://www.w3.org/2000/svg">' + resolved.innerSvg + '</svg>';
   }
 
   /**
