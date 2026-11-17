@@ -565,7 +565,11 @@ var ChartRegistry = (function () {
   // │      `ai-import.js`'s `expand()`. One line. Optional: also mention │
   // │      the field in `ai-prompt-template.js` if you want the AI to    │
   // │      actively choose values (otherwise defaults apply when the AI  │
-  // │      omits it — totally fine).                                     │
+  // │      omits it — totally fine). Also add it to                      │
+  // │      `DataStore.FILE_FIELDS`, or saved files and links drop it.    │
+  // │                                                                    │
+  // │   A new chart type also needs its `DataStore.FILE_FIELDS.byType`   │
+  // │   entry. tests/ai-import/check.js fails on any of these gaps.      │
   // │                                                                    │
   // │ See data-store.js's loadFromConfig comment for the full rule and   │
   // │ CLAUDE.md "Plugin-internal sync rules" for the canonical doc.      │

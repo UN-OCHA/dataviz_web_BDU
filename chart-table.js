@@ -19,10 +19,10 @@
  *                           Bars are proportional within each column (or
  *                           within a column group, see tableColGroups) and
  *                           every bar column has the same bar length, so
- *                           columns compare fairly. Non-numeric cells
- *                           ("–", "—", empty, text) show no bar;
- *                           placeholder text made of X's ("X.X", "$X.XM")
- *                           shows a placeholder bar (varied lengths).
+ *                           columns compare fairly. Only cells that
+ *                           read as a number draw a bar: "–", "—",
+ *                           empty, words and placeholder text made of
+ *                           X's ("X.X", "$X.XM") show no bar.
  *   • tableBarLabel       — "above" (value over its bar, default) |
  *                           "beside" (value, then bar).
  *   • tableBarColors      — { colIndex: hex } colour per column.
@@ -71,15 +71,11 @@
   // Share of the flag size a humanitarian icon gets in a table row (see iconH)
   var TABLE_ICON_ROOM = 0.85;
   var DIVIDER_COLOR = "#999999";
-  // Placeholder cells ("X.X", "$X.XM") still draw a bar, so a template
-  // shows the design before real figures arrive. Lengths vary from cell to
-  // cell, between 30 and 95 % of the bar zone, in a fixed pattern (same
-  // chart, same bars), so the template looks like a real chart (Javier,
-  // 22 Oct 2026; every placeholder bar used to be half length).
-  function placeholderRatio(row, col) {
-    var f = ((row + 1) * 0.6180339887 + (col + 1) * 0.4142135624) % 1;
-    return 0.3 + 0.65 * f;
-  }
+  // A bar is drawn only for a cell that reads as a number. Placeholder
+  // cells ("X.X", "$X.XM") used to get a bar of made-up length so a
+  // template looked like a real chart, but beside real figures such a bar
+  // passed for data (Javier, 17 Nov 2026). A template that should show
+  // bars carries sample numbers instead. Don't bring the made-up bar back.
 
   // ── Cell readers ───────────────────────────────────────
 
@@ -845,8 +841,7 @@
           var n = readNumber(val);
           var ratio = 0;
           if (!isNaN(n) && info.max > 0) ratio = Math.max(0, Math.min(1, n / info.max));
-          else if (isPlaceholder(val)) ratio = placeholderRatio(srcR, cc);
-          var hasValue = !isNaN(n) || isPlaceholder(val);
+          var hasValue = !isNaN(n);
           var barX, barY, vX, vY, vAnchor;
           if (opt.barAbove) {
             // Value on top, bar under it, the pair centred in the row
@@ -865,6 +860,11 @@
             barY = ry + (thisRowH - barH) / 2;
             vX = valueRight; vY = firstBaselineY; vAnchor = "end";
           }
+          // No bar ("–", empty, placeholder): nothing sits under the text,
+          // so centre it in the row like the label and plain columns
+          // (Javier, 17 Nov 2026). It used to keep the value-above-bar
+          // height and sit ~4.6 pt above the rest of the row.
+          if (!hasValue) vY = firstBaselineY;
           if (opt.track[cc] && hasValue && zoneW > 0) {
             svg.push('    <rect x="' + barX.toFixed(1) + '" y="' + barY.toFixed(1) + '" width="' + zoneW.toFixed(1) +
               '" height="' + barH + '" fill="' + TRACK_COLOR + '"/>');

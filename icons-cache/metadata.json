@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2.0",
-    "last_updated": "2026-05-19",
+    "last_updated": "2026-09-15",
     "next_font_codepoint": "U+E186"
   },
   "families": [
@@ -91,7 +91,7 @@
         "announcement",
         "communication"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E005",
       "date_added": "2026-02-13"
@@ -704,7 +704,7 @@
         "health",
         "case management"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E034",
       "date_added": "2026-02-13"
@@ -836,7 +836,7 @@
         "people",
         "children"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E03E",
       "date_added": "2026-02-13"
@@ -946,7 +946,7 @@
         "dialogue",
         "inclusion"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E046",
       "date_added": "2026-02-13"
@@ -1803,7 +1803,7 @@
         "people",
         "gender"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E087",
       "date_added": "2026-02-13"
@@ -1815,7 +1815,7 @@
         "security and incident",
         "gender based violence"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E088",
       "date_added": "2026-02-13"
@@ -1855,7 +1855,7 @@
         "crowd",
         "collective"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E08B",
       "date_added": "2026-02-13"
@@ -1881,7 +1881,7 @@
         "security and incident",
         "harassment intimidation"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E08D",
       "date_added": "2026-02-13"
@@ -2045,7 +2045,7 @@
         "ux ui",
         "help"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E099",
       "date_added": "2026-02-13"
@@ -2803,7 +2803,7 @@
         "device",
         "communication"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E0D2",
       "date_added": "2026-02-13"
@@ -3115,7 +3115,7 @@
         "alliance",
         "cooperation"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E0EA",
       "date_added": "2026-02-13"
@@ -4221,7 +4221,7 @@
         "ux ui",
         "secured"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E13F",
       "date_added": "2026-02-13"
@@ -4325,7 +4325,7 @@
         "gender violence",
         "abuse"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E147",
       "date_added": "2026-02-13"
@@ -4753,7 +4753,7 @@
         "capacity building",
         "skill"
       ],
-      "wordmark": false,
+      "wordmark": true,
       "wordmark_valign": 0,
       "font_codepoint": "U+E167",
       "date_added": "2026-02-13"

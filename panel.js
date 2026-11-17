@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var APP_VERSION = "2026.1.17";
+  var APP_VERSION = "2026.1.18";
 
   // Everything shell-specific (Illustrator vs web) goes through the global
   // Connector — see connector-illustrator.js. `csInterface` is its
@@ -443,6 +443,7 @@
     DataStore.iconColors = null;
     var st = ChartRegistry.getStyle(value);
     DataStore.kfIconColor = (st.colors && st.colors[0]) || "#009EDB";
+    ColorPickersUI.resetSankeyColor(value);
     ColorPickersUI.onStyleChange(value);
     IconsPanel.refreshColors();
     KeyFiguresUI.syncToUI();
@@ -614,9 +615,13 @@
     store:          DataStore,
     showStatus:     showStatus,
     clearStatus:    clearStatus,
+    // The sample links in the red Sankey message: same loader as the Data
+    // tab's links (it called a function renamed away on 28 Oct 2026, so the
+    // links loaded nothing; boot-check.js now clicks every such link).
     onSankeyLoad:   function (type) {
       PanelCoordinator.setActiveTab("data");
-      loadSankeyAndShow(type);
+      // No fallback: an unknown id must fail loudly (boot-check.js catches it)
+      loadSampleVariant(SAMPLE_VARIANTS.sankey.filter(function (v) { return v.id === type; })[0]);
     },
     onKfLoad:       function () {
       DataGrid.pushUndo();
@@ -1860,74 +1865,10 @@
   // Saved files use a .json extension and pretty-printed (2-space)
   // formatting so they're human-readable and diff-friendly.
 
-  // Fields every chart needs regardless of type — data, header text,
-  // canvas size, style, number formatting, the user's vertical
-  // padding slider, etc. These always end up in the exported JSON.
-  var CONFIG_UNIVERSAL = [
-    "v", "chartType",
-    "chartTitle", "chartSubtitle", "chartComments", "chartFooter",
-    "headers", "rows", "labelCol", "valueCol", "valueCols",
-    "chartWidth", "chartHeight",
-    "verticalPadding", "style", "shade",
-    "numberFormat", "valuePrefix", "valueSuffix",
-    "autoSort", "sortCol", "sortDir",
-    "textScale", "labelScale",
-    "headerTextWidth", "footerTextWidth",
-    "colors", "labelColor",
-    "iconColType", "iconSelections", "rowIconColor"
-  ];
-
-  // Per-chart-type fields. The exported JSON includes these only
-  // when chartType matches — donut tweaks don't show up in a
-  // timeline export, etc. Keeps the snapshot focused on what's
-  // actually rendering.
-  var CONFIG_BY_TYPE = {
-    "hbar":          ["barThickness", "barSpacing", "barLabelMode", "axisMax", "hideZeroLabels"],
-    "vbar":          ["barThickness", "barSpacing", "barLabelMode", "axisMax", "hideZeroLabels"],
-    "stacked-bar":   ["barThickness", "barSpacing", "barLabelMode", "stackedStroke", "stackedStrokeWidth", "stackedStrokeColor", "stackedLegend", "axisMax", "hideZeroLabels"],
-    "stacked-col":   ["barThickness", "barSpacing", "barLabelMode", "stackedStroke", "stackedStrokeWidth", "stackedStrokeColor", "stackedLegend", "axisMax", "hideZeroLabels"],
-    "cluster":       ["barThickness", "barSpacing", "barLabelMode", "clusterOrientation", "stackedLegend", "axisMax", "hideZeroLabels"],
-    "cluster-donut": ["donutHole", "donutCenterAuto", "clusterDonutLegend", "clusterDonutCategoryColors", "pieLabelMode", "pieLabelContent", "pieLeaderLines", "pieLabelDistance"],
-    "line":          ["lineShowDots", "lineDotSize", "lineLabelPos", "lineLabelBg"],
-    "donut":         ["donutCenterTitle", "donutCenterLabel", "donutCenterAuto", "donutHole", "pieLabelMode", "pieLabelContent", "pieLeaderLines", "pieLabelDistance", "pieLegend", "sliceColors"],
-    "pie":           ["pieLabelMode", "pieLabelContent", "pieLeaderLines", "pieLabelDistance", "pieLegend", "sliceColors"],
-    "bubble":        ["bubbleOrientation", "bubbleSeparation"],
-    "timeline":      ["timelineOrientation", "timelineEventSpacing", "timelineCategoryColors", "timelineLegend", "timelineCompactArcs", "timelineRowGap"],
-    "icon":          ["iconShape", "iconShapes", "iconSize", "iconLegendLabels", "iconColors", "iconShowLegend", "iconLegendLayout"],
-    "sankey":        ["sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyColorMode", "sankeySingleColor"],
-    "keyfigures":    ["bodyCol", "kfAutoCols", "kfMaxCols", "kfAutoWidth", "kfColWidth", "kfIconPosition", "kfShowSeparators", "kfPadH", "kfPadV", "kfGap", "kfIconColor", "kfTextColor"],
-    "calendar":      ["barThickness", "calendarAxis", "calendarColumns", "calendarColumnGroups", "calendarGrid", "calendarRowLabels", "calendarLegend", "calendarRowColors", "calendarRowMarks", "calendarCategoryColors"],
-    "table":         ["tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors", "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers", "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"]
-  };
-
-  // Build a filtered config object containing only the fields that
-  // matter for the current chart type. The full DataStore.toConfig()
-  // is used as the source of truth; we just drop irrelevant keys.
-  //
-  // toConfig() returns a JSON STRING (not an object) because the
-  // artboard-storage path expects a serialised payload — so we
-  // parse it here before filtering. Forgetting that step is exactly
-  // why the export was producing "{}" before this fix.
-  function buildExportConfig() {
-    var raw = DataStore.toConfig();
-    var full = {};
-    try { full = (typeof raw === "string") ? JSON.parse(raw) : (raw || {}); }
-    catch (e) { full = {}; }
-    var type = full.chartType || "hbar";
-    var keep = CONFIG_UNIVERSAL.concat(CONFIG_BY_TYPE[type] || []);
-    var keepSet = {};
-    for (var i = 0; i < keep.length; i++) keepSet[keep[i]] = true;
-    var clean = {};
-    for (var k in full) {
-      if (full.hasOwnProperty(k) && keepSet[k] && full[k] !== undefined) {
-        clean[k] = full[k];
-      }
-    }
-    return clean;
-  }
-
   function buildConfigJsonString() {
-    return JSON.stringify(buildExportConfig(), null, 2);
+    // A saved file, a chart link and the copied JSON keep the fields that
+    // matter for this chart type (DataStore.FILE_FIELDS).
+    return JSON.stringify(DataStore.toFileConfig(), null, 2);
   }
 
   function safeChartFilename() {
@@ -2013,7 +1954,7 @@
     $id("share-chart-save").style.display = "none";
     $id("share-chart-copy").style.display = "";
     $id("share-chart-copy").disabled = true;
-    ChartLink.build(JSON.stringify(buildExportConfig())).then(function (url) {
+    ChartLink.build(JSON.stringify(DataStore.toFileConfig())).then(function (url) {
       $id("share-chart-busy").hidden = true;
       if (url.length > ChartLink.MAX_LENGTH) {
         // Too big for a link: say so, and offer the file instead.

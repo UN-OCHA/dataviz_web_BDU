@@ -1070,14 +1070,34 @@ var DataStore = (function () {
     return out;
   }
 
+  // A hex colour ("#RGB" or "#RRGGBB") as text, or null for anything else.
+  function cleanHex(v) {
+    return /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(v == null ? "" : v)) ? String(v) : null;
+  }
+
   // { key: "#RRGGBB" } map, keeping only hex colour values.
   function cleanColorMap(map) {
     var out = {};
     if (!map || typeof map !== "object") return out;
     for (var k in map) {
-      if (map.hasOwnProperty(k) && /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(map[k]))) out[k] = String(map[k]);
+      var hex = map.hasOwnProperty(k) ? cleanHex(map[k]) : null;
+      if (hex) out[k] = hex;
     }
     return out;
+  }
+
+  // A number from a config/AI payload: real numbers and number text ("80")
+  // pass, anything else gives the fallback. Sizes go straight into SVG
+  // coordinates, where a word would draw NaN.
+  function cleanNumber(v, fallback) {
+    // One number reader for the whole tool (thousands vs decimal commas).
+    var n = parseNumeric(v);
+    return (typeof n === "number" && isFinite(n)) ? n : fallback;
+  }
+
+  // A per-row list (icon shapes, series colours), or null when it isn't a list.
+  function cleanList(v) {
+    return Array.isArray(v) ? v.slice() : null;
   }
   // { colIndex: "left" | "center" | "right" }
   function cleanAlignMap(map) {
@@ -1172,6 +1192,84 @@ var DataStore = (function () {
   // break inside an evalScript string stops Illustrator running the script.
   store.chartName = function () {
     return String(store.chartTitle || "").replace(/\s+/g, " ").trim();
+  };
+
+  // ── Saved file fields ────────────────────────────────
+  //
+  // A saved file (.humanitariandataviz.json), a chart link and the copied
+  // JSON keep only the settings that matter for the chart's type, so a
+  // timeline file doesn't carry donut settings. `universal` is kept for
+  // every type, `byType` adds the type's own.
+  //
+  // MAINTAINER NOTE: a new setting in toConfig() goes in one of these
+  // lists too, or saved files and chart links silently lose it.
+  // tests/ai-import/check.js fails when a setting written by toConfig()
+  // is in no list, or when a chart type's drawing reads a setting its
+  // list leaves out (that is how line, cluster-line, bubble and sankey
+  // lost settings until 17 Nov 2026).
+  var BAR_AXIS = ["axisMax", "hideZeroLabels"];
+  var BAR_LAYOUT = ["barThickness", "barSpacing", "barLabelMode"];
+  var STACKED = ["stackedStroke", "stackedStrokeWidth", "stackedStrokeColor", "stackedLegend"];
+  var PIE_LABELS = ["pieLabelMode", "pieLabelContent", "pieLeaderLines", "pieLabelDistance"];
+  var DOTS = ["lineShowDots", "lineDotSize"];
+  var LINE = DOTS.concat(["lineLabelPos", "lineLabelBg", "lineValueLabels",
+    "lineSeriesEndLabels", "lineLegend", "lineShowYAxis", "lineHiddenLabels"]);
+  store.FILE_FIELDS = {
+    universal: [
+      "v", "chartType",
+      "chartTitle", "chartSubtitle", "chartComments", "chartFooter",
+      "headers", "rows", "labelCol", "valueCol", "valueCols",
+      "chartWidth", "chartHeight",
+      "verticalPadding", "style", "shade",
+      "numberFormat", "valuePrefix", "valueSuffix",
+      "autoSort", "sortCol", "sortDir",
+      "textScale", "labelScale",
+      "headerTextWidth", "footerTextWidth",
+      "colors", "labelColor",
+      // Per-series / per-row colours from the legend swatches: every chart
+      // type but cluster-line applies them (ChartBuilder resolveColors).
+      "iconColors",
+      "iconColType", "iconSelections", "rowIconColor"
+    ],
+    byType: {
+      "hbar":          BAR_LAYOUT.concat(BAR_AXIS),
+      "vbar":          BAR_LAYOUT.concat(BAR_AXIS),
+      "stacked-bar":   BAR_LAYOUT.concat(STACKED, BAR_AXIS),
+      "stacked-col":   BAR_LAYOUT.concat(STACKED, BAR_AXIS),
+      "cluster":       BAR_LAYOUT.concat(["clusterOrientation", "stackedLegend"], BAR_AXIS),
+      "cluster-donut": ["donutHole", "donutCenterAuto", "clusterDonutLegend", "clusterDonutCategoryColors"].concat(PIE_LABELS),
+      "line":          LINE.concat(BAR_AXIS),
+      "cluster-line":  ["clusterLineColors", "clusterLineYAxis", "clusterLineValueLabels", "clusterLineIndependentScale"]
+                        .concat(DOTS, BAR_AXIS),
+      "donut":         ["donutCenterTitle", "donutCenterLabel", "donutCenterAuto", "donutHole"].concat(PIE_LABELS, ["pieLegend", "sliceColors"]),
+      "pie":           PIE_LABELS.concat(["pieLegend", "sliceColors"]),
+      "bubble":        ["bubbleOrientation", "bubbleSeparation"].concat(BAR_AXIS),
+      "timeline":      ["timelineOrientation", "timelineEventSpacing", "timelineCategoryColors", "timelineLegend", "timelineCompactArcs", "timelineRowGap"],
+      "icon":          ["iconShape", "iconShapes", "iconSize", "iconLegendLabels", "iconShowLegend", "iconLegendLayout"],
+      "sankey":        ["sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyNodeMode",
+                        "sankeyColorMode", "sankeySingleColor"],
+      "keyfigures":    ["bodyCol", "kfAutoCols", "kfMaxCols", "kfAutoWidth", "kfColWidth", "kfIconPosition", "kfShowSeparators", "kfPadH", "kfPadV", "kfGap", "kfIconColor", "kfTextColor"],
+      "calendar":      ["barThickness", "calendarAxis", "calendarColumns", "calendarColumnGroups", "calendarGrid", "calendarRowLabels", "calendarLegend", "calendarRowColors", "calendarRowMarks", "calendarCategoryColors"],
+      "table":         ["tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors", "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers", "tableBarLabel", "tableColAlign", "tableColWidths", "tableColBold", "tableRowBold", "tableColGroups"],
+      "map":           []
+    }
+  };
+
+  // The chart's settings as a saved file holds them: toConfig(), as an
+  // object, with only the fields FILE_FIELDS keeps for this chart type.
+  // An unknown type keeps the bar settings, as before.
+  store.toFileConfig = function () {
+    var full = JSON.parse(store.toConfig());
+    var keep = {};
+    store.FILE_FIELDS.universal
+      .concat(store.FILE_FIELDS.byType[full.chartType] || store.FILE_FIELDS.byType.hbar)
+      .forEach(function (k) { keep[k] = true; });
+    var out = {};
+    // In toConfig's order, so saved files and links read as before.
+    for (var k in full) {
+      if (full.hasOwnProperty(k) && keep[k]) out[k] = full[k];
+    }
+    return out;
   };
 
   store.toConfig = function () {
@@ -1317,6 +1415,13 @@ var DataStore = (function () {
       }
     }
     if (store.sortCol != null) { cfg.sortCol = store.sortCol; cfg.sortDir = store.sortDir; }
+    // Sankey colour: one colour or the palette (Design tab). Saved for
+    // sankey only; before 17 Nov 2026 it lived in the panel and was lost
+    // on every save, link and re-edit.
+    if (store.chartType === "sankey" && store.sankeyColorMode) {
+      cfg.sankeyColorMode = store.sankeyColorMode;
+      if (store.sankeySingleColor) cfg.sankeySingleColor = store.sankeySingleColor;
+    }
 
     return JSON.stringify(cfg);
   };
@@ -1330,15 +1435,17 @@ var DataStore = (function () {
    * │ the round-trip works for the manual UI. Then decide whether the    │
    * │ AI flow should also support it:                                    │
    * │                                                                    │
-   * │   • Visual/layout default → no AI work needed. The setting flows   │
-   * │     through both the manual UI and AI-imported charts via this     │
-   * │     function and ChartBuilder reads it.                            │
+   * │   • Visual/layout default with NO new field → no AI work needed.   │
+   * │     It flows through both the manual UI and AI-imported charts     │
+   * │     via this function and ChartBuilder reads it.                   │
    * │                                                                    │
-   * │   • New optional config field the AI can OPTIONALLY produce →      │
-   * │     add the field name to the `passthrough` list in                │
-   * │     `ai-import.js`'s `expand()`. One line. The plugin will then    │
-   * │     accept it from AI JSON; if the AI doesn't send it, defaults    │
-   * │     apply. (The AI doesn't need to know about it.)                 │
+   * │   • ANY new field read here → add its name to the `passthrough`    │
+   * │     list in `ai-import.js`'s `expand()`. One line, and required:   │
+   * │     tests/ai-import/check.js fails without it, because an          │
+   * │     imported chart must be able to match a saved one. If the AI    │
+   * │     doesn't send the field, defaults apply. Clean the value here   │
+   * │     (cleanNumber, cleanHex, cleanList…): it can arrive from an     │
+   * │     assistant in any shape.                                        │
    * │                                                                    │
    * │   • Field the AI should ACTIVELY choose values for → also add a    │
    * │     short mention to `ai-prompt-template.js` so Copilot knows when │
@@ -1367,12 +1474,12 @@ var DataStore = (function () {
       store.chartWidth = c.chartWidth || 500;
       store.chartHeight = c.chartHeight || 0;
       store.barThickness = c.barThickness || 0;
-      store.barSpacing = c.barSpacing || 0;
-      store.verticalPadding = c.verticalPadding || 0;
+      store.barSpacing = cleanNumber(c.barSpacing, 0);
+      store.verticalPadding = cleanNumber(c.verticalPadding, 0);
       store.colors = c.colors || null;
-      store.labelColor = c.labelColor || null;
-      store.textScale = c.textScale || 100;
-      store.labelScale = c.labelScale || 100;
+      store.labelColor = cleanHex(c.labelColor);
+      store.textScale = cleanNumber(c.textScale, 100) || 100;
+      store.labelScale = cleanNumber(c.labelScale, 100) || 100;
       store.style = c.style || "ocha";
       store.shade = !!c.shade;
       store.lineShowDots = c.lineShowDots !== false;
@@ -1383,7 +1490,7 @@ var DataStore = (function () {
       store.lineSeriesEndLabels = c.lineSeriesEndLabels !== false;
       store.lineLegend = !!c.lineLegend;
       store.lineShowYAxis = !!c.lineShowYAxis;
-      store.lineHiddenLabels = Array.isArray(c.lineHiddenLabels) ? c.lineHiddenLabels.slice() : [];
+      store.lineHiddenLabels = cleanList(c.lineHiddenLabels) || [];
       store.clusterLineColors = (c.clusterLineColors && typeof c.clusterLineColors === "object") ? c.clusterLineColors : {};
       store.clusterLineYAxis = c.clusterLineYAxis !== false;       // default ON
       store.clusterLineValueLabels = !!c.clusterLineValueLabels;   // default OFF
@@ -1401,7 +1508,8 @@ var DataStore = (function () {
       store.pieLegend = !!c.pieLegend;
       store.headerTextWidth = (c.headerTextWidth && c.headerTextWidth > 0) ? c.headerTextWidth : 100;
       store.footerTextWidth = (c.footerTextWidth && c.footerTextWidth > 0) ? c.footerTextWidth : 100;
-      store.timelineRowGap = (c.timelineRowGap && c.timelineRowGap > 0) ? c.timelineRowGap : 30;
+      var rowGap = cleanNumber(c.timelineRowGap, 0);
+      store.timelineRowGap = rowGap > 0 ? rowGap : 30;
       store.clusterOrientation = c.clusterOrientation || "horizontal";
       store.donutCenterTitle = c.donutCenterTitle || "";
       store.donutCenterLabel = c.donutCenterLabel || "";
@@ -1424,10 +1532,10 @@ var DataStore = (function () {
       store.valueSuffix = c.valueSuffix || "";
       store.autoSort = c.autoSort !== false;
       store.iconShape = c.iconShape || "people";
-      store.iconShapes = c.iconShapes || null;
+      store.iconShapes = cleanList(c.iconShapes);
       store.iconSize = c.iconSize || 20;
       store.iconLegendLabels = c.iconLegendLabels || null;
-      store.iconColors = c.iconColors || null;
+      store.iconColors = cleanList(c.iconColors);
       store.iconShowLegend = c.iconShowLegend !== false;
       store.iconLegendLayout = c.iconLegendLayout || "horizontal";
       store.sankeyNodeWidth = c.sankeyNodeWidth || 20;
@@ -1435,22 +1543,26 @@ var DataStore = (function () {
       store.sankeyLinkOpacity = c.sankeyLinkOpacity != null ? c.sankeyLinkOpacity : 0.4;
       store.sankeyLabelMode = c.sankeyLabelMode || "both";
       store.sankeyNodeMode = c.sankeyNodeMode || "auto";
+      // Set only when the file has them: older files and charts keep the
+      // panel's current choice, as they always did.
+      if (c.sankeyColorMode === "single" || c.sankeyColorMode === "multi") store.sankeyColorMode = c.sankeyColorMode;
+      if (cleanHex(c.sankeySingleColor)) store.sankeySingleColor = cleanHex(c.sankeySingleColor);
       // Key Figures options — restore from config
       store.kfAutoCols = c.kfAutoCols !== false;
-      store.kfMaxCols = c.kfMaxCols || 3;
+      store.kfMaxCols = cleanNumber(c.kfMaxCols, 3) || 3;
       store.kfAutoWidth = c.kfAutoWidth !== false;
-      store.kfColWidth = c.kfColWidth || 150;
+      store.kfColWidth = cleanNumber(c.kfColWidth, 150) || 150;
       store.kfIconPosition = c.kfIconPosition || "left";
       store.kfShowSeparators = c.kfShowSeparators !== false;
-      store.kfPadH = c.kfPadH != null ? c.kfPadH : 12;
-      store.kfPadV = c.kfPadV != null ? c.kfPadV : 10;
-      store.kfGap = c.kfGap != null ? c.kfGap : 8;
-      store.kfIconColor = c.kfIconColor || "#009EDB";
-      store.kfTextColor = c.kfTextColor || null;
+      store.kfPadH = cleanNumber(c.kfPadH, 12);
+      store.kfPadV = cleanNumber(c.kfPadV, 10);
+      store.kfGap = cleanNumber(c.kfGap, 8);
+      store.kfIconColor = cleanHex(c.kfIconColor) || "#009EDB";
+      store.kfTextColor = cleanHex(c.kfTextColor);
       store.bodyCol = c.bodyCol != null ? c.bodyCol : 2;
       store.iconColType = c.iconColType || "none";
       store.iconSelections = c.iconSelections || [];
-      store.rowIconColor = c.rowIconColor || null;
+      store.rowIconColor = cleanHex(c.rowIconColor);
       store.tableStyle = c.tableStyle === "minimal" ? "minimal" : "classic";
       store.tableBarCols = cleanIndexList(c.tableBarCols);
       store.tableBarColors = cleanColorMap(c.tableBarColors);
@@ -1458,7 +1570,7 @@ var DataStore = (function () {
       store.tableBarColorBy = (c.tableBarColorBy === "row" || c.tableBarColorBy === "column" || c.tableBarColorBy === "single")
         ? c.tableBarColorBy
         : (c.tableBarColors && typeof c.tableBarColors === "object" && Object.keys(c.tableBarColors).length ? "column" : "single");
-      store.tableBarColor = /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(c.tableBarColor || "")) ? c.tableBarColor : null;
+      store.tableBarColor = cleanHex(c.tableBarColor);
       store.tableRowColors = cleanColorMap(c.tableRowColors);
       store.tableBarTrackCols = cleanIndexList(c.tableBarTrackCols);
       store.tableRowHighlight = cleanLabelList(c.tableRowHighlight);

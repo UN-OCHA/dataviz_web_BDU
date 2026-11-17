@@ -868,8 +868,15 @@ var AiImport = (function () {
     // accepted when present), add a short mention to
     // `ai-prompt-template.js`. See `CLAUDE.md` "Plugin-internal sync
     // rules" for the full checklist.
+    //
+    // tests/ai-import/check.js reads this list and fails when a field that
+    // loadFromConfig reads is missing from it (or listed here but never
+    // read), so a setting saved in a chart file can't be dropped on import.
     var passthrough = [
       "chartWidth", "chartHeight",
+      // Design tab sizes: space between bars/rows, space above and below,
+      // text size, label size, label colour
+      "barSpacing", "verticalPadding", "textScale", "labelScale", "labelColor",
       "axisMax", "hideZeroLabels", "autoSort",
       "barLabelMode",
       "stackedLegend", "stackedStroke", "stackedStrokeWidth", "stackedStrokeColor",
@@ -882,22 +889,31 @@ var AiImport = (function () {
       // Per-type orientation / layout toggles
       "bubbleOrientation", "bubbleSeparation",
       "timelineOrientation", "timelineEventSpacing", "timelineCategoryColors",
+      "timelineLegend", "timelineCompactArcs", "timelineRowGap",
       "clusterOrientation",
+      // Small-multiple lines: per-line colours, axis, labels, own scale
+      "clusterLineColors", "clusterLineYAxis", "clusterLineValueLabels", "clusterLineIndependentScale",
       // Donut / pie tweaks
       "donutHole", "donutCenterTitle", "donutCenterLabel", "donutCenterAuto", "clusterDonutLegend", "clusterDonutCategoryColors", "sliceColors", "pieLegend",
       "pieLabelMode", "pieLabelContent", "pieLeaderLines", "pieLabelDistance",
-      // Key Figures: bodyCol is positional (defaults to 2)
+      // Key Figures: bodyCol is positional (defaults to 2); grid, icon
+      // position, separators, spacing and colours
       "bodyCol",
+      "kfAutoCols", "kfMaxCols", "kfAutoWidth", "kfColWidth", "kfIconPosition", "kfShowSeparators",
+      "kfPadH", "kfPadV", "kfGap", "kfIconColor", "kfTextColor",
       // Icon chart: shape (built-in: man/woman/people/dot/square),
-      // size, legend display, optional per-row icon overrides
-      "iconShape", "iconSize", "iconShowLegend", "iconLegendLayout",
-      "iconLegendLabels", "rowIcons",
+      // size, legend display, per-row shapes and colours. The primer's
+      // friendlier name for iconShapes, "rowIcons", is mapped below.
+      "iconShape", "iconShapes", "iconColors", "iconSize", "iconShowLegend", "iconLegendLayout",
+      "iconLegendLabels",
       // Row icons/flags decoration on bar-family charts (hbar/vbar/
       // stacked-bar/stacked-col/table/keyfigures). Per-row refs come in
-      // rowIconRefs, handled below into iconSelections.
-      "iconColType",
+      // rowIconRefs, handled below into iconSelections. rowIconColor is
+      // the icons' colour (absent = the style's own colour).
+      "iconColType", "rowIconColor",
       // Sankey: node/link styling + same-label handling
       "sankeyNodeWidth", "sankeyNodePadding", "sankeyLinkOpacity", "sankeyLabelMode", "sankeyNodeMode",
+      "sankeyColorMode", "sankeySingleColor",
       // Data table: look, bars in cells, colours, dividers, italic labels
       "tableStyle", "tableBarCols", "tableBarColors", "tableBarColorBy", "tableBarColor", "tableRowColors",
       "tableBarTrackCols", "tableRowHighlight", "tableColItalic", "tableDividers",
@@ -922,6 +938,10 @@ var AiImport = (function () {
     // Friendly alias: `width` / `height` → internal names
     if (parsed.width != null && cfg.chartWidth == null) cfg.chartWidth = parsed.width;
     if (parsed.height != null && cfg.chartHeight == null) cfg.chartHeight = parsed.height;
+    // Friendly alias: `rowIcons` (the primer's name, one shape per row) →
+    // `iconShapes`, the field the icon chart reads. Without this the
+    // per-row shapes were dropped and every row drew the chart's one shape.
+    if (isArray(parsed.rowIcons) && cfg.iconShapes == null) cfg.iconShapes = parsed.rowIcons.slice();
 
     // Row icons / flags on bar-family charts. iconColType arrives via the
     // passthrough; the per-row references arrive in rowIconRefs (parallel to

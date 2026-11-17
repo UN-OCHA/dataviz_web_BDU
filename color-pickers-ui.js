@@ -405,13 +405,24 @@ var ColorPickersUI = (function () {
 
   // ── Style change handler ─────────────────────────────
 
-  /** Called when style radio changes. Updates palettes and sankey color. */
+  /** Sankey single colour back to the style's primary (user picked a style). */
+  function resetSankeyColor(styleName) {
+    var st = ChartRegistry.getStyle(styleName);
+    _store.sankeySingleColor = (st.colors && st.colors[0]) || "#009EDB";
+  }
+
+  /** Called when the style is set (picked by the user, or by opening a
+   *  chart). Updates the palettes. Leaves the sankey colour alone: the
+   *  style radio handler resets it, an opened chart brings its own. */
   function onStyleChange(styleName) {
     ochaSwatches = ChartRegistry.getSwatches(styleName);
     defaultIconPalette = ChartRegistry.getIconPalette(styleName);
-    // Reset sankey single color to new style's primary
-    var st = ChartRegistry.getStyle(styleName);
-    _store.sankeySingleColor = (st.colors && st.colors[0]) || "#009EDB";
+    if (!_store.sankeySingleColor) resetSankeyColor(styleName);
+    // Sankey controls follow the store (an opened chart's choice included)
+    if (sankeyColorModeSelect) {
+      sankeyColorModeSelect.value = _store.sankeyColorMode === "multi" ? "multi" : "single";
+      sankeySingleColorRow.style.display = sankeyColorModeSelect.value === "single" ? "flex" : "none";
+    }
     // Always rebuild sankey swatches so they stay in sync with the active style
     if (sankeyColorSwatches) buildSankeySwatches();
     // Same for timeline categories — auto-assigned colours come from
@@ -785,6 +796,7 @@ var ColorPickersUI = (function () {
     syncIconColor:       syncIconColor,
     syncStrokeColor:     syncStrokeColor,
     buildSankeySwatches: buildSankeySwatches,
+    resetSankeyColor:    resetSankeyColor,
     buildSeriesDropdown: buildSeriesDropdown,
     buildTimelineCategoryRows: buildTimelineCategoryRows,
     buildSliceColorRows: buildSliceColorRows,
